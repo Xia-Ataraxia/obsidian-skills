@@ -1,0 +1,78 @@
+{
+	"schemaVersion": "0.1.0",
+	"name": "Recipe",
+	"behavior": "create",
+	"noteContentFormat": "{% if schema:@Recipe:image %}{{schema:@Recipe:image|first|image:\"Finished dish\"}}\n\n{% endif %}{{schema:@Recipe:description ?? description}}\n\n{% if schema:@Recipe:prepTime or schema:@Recipe:cookTime or schema:@Recipe:totalTime %}| Prep | Cook | Total |\n| --- | --- | --- |\n| {{schema:@Recipe:prepTime|duration:\"H:mm\"}} | {{schema:@Recipe:cookTime|duration:\"H:mm\"}} | {{schema:@Recipe:totalTime|duration:\"H:mm\"}} |\n\n{% endif %}## Ingredients\n\n{{schema:@Recipe:recipeIngredient|list:task}}\n\n## Instructions\n\n{% for step in schema:@Recipe:recipeInstructions %}{{loop.index}}. {{step.text ?? step}}\n{% endfor %}\n{% if schema:@Recipe:nutrition %}## Nutrition\n\n{% if schema:@Recipe:nutrition.calories %}- Calories: {{schema:@Recipe:nutrition.calories}}\n{% endif %}{% if schema:@Recipe:nutrition.proteinContent %}- Protein: {{schema:@Recipe:nutrition.proteinContent}}\n{% endif %}{% if schema:@Recipe:nutrition.fatContent %}- Fat: {{schema:@Recipe:nutrition.fatContent}}\n{% endif %}{% if schema:@Recipe:nutrition.carbohydrateContent %}- Carbohydrates: {{schema:@Recipe:nutrition.carbohydrateContent}}\n{% endif %}\n{% endif %}## Notes\n\nSource: {{url}}\n",
+	"properties": [
+		{
+			"name": "title",
+			"value": "{{schema:@Recipe:name ?? title}}",
+			"type": "text"
+		},
+		{
+			"name": "source",
+			"value": "{{url}}",
+			"type": "text"
+		},
+		{
+			"name": "author",
+			"value": "{{schema:@Recipe:author[*].name|wikilink|join}}",
+			"type": "multitext"
+		},
+		{
+			"name": "site",
+			"value": "{{site ?? domain}}",
+			"type": "text"
+		},
+		{
+			"name": "published",
+			"value": "{{schema:@Recipe:datePublished|date:\"YYYY-MM-DD\"}}",
+			"type": "date"
+		},
+		{
+			"name": "created",
+			"value": "{{date|date:\"YYYY-MM-DD\"}}",
+			"type": "date"
+		},
+		{
+			"name": "servings",
+			"value": "{{schema:@Recipe:recipeYield|first}}",
+			"type": "number"
+		},
+		{
+			"name": "total_time",
+			"value": "{{schema:@Recipe:totalTime|duration:\"H:mm\"}}",
+			"type": "text"
+		},
+		{
+			"name": "cuisine",
+			"value": "{{schema:@Recipe:recipeCuisine}}",
+			"type": "multitext"
+		},
+		{
+			"name": "course",
+			"value": "{{schema:@Recipe:recipeCategory}}",
+			"type": "multitext"
+		},
+		{
+			"name": "ingredients",
+			"value": "{{schema:@Recipe:recipeIngredient}}",
+			"type": "multitext"
+		},
+		{
+			"name": "rating",
+			"value": "",
+			"type": "number"
+		},
+		{
+			"name": "tags",
+			"value": "recipes",
+			"type": "multitext"
+		}
+	],
+	"triggers": [
+		"schema:@Recipe"
+	],
+	"noteNameFormat": "{{schema:@Recipe:name|safe_name ?? title|safe_name}}",
+	"path": "Clippings/Recipes"
+}

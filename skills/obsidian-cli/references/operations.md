@@ -90,12 +90,14 @@ Additive commands are not idempotent.
 A retried `append` or `prepend` after an ambiguous result appends twice, and the duplicate looks like content the user wrote.
 Always re-read before retrying a mutating command, and only retry when the readback shows the effect is absent.
 
-`property:set` overwrites one property to a fixed value, so repeating it is safe in a way `append` is not.
+`property:set` is idempotent only while the inspected property and authorization remain unchanged. Re-read before retrying: a concurrent user edit must not be overwritten just because the original value was fixed.
 
 ### Moves
 
 A move can half-succeed in three places at once: the destination, the old path, and every inbound link.
 Check all three, in this order:
+
+The isolated 1.12.7 collision check returned exit code 0 with `Error: Destination file already exists!`; both files were preserved. Inspect error text and materialized state, not only the exit status.
 
 1. Read the destination path — the note must be there with its content intact.
 2. Read the old path — it must no longer resolve.

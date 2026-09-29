@@ -1,0 +1,253 @@
+# obsidian-doctor plugin registry
+#
+# Every `registry_lookup` that scripts/diagnose.py emits points here. The script
+# never reads and never writes this file: it reports `{file, plugin_id, keys}`
+# and a human resolves the lookup. Keeping resolution manual is deliberate — a
+# registry entry is a claim about somebody else's software, and it deserves a
+# reader who can see how it was obtained.
+#
+# Lookup path:  plugins["<plugin-id>"].<key>
+#   <plugin-id> is the `id` field inside the plugin's own manifest.json. It is
+#   not the display name and not necessarily the directory name.
+#
+# Append-only. `known_versions` and `failure_signatures` grow; an entry leaves
+# only when the publisher removes the API it describes. Never blank a list,
+# never replace a plugin key wholesale, and never regenerate this file from a
+# template: each line cost somebody a diagnosis.
+#
+# Nothing host-specific belongs here. Cite plugin behaviour — never a note path,
+# vault name, account identifier, machine path, or raw console dump.
+
+schema: obsidian-doctor/registry@1
+
+registry_contract:
+  lookup: 'plugins["<plugin-id>"].<key>'
+  required_keys: [name, repo, docs, api_surface, known_versions, failure_signatures]
+  append_only: [known_versions, failure_signatures]
+  empty_is_legal: 'an empty `{}` or `[]` means nothing is recorded yet, never that there is nothing to find'
+  absent_plugin_means: 'untested — an unlisted plugin is unknown, not healthy'
+  unrecorded_version_means: 'untested — a version with no entry is not a version known to work'
+  forbidden_recoveries:
+    - 'hand-editing <config-folder>/plugins/<plugin-id>/data.json'
+    - 'editing <config-folder>/plugins/<plugin-id>/main.js or any shipped plugin build output'
+    - 'assigning into plugin internals from an eval or console expression'
+    - "calling a plugin's own save-settings routine to persist an injected value"
+    - 'resetting settings to defaults, reinstalling, or deleting plugin data to start clean'
+    - 'enabling, disabling, or reloading a plugin as a diagnosis step rather than as an approved change'
+    - 'rewriting a whole note or template to deliver a one-line fix'
+
+# Every recorded fact carries one of these evidence values.
+evidence_vocabulary:
+  documented: "read from a publisher-maintained page listed in that entry's docs_read"
+  reported: 'recorded from a third-party report; not reproduced by this package'
+  observed: 'reproduced first-hand against a named app version and plugin version'
+
+seed_state:
+  observed_entries: 0
+  note: >-
+    No Obsidian installation, vault, or plugin was available while this seed
+    registry was written, so no entry is `observed`. Treat every `documented`
+    entry as a publisher claim and every `reported` entry as a lead to confirm,
+    and upgrade an entry to `observed` only after recording the exact app and
+    plugin versions it was reproduced on.
+
+plugins:
+
+  templater-obsidian:
+    name: Templater
+    repo: https://github.com/silentvoid13/Templater
+    docs: https://silentvoid13.github.io/Templater/
+
+    api_surface:
+      evidence: documented
+      docs_read:
+        - https://silentvoid13.github.io/Templater/syntax.html
+        - https://silentvoid13.github.io/Templater/commands/execution-command.html
+        - https://silentvoid13.github.io/Templater/internal-functions/internal-modules/system-module.html
+        - https://silentvoid13.github.io/Templater/internal-functions/internal-modules/file-module.html
+
+      command_forms:
+        interpolation: '<% expression %>'
+        execution: '<%* statements %>'
+        emit_from_execution: 'tR += value'
+
+      # An execution block runs statements and contributes nothing to the note
+      # by itself; a value reaches the note only through `tR` or an
+      # interpolation command that reads the binding back.
+      execution_blocks_emit_nothing: true
+
+      # Every official example of these calls is written with `await`. Without
+      # it the template receives a pending Promise instead of a value.
+      await_required:
+        - tp.system.prompt
+        - tp.system.suggester
+        - tp.system.multi_suggester
+        - tp.file.create_new
+        - tp.file.exists
+        - tp.file.include
+        - tp.file.move
+        - tp.file.rename
+
+      # Modal calls. `throw_on_cancel` defaults to false on all three, so a
+      # cancelled modal resolves to null instead of raising, and the null flows
+      # onward unless the template checks for it.
+      interactive:
+        - symbol: tp.system.prompt
+          cancel_result: 'null'
+          throw_on_cancel_default: false
+          throw_on_cancel_arg_index: 2
+        - symbol: tp.system.suggester
+          cancel_result: 'null'
+          throw_on_cancel_default: false
+          throw_on_cancel_arg_index: 2
+        - symbol: tp.system.multi_suggester
+          cancel_result: 'null'
+          throw_on_cancel_default: false
+          throw_on_cancel_arg_index: 2
+
+      # These change the vault as a side effect of rendering, before the render
+      # has finished and before any later step can fail.
+      vault_mutating:
+        - symbol: tp.file.rename
+          effect: 'renames the file currently being rendered'
+        - symbol: tp.file.move
+          effect: 'moves the file currently being rendered to another folder'
+        - symbol: tp.file.create_new
+          effect: 'creates an additional file in the vault'
+
+      # Templater offers no rollback. A mutation that already landed stays
+      # landed when a later command throws or a later modal is cancelled.
+      rollback: none
+
+      # Identifiers that resolve inside a Templater command without being
+      # declared in the template. Anything else needs a binding.
+      resolves_without_binding: [tp, app, moment]
+
+    known_versions:
+      - version: '2.19.3'
+        min_app_version: '1.5.0'
+        evidence: reported
+        source: 'manifest values quoted in third-party diagnosis notes reviewed while authoring this package'
+        notes: >-
+          Recorded as a version string seen in a report, not as a version this
+          package ran. Read the installed `manifest.json` and use the value it
+          actually contains; if it differs from this entry, the installed value
+          wins and this entry is stale.
+      - version: '2.19.1'
+        min_app_version: null
+        evidence: reported
+        source: 'third-party diagnosis notes reviewed while authoring this package'
+        notes: 'Carries the suggester-empty-list signature below. `minAppVersion` for this release was not recorded, so it stays null rather than being inferred from a neighbouring release.'
+
+    failure_signatures:
+
+      - id: bare-identifier-reference-error
+        check: templater-reference-error
+        channel: console
+        signal: 'ReferenceError: <identifier> is not defined'
+        also_visible_as: 'the interpolation command survives into the rendered note as literal text, because the render aborted'
+        evidence: documented
+        cause: >-
+          An interpolation command is evaluated as a JavaScript expression in
+          Templater's scope. An identifier that is neither declared in the
+          template nor one of `resolves_without_binding` has no value there, so
+          evaluation throws and the render stops at that command.
+        recovery: >-
+          Bind the identifier inside an execution block and emit it through
+          `tR`, or read it back through an interpolation command placed after
+          the binding. The template owner applies the edit.
+        confirm_with: 'the console line captured before the edit, plus a re-render whose output contains the resolved value and no literal command text'
+
+      - id: unawaited-async-call
+        check: templater-missing-await
+        channel: rendered-note
+        signal: '`[object Promise]` in the output, or an empty slot where a value was expected'
+        evidence: documented
+        cause: >-
+          A call listed under `await_required` was used without `await`, so the
+          template interpolated the Promise rather than its resolved value. For
+          a mutating call the side effect also races the rest of the render.
+        recovery: 'add `await` at each such call site inside an execution block'
+        confirm_with: 'a re-render read back from the exact output path, showing the resolved value instead of a Promise'
+
+      - id: execution-block-emits-nothing
+        check: templater-missing-output
+        channel: rendered-note
+        signal: 'a value the user was prompted for never appears in the note, while the render reports no error'
+        evidence: documented
+        cause: >-
+          A binding computed inside an execution block was never appended to
+          `tR` and never read back by an interpolation command, so it was
+          discarded when the block ended. A clean render is expected here: there
+          is no error to find.
+        recovery: 'append the value to `tR`, or read it back through an interpolation command'
+        confirm_with: 'the rendered note read back from its exact path, containing the value'
+
+      - id: cancelled-prompt-after-mutation
+        check: templater-partial-mutation-risk
+        channel: vault-state
+        signal: >-
+          after a cancelled modal, the note exists under a renamed or moved path
+          with unrendered body text, or stays at its original path with the
+          template partly applied
+        evidence: documented
+        cause: >-
+          A call from `vault_mutating` ran before an interactive modal, or after
+          one whose null result was never checked. The mutation is not rolled
+          back when the render stops.
+        recovery: >-
+          Collect and validate every modal answer first, return early on a null
+          answer or pass `throw_on_cancel` as true, and mutate only afterwards.
+          Repairing a note that is already half-changed is a separate,
+          separately authorized note edit.
+        confirm_with: >-
+          reading the note back by its expected path and by its previous path,
+          and recording which one resolves. A command that returned is not
+          evidence about vault state.
+
+      - id: missing-symbol-typeerror
+        check: plugin-api-unavailable
+        channel: console
+        signal: '`TypeError: ... is not a function`, or `TypeError: Cannot read properties of undefined`'
+        evidence: documented
+        cause: >-
+          The call site expects a symbol the installed build does not expose.
+          This is an API-shape mismatch, not a syntax error in the template.
+        recovery: >-
+          Rewrite the call site against the API the installed version documents,
+          or have the vault owner install a version that documents the expected
+          symbol. Probing the symbol is a read-only expression; never repair it
+          by assigning into plugin internals.
+        confirm_with: 'a read-only probe of the symbol at the installed version, plus the version string read from `manifest.json`'
+
+      - id: suggester-empty-list
+        check: none
+        classified_by: 'known_versions lookup at the installed version'
+        channel: ui
+        signal: 'the suggester modal opens with an empty list even though candidate items were passed'
+        affects_versions: ['2.19.1']
+        evidence: reported
+        cause: >-
+          Reported as the suggester modal not performing its initial render, so
+          the list stays empty until an input event arrives. Not reproduced by
+          this package.
+        recovery: >-
+          The reported workaround is to pass a sentinel default value whose
+          label is the empty string, so the initial render is triggered without
+          pre-filling the search box; because the sentinel is not among the
+          candidates, it cannot be selected. Reproduce the symptom on the
+          installed version before applying it, and do not generalise the
+          workaround to a version where the symptom was not observed.
+        confirm_with: 'the installed version string, plus the modal observed with and without the workaround on that same version'
+
+  notebook-navigator:
+    name: Notebook Navigator
+    repo: https://github.com/johansan/notebook-navigator
+    docs: https://notebooknavigator.com/docs.html
+    # Present so the plugin resolves to a real publisher and documentation URL
+    # instead of a guess. Nothing about its behaviour has been read or
+    # reproduced, so the knowledge keys are empty and stay that way until an
+    # entry can cite its evidence.
+    api_surface: {}
+    known_versions: []
+    failure_signatures: []

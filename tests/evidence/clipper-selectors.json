@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "kind": "package-consumer-test-report",
+  "date": "2026-09-29",
+  "surface": "Headless Chromium DOM, not the Web Clipper extension",
+  "synthetic": {
+    "result": "passed",
+    "selectors": {"article h1": "Field study", ".author": "Sample Author", "[data-summary]": "Neutral observation."},
+    "drift": "Changing author class to byline made .author return zero matches; capture must stop rather than save empty metadata"
+  },
+  "publicPage": {
+    "url": "https://example.org/",
+    "result": "selector-failed",
+    "observed": "Expected h1 was absent; the actual page had changed. The assertion failed, the page was inspected, and no capture or note write was performed.",
+    "limitation": "This public page is not a stable test service; use the synthetic DOM for repeatable checks. Do not count this as successful live capture."
+  },
+  "unverified": ["Extension template import", "Extension filters and logic execution", "Resulting note write/readback", "Authenticated pages"],
+  "mutations": "Synthetic DOM only; no browser profile, extension, account, or vault mutation"
+}
