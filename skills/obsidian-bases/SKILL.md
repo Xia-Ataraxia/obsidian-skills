@@ -22,10 +22,10 @@ Owned here:
 
 Not owned here:
 
-- Which notes deserve a base, where the `.base` file belongs, which template frames it, and what provenance it carries. The target vault's own written policy decides those. When the vault states no policy, ask instead of inventing one.
+- Which notes deserve a base, where the `.base` file belongs, which template frames it, and what provenance it carries. Respect the target vault's applicable policy and the user's exact task. If no policy file exists, use explicit task-bound choices; clarify only missing decisions rather than inventing conventions.
 - Markdown note syntax, `.canvas` graph structure, and vault CLI operations. Name the matching package by identity -- `obsidian-markdown`, `obsidian-canvas`, `obsidian-cli` -- only when the task actually reaches that artifact and that package is loaded. When it is not, report the gap rather than improvising.
 
-This package is standalone. It needs no vault plugin, no mutation server, no environment variable, and no personal configuration. A vault policy file or a vault-aware CLI composes with it only when the user explicitly selects that surface for the task; the absence of any of them is a normal, fully supported case, and their presence without selection means they stay unused.
+This package is standalone. Authoring the format needs no vault plugin, mutation server, environment variable, or personal configuration; rendering requires the target app's Bases capability. Applicable live vault policy always governs the task. Optional personal-policy tools and a vault-aware CLI compose only when selected; their absence is normal and unselected tools stay unused.
 
 ## Workflow
 

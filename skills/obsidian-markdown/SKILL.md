@@ -19,10 +19,10 @@ Owned here:
 
 Not owned here:
 
-- What a note should say, where it belongs, which template frames it, what provenance it must carry, and the house style it follows. The target vault's own written policy decides those; when the vault states no policy, ask instead of inventing one.
+- What a note should say, where it belongs, which template frames it, what provenance it must carry, and the house style it follows. Respect applicable live vault policy and explicit task-bound choices. If no policy file exists, clarify only unresolved decisions rather than inventing conventions.
 - `.canvas` graph structure, `.base` file internals, and vault-aware CLI operations. Name the matching skill by identity -- `obsidian-canvas`, `obsidian-bases`, `obsidian-cli` -- only when the task actually reaches that artifact and that skill is loaded in the current runtime. When it is not, report the gap rather than improvising a schema or a command.
 
-This skill is standalone. It requires no vault plugin, no mutation server, no environment variable, and no personal configuration. A vault policy file, an Obsidian mutation server, or a vault-aware CLI composes with it only when the user explicitly selects that surface for the task; absence of any of them is a normal, fully supported case.
+This skill is standalone. It requires no vault plugin, mutation server, environment variable, or personal configuration. Applicable live vault policy always governs the task. Optional personal-policy tools, an Obsidian mutation server, or a vault-aware CLI compose only when selected; their absence is normal. A missing policy file does not erase explicit task-bound authorization or permit inventing house rules.
 
 ## Resolve the target before writing
 

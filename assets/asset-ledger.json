@@ -1,0 +1,125 @@
+{
+  "schema": "obsidian-skills/asset-ledger@1",
+  "package": "obsidian-skills",
+  "package_version": "0.1.0",
+  "recorded": "2026-09-29",
+  "scope": "Every image file tracked in this repository. An asset that is not listed here is not cleared for publication.",
+  "policy": [
+    "No upstream image, icon set, clip-art, texture, font file, or application screenshot is redistributed here. A permissive license on a surrounding repository is not a rights record for an image taken from it.",
+    "Each asset below is original vector work authored for this repository and is covered by the repository LICENSE (MIT).",
+    "Illustrations are drawn diagrams. None of them is a screenshot of the Obsidian application, and none of them is evidence that anything rendered in a running app.",
+    "\"Obsidian\" names the third-party application these skills target. No vendor logo, product icon, or UI asset is included, and no affiliation or endorsement is claimed."
+  ],
+  "assets": [
+    {
+      "path": "assets/brand/logo.svg",
+      "role": "Canonical project mark for small-size branding (icon use). Not referenced by a manifest or README in this checkout; the hero banner redraws the same lattice inline.",
+      "media_type": "image/svg+xml",
+      "dimensions": { "width": 256, "height": 256, "viewBox": "0 0 256 256" },
+      "bytes": 2567,
+      "sha256": "8e36fed8f8bd8522c85364ac87a6076a714b4f6cc5b34829318090b71ac3f29f",
+      "creator": "Obsidian Skills contributors (Xia-Ataraxia)",
+      "origin": "original work authored in this repository; drawn from primitive SVG shapes, not traced, derived, or imported from any third-party file",
+      "upstream_source": null,
+      "rights": {
+        "holder": "Copyright (c) 2026 Obsidian Skills contributors",
+        "license": "MIT",
+        "license_file": "LICENSE",
+        "third_party_attribution_required": false,
+        "redistribution": "permitted under MIT with the repository notice"
+      },
+      "contents": {
+        "embedded_raster": false,
+        "embedded_fonts": false,
+        "text_elements": false,
+        "font_stack": null,
+        "scripts": false,
+        "external_references": [],
+        "only_namespace_uri": "http://www.w3.org/2000/svg"
+      },
+      "depicts": "Nine equally sized diamond facets in a three-by-three lattice on a dark violet panel; no facet is central or larger, standing for nine independent packages with no root skill.",
+      "claims": "decorative mark only; asserts nothing about behavior, support, or verification"
+    },
+    {
+      "path": "assets/brand/hero.svg",
+      "role": "README banner, referenced by README.md and README.ko.md.",
+      "media_type": "image/svg+xml",
+      "dimensions": { "width": 1280, "height": 400, "viewBox": "0 0 1280 400" },
+      "bytes": 9304,
+      "sha256": "c8629452fa41cbae15f3d02573b561bbb68f6d35d98aaeaab61ce12a639824c7",
+      "creator": "Obsidian Skills contributors (Xia-Ataraxia)",
+      "origin": "original work authored in this repository; reuses the same nine-facet lattice as assets/brand/logo.svg and nine abstract glyphs drawn here, with no third-party icon set",
+      "upstream_source": null,
+      "rights": {
+        "holder": "Copyright (c) 2026 Obsidian Skills contributors",
+        "license": "MIT",
+        "license_file": "LICENSE",
+        "third_party_attribution_required": false,
+        "redistribution": "permitted under MIT with the repository notice"
+      },
+      "contents": {
+        "embedded_raster": false,
+        "embedded_fonts": false,
+        "text_elements": true,
+        "font_stack": "ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif — referenced by name; no font file is embedded or redistributed",
+        "scripts": false,
+        "external_references": [],
+        "only_namespace_uri": "http://www.w3.org/2000/svg"
+      },
+      "depicts": "Wordmark, the line \"Nine independent Agent Skills for Obsidian vaults\", the nine package names, a \"LOCAL / UNRELEASED 0.1.0\" badge, and nine equal tiles each holding one abstract glyph.",
+      "claims": "carries the release status shown in the README (local, unreleased 0.1.0); asserts no marketplace availability and no verified runtime support",
+      "not_a_screenshot": true
+    },
+    {
+      "path": "assets/demo/workflow.svg",
+      "role": "README workflow illustration, referenced by README.md and README.ko.md.",
+      "media_type": "image/svg+xml",
+      "dimensions": { "width": 1200, "height": 540, "viewBox": "0 0 1200 540" },
+      "bytes": 2685,
+      "sha256": "b9ee59da6ecec2d109f22348685c4ef57c2b9cb5ff146aff49380a84d737112a",
+      "creator": "Obsidian Skills contributors (Xia-Ataraxia)",
+      "origin": "original work authored in this repository; a drawn three-panel diagram over a synthetic example, not a capture or trace of any application window",
+      "upstream_source": null,
+      "rights": {
+        "holder": "Copyright (c) 2026 Obsidian Skills contributors",
+        "license": "MIT",
+        "license_file": "LICENSE",
+        "third_party_attribution_required": false,
+        "redistribution": "permitted under MIT with the repository notice"
+      },
+      "contents": {
+        "embedded_raster": false,
+        "embedded_fonts": false,
+        "text_elements": true,
+        "font_stack": "system-ui, sans-serif — referenced by name; no font file is embedded or redistributed",
+        "scripts": false,
+        "external_references": [],
+        "only_namespace_uri": "http://www.w3.org/2000/svg"
+      },
+      "depicts": "Three panels — inspect a synthetic field note, select the independent format owner, verify structure and read the exact result back — over a synthetic research example with no private note content.",
+      "claims": "illustration of the intended workflow; the in-image footer states it is not a screenshot and not a live-render verification claim",
+      "not_a_screenshot": true
+    }
+  ],
+  "excluded": [
+    {
+      "what": "Local probe captures taken while exercising an isolated neutral Obsidian profile (application screenshots, CLI logs).",
+      "why": "They are untracked local evidence under an ignored directory, not repository assets, and an application screenshot would redistribute third-party UI. Their findings are summarised in docs/verification-matrix.md instead.",
+      "tracked": false
+    },
+    {
+      "what": "Vendor logos, product icons, marketplace badges, and third-party screenshots.",
+      "why": "No rights record exists for them in this repository, so none is included.",
+      "tracked": false
+    }
+  ],
+  "verification": {
+    "command": "shasum -a 256 assets/brand/logo.svg assets/brand/hero.svg assets/demo/workflow.svg",
+    "note": "Digests were recorded when this ledger was written and re-confirmed against this checkout. Re-run the command and update this file whenever an asset changes; a mismatch means the ledger is stale, not that the asset is cleared.",
+    "status": "verified by tests/test_assets.py: actual hashes, byte counts, complete SVG coverage, rights records, safe SVG structure and bilingual image references",
+    "rendering": {
+      "local": "Both READMEs were rendered locally (markdown-it and Chromium): hero.svg and workflow.svg loaded with their alt text and nothing overflowed horizontally at 1200 px.",
+      "public_host": "not executed — rendering on a public repository host is separate evidence and has not been produced"
+    }
+  }
+}

@@ -8,7 +8,7 @@ Resolve two things before writing: the exact vault-relative path of the `.base` 
 
 When the vault, the authority, or the requested target is missing or ambiguous, keep the operation read-only and name the specific gap. Reuse authority the current task already granted for that file and that effect; do not ask twice for the same approved change, and do not stretch approval for one base to cover its neighbours.
 
-The target vault's own written policy owns what the base is for, where it lives, which naming and template conventions apply, and what provenance it must carry. This package owns none of that. When the vault states no policy, ask rather than inventing one.
+The target vault's applicable policy and the user's task own what the base is for, where it lives, which naming and template conventions apply, and what provenance it must carry. This package supplies no house policy. With no policy file, explicit task-bound choices still authorize their exact scope; clarify only unresolved decisions and never invent conventions.
 
 When the user selected a vault-aware surface, write through it instead of around it. `obsidian-cli` owns that surface if a CLI operation is the selected owner; its absence is normal, and its presence without selection means it stays unused. Authoring a base needs neither that package nor any other. Never assemble `.base` content with shell redirection or stream editors: they reformat YAML, drop trailing newlines, and mangle the nested quoting that filters and formulas depend on.
 

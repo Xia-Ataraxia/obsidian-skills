@@ -1,0 +1,628 @@
+{
+  "fixture_schema": "obsidian-skills/neutral-vault-fixture@1",
+  "purpose": "Synthetic, host-free fixtures for the candidate test suite. Every document below is authored for these tests only. Parsing a fixture proves a static property of the text; it never proves that Obsidian, a plugin, the Web Clipper extension, or any sync service accepted, indexed, or rendered it.",
+  "provenance": "Independently authored for this repository. No vault content, account identifier, credential, host path, or upstream source text is reproduced here.",
+  "vault": {
+    "name": "neutral-vault",
+    "note": "A disposable synthetic vault. Every path is vault-relative and every value is invented for tests; nothing here is read from or written to a real vault, profile, or host directory.",
+    "files": {
+      "Notes/Neutral Note.md": "---\ntitle: Neutral Note\ntags:\n  - synthetic\nstatus: open\n---\n\n# Neutral Note\n\nA synthetic note that links to [[Second Note]] and embeds nothing.\n\n> [!note] Preservation\n> This body must survive every installer and rollback exercise byte for byte.\n",
+      "Notes/Second Note.md": "---\ntitle: Second Note\nstatus: done\n---\n\n# Second Note\n\nReferenced by [[Neutral Note]].\n",
+      "Boards/Overview.canvas": "{\n  \"nodes\": [\n    {\n      \"id\": \"6f0ad84f44ce9c17\",\n      \"type\": \"text\",\n      \"x\": 0,\n      \"y\": 0,\n      \"width\": 400,\n      \"height\": 200,\n      \"text\": \"# Overview\\n\\nSynthetic board.\"\n    },\n    {\n      \"id\": \"a1b2c3d4e5f67890\",\n      \"type\": \"file\",\n      \"x\": 500,\n      \"y\": 0,\n      \"width\": 400,\n      \"height\": 300,\n      \"file\": \"Notes/Neutral Note.md\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"0123456789abcdef\",\n      \"fromNode\": \"6f0ad84f44ce9c17\",\n      \"toNode\": \"a1b2c3d4e5f67890\",\n      \"toEnd\": \"arrow\"\n    }\n  ]\n}\n",
+      "Bases/Tasks.base": "filters: 'status != \"archived\"'\nviews:\n  - type: table\n    name: Open work\n    order:\n      - file.name\n      - status\n"
+    },
+    "config": {
+      "path": "config/app.json",
+      "approved_revision": "{\n  \"alwaysUpdateLinks\": true,\n  \"attachmentFolderPath\": \"Attachments\",\n  \"promptDelete\": true,\n  \"revision\": \"approved-1\"\n}\n",
+      "drifted_revision": "{\n  \"alwaysUpdateLinks\": false,\n  \"attachmentFolderPath\": \"Inbox\",\n  \"promptDelete\": false,\n  \"revision\": \"candidate-2\"\n}\n"
+    }
+  },
+  "canvas": {
+    "valid": [
+      {
+        "id": "empty-document",
+        "note": "Both arrays are optional in JSON Canvas 1.0; an empty canvas is well formed.",
+        "text": "{\n  \"nodes\": [],\n  \"edges\": []\n}\n"
+      },
+      {
+        "id": "omitted-arrays",
+        "note": "A document that omits nodes and edges entirely is still a valid canvas.",
+        "text": "{}\n"
+      },
+      {
+        "id": "four-node-types-and-one-edge",
+        "note": "One node of every declared type plus an edge whose endpoints both resolve.",
+        "text": "{\n  \"nodes\": [\n    {\n      \"id\": \"6f0ad84f44ce9c17\",\n      \"type\": \"text\",\n      \"x\": 0,\n      \"y\": 0,\n      \"width\": 400,\n      \"height\": 200,\n      \"text\": \"# Neutral\\n\\nSynthetic note body.\"\n    },\n    {\n      \"id\": \"a1b2c3d4e5f67890\",\n      \"type\": \"file\",\n      \"x\": 500,\n      \"y\": 0,\n      \"width\": 400,\n      \"height\": 300,\n      \"file\": \"Attachments/diagram.png\",\n      \"subpath\": \"#Overview\"\n    },\n    {\n      \"id\": \"c3d4e5f678901234\",\n      \"type\": \"link\",\n      \"x\": 1000,\n      \"y\": 0,\n      \"width\": 400,\n      \"height\": 200,\n      \"url\": \"https://obsidian.md\",\n      \"color\": \"5\"\n    },\n    {\n      \"id\": \"d4e5f6789012345a\",\n      \"type\": \"group\",\n      \"x\": -50,\n      \"y\": -50,\n      \"width\": 1600,\n      \"height\": 600,\n      \"label\": \"Synthetic Overview\",\n      \"color\": \"#7C3AED\"\n    }\n  ],\n  \"edges\": [\n    {\n      \"id\": \"0123456789abcdef\",\n      \"fromNode\": \"6f0ad84f44ce9c17\",\n      \"fromSide\": \"right\",\n      \"toNode\": \"a1b2c3d4e5f67890\",\n      \"toSide\": \"left\",\n      \"toEnd\": \"arrow\",\n      \"label\": \"leads to\"\n    }\n  ]\n}\n"
+      }
+    ],
+    "malformed": [
+      {
+        "id": "truncated-json",
+        "note": "Unterminated object: a real JSON parser must reject it.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"# Neutral\\n\\nSynthetic note body.\"}\n",
+        "expect_defect_code": "json.parse-error"
+      },
+      {
+        "id": "trailing-comma",
+        "note": "Trailing comma is invalid JSON even though many editors accept it.",
+        "text": "{\n  \"nodes\": [],\n  \"edges\": [],\n}\n",
+        "expect_defect_code": "json.parse-error"
+      },
+      {
+        "id": "top-level-array",
+        "note": "The canvas document must be an object, not an array.",
+        "text": "[]\n",
+        "expect_defect_code": "document.not-object"
+      },
+      {
+        "id": "nodes-not-array",
+        "note": "nodes must be an array.",
+        "text": "{\n  \"nodes\": {},\n  \"edges\": []\n}\n",
+        "expect_defect_code": "nodes.not-array"
+      },
+      {
+        "id": "node-missing-height",
+        "note": "Every node requires id, type, x, y, width and height.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"text\": \"body\"}\n  ]\n}\n",
+        "expect_defect_code": "node.missing-field"
+      },
+      {
+        "id": "node-unknown-type",
+        "note": "type must be text, file, link or group.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"sticky\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200}\n  ]\n}\n",
+        "expect_defect_code": "node.unknown-type"
+      },
+      {
+        "id": "text-node-without-text",
+        "note": "A text node requires its type-specific text field.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200}\n  ]\n}\n",
+        "expect_defect_code": "node.missing-type-field"
+      },
+      {
+        "id": "geometry-as-string",
+        "note": "Geometry is integer pixels; a quoted number is not an integer.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": \"0\", \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"body\"}\n  ]\n}\n",
+        "expect_defect_code": "node.geometry-not-integer"
+      },
+      {
+        "id": "duplicate-node-id",
+        "note": "Ids must be unique across nodes and edges.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"a\"},\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 600, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"b\"}\n  ]\n}\n",
+        "expect_defect_code": "document.duplicate-id"
+      },
+      {
+        "id": "edge-dangling-reference",
+        "note": "fromNode/toNode must resolve to an existing node id.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"a\"}\n  ],\n  \"edges\": [\n    {\"id\": \"0123456789abcdef\", \"fromNode\": \"6f0ad84f44ce9c17\", \"toNode\": \"ffffffffffffffff\"}\n  ]\n}\n",
+        "expect_defect_code": "edge.dangling-reference"
+      },
+      {
+        "id": "edge-missing-endpoint",
+        "note": "An edge requires id, fromNode and toNode.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"a\"}\n  ],\n  \"edges\": [\n    {\"id\": \"0123456789abcdef\", \"fromNode\": \"6f0ad84f44ce9c17\"}\n  ]\n}\n",
+        "expect_defect_code": "edge.missing-field"
+      },
+      {
+        "id": "edge-invalid-side",
+        "note": "fromSide/toSide accept only top, right, bottom or left.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"a\"},\n    {\"id\": \"a1b2c3d4e5f67890\", \"type\": \"text\", \"x\": 600, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"b\"}\n  ],\n  \"edges\": [\n    {\"id\": \"0123456789abcdef\", \"fromNode\": \"6f0ad84f44ce9c17\", \"fromSide\": \"middle\", \"toNode\": \"a1b2c3d4e5f67890\"}\n  ]\n}\n",
+        "expect_defect_code": "edge.invalid-side"
+      },
+      {
+        "id": "invalid-preset-color",
+        "note": "canvasColor is preset \"1\"-\"6\" or a hex string.",
+        "text": "{\n  \"nodes\": [\n    {\"id\": \"6f0ad84f44ce9c17\", \"type\": \"text\", \"x\": 0, \"y\": 0, \"width\": 400, \"height\": 200, \"text\": \"a\", \"color\": \"7\"}\n  ]\n}\n",
+        "expect_defect_code": "color.invalid"
+      }
+    ]
+  },
+  "bases": {
+    "valid": [
+      {
+        "id": "minimal-table-view",
+        "note": "Only `views` is present; every top-level key is optional.",
+        "text": "views:\n  - type: table\n    name: All notes\n"
+      },
+      {
+        "id": "filters-string-form",
+        "note": "`filters` may be a bare expression string at either level.",
+        "text": "filters: 'status != \"done\"'\nviews:\n  - type: cards\n    name: Open work\n    filters: 'file.hasTag(\"project\")'\n"
+      },
+      {
+        "id": "nested-boolean-filters",
+        "note": "A filter node carries exactly one of and/or/not, whose value is a list.",
+        "text": "filters:\n  and:\n    - 'status != \"archived\"'\n    - or:\n        - 'file.hasTag(\"project\")'\n        - 'file.hasTag(\"area\")'\n    - not:\n        - 'file.hasTag(\"template\")'\nviews:\n  - type: list\n    name: Active\n"
+      },
+      {
+        "id": "full-document",
+        "note": "All five documented top-level keys, plus view-level groupBy/order/limit/summaries.",
+        "text": "filters: 'file.hasTag(\"project\")'\nformulas:\n  days_open: '(now() - file.ctime).days'\nproperties:\n  status:\n    displayName: Status\nsummaries:\n  total_open: 'count()'\nviews:\n  - type: table\n    name: Projects\n    limit: 50\n    order:\n      - file.name\n      - status\n    groupBy:\n      property: status\n      direction: ASC\n    summaries:\n      days_open: total_open\n  - type: map\n    name: Field sites\n"
+      }
+    ],
+    "malformed": [
+      {
+        "id": "unterminated-quote",
+        "note": "Mismatched quoting: a real YAML parser must reject it.",
+        "text": "views:\n  - type: table\n    name: \"All notes\n",
+        "expect_defect_code": "yaml.parse-error"
+      },
+      {
+        "id": "unquoted-colon-in-expression",
+        "note": "An unquoted expression containing `: ` is parsed as a nested mapping key.",
+        "text": "filters: status: done\n",
+        "expect_defect_code": "yaml.parse-error"
+      },
+      {
+        "id": "tab-indentation",
+        "note": "YAML forbids tabs as indentation.",
+        "text": "views:\n\t- type: table\n\t  name: All notes\n",
+        "expect_defect_code": "yaml.parse-error"
+      },
+      {
+        "id": "duplicate-top-level-key",
+        "note": "A duplicated mapping key silently drops the first block under a lenient loader.",
+        "text": "views:\n  - type: table\n    name: A\nviews:\n  - type: cards\n    name: B\n",
+        "expect_defect_code": "yaml.duplicate-key"
+      },
+      {
+        "id": "document-not-mapping",
+        "note": "A .base document must be a mapping.",
+        "text": "- type: table\n  name: All notes\n",
+        "expect_defect_code": "document.not-mapping"
+      },
+      {
+        "id": "unknown-top-level-key",
+        "note": "`view` is not one of filters/formulas/properties/summaries/views.",
+        "text": "view:\n  - type: table\n    name: All notes\n",
+        "expect_defect_code": "document.unknown-key"
+      },
+      {
+        "id": "views-not-list",
+        "note": "`views` must be a list of view entries.",
+        "text": "views:\n  type: table\n  name: All notes\n",
+        "expect_defect_code": "views.not-list"
+      },
+      {
+        "id": "view-missing-name",
+        "note": "Every view requires both type and name.",
+        "text": "views:\n  - type: table\n",
+        "expect_defect_code": "view.missing-field"
+      },
+      {
+        "id": "view-missing-type",
+        "note": "Every view requires both type and name.",
+        "text": "views:\n  - name: All notes\n",
+        "expect_defect_code": "view.missing-field"
+      },
+      {
+        "id": "view-type-not-a-string",
+        "note": "The view type is an open string, but it must be a string. Plugins register their own layouts, so a closed set is not asserted.",
+        "text": "views:\n  - type: 3\n    name: All notes\n",
+        "expect_defect_code": "view.type-not-string"
+      },
+      {
+        "id": "filters-two-branch-keys",
+        "note": "A filter node carries exactly one of and/or/not.",
+        "text": "views:\n  - type: table\n    name: All notes\n    filters:\n      and:\n        - 'a == 1'\n      or:\n        - 'b == 2'\n",
+        "expect_defect_code": "filters.not-exactly-one-key"
+      },
+      {
+        "id": "filters-branch-not-list",
+        "note": "The value of and/or/not must be a list of filters.",
+        "text": "filters:\n  and: 'status != \"done\"'\n",
+        "expect_defect_code": "filters.branch-not-list"
+      },
+      {
+        "id": "filters-unknown-branch-key",
+        "note": "Only and/or/not are legal filter branch keys.",
+        "text": "filters:\n  xor:\n    - 'a == 1'\n",
+        "expect_defect_code": "filters.not-exactly-one-key"
+      },
+      {
+        "id": "group-by-snake-case",
+        "note": "The documented spelling is camelCase groupBy, not group_by.",
+        "text": "views:\n  - type: table\n    name: All notes\n    group_by:\n      property: status\n",
+        "expect_defect_code": "view.unknown-key"
+      },
+      {
+        "id": "group-by-bad-direction",
+        "note": "groupBy.direction accepts ASC or DESC.",
+        "text": "views:\n  - type: table\n    name: All notes\n    groupBy:\n      property: status\n      direction: DESCENDING\n",
+        "expect_defect_code": "groupBy.invalid-direction"
+      },
+      {
+        "id": "group-by-missing-property",
+        "note": "groupBy requires the property it groups on.",
+        "text": "views:\n  - type: table\n    name: All notes\n    groupBy:\n      direction: ASC\n",
+        "expect_defect_code": "groupBy.missing-property"
+      },
+      {
+        "id": "order-not-list",
+        "note": "`order` is a list of property strings.",
+        "text": "views:\n  - type: table\n    name: All notes\n    order: file.name\n",
+        "expect_defect_code": "view.order-not-list"
+      },
+      {
+        "id": "limit-not-integer",
+        "note": "`limit` is an integer row cap.",
+        "text": "views:\n  - type: table\n    name: All notes\n    limit: \"50\"\n",
+        "expect_defect_code": "view.limit-not-integer"
+      }
+    ]
+  },
+  "clipper": {
+    "valid": [
+      {
+        "id": "create-template",
+        "note": "Non-daily behavior, so noteNameFormat and path are both required and present.",
+        "text": "{\n  \"schemaVersion\": \"0.1.0\",\n  \"name\": \"Synthetic Article\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": [\n    {\n      \"name\": \"title\",\n      \"value\": \"{{title}}\",\n      \"type\": \"text\"\n    },\n    {\n      \"name\": \"source\",\n      \"value\": \"{{url}}\",\n      \"type\": \"text\"\n    },\n    {\n      \"name\": \"clipped\",\n      \"value\": \"{{date}}\",\n      \"type\": \"date\"\n    },\n    {\n      \"name\": \"tags\",\n      \"value\": \"clippings\",\n      \"type\": \"multitext\"\n    },\n    {\n      \"name\": \"starred\",\n      \"value\": \"false\",\n      \"type\": \"checkbox\"\n    }\n  ],\n  \"triggers\": [\n    \"https://example.org/articles/\"\n  ],\n  \"context\": \"article\"\n}\n"
+      },
+      {
+        "id": "append-daily-without-path",
+        "note": "Daily-note behaviors legitimately omit noteNameFormat and path.",
+        "text": "{\n  \"schemaVersion\": \"0.1.0\",\n  \"name\": \"Synthetic Daily Capture\",\n  \"behavior\": \"append-daily\",\n  \"noteContentFormat\": \"- {{title}} ({{url}})\",\n  \"properties\": []\n}\n"
+      }
+    ],
+    "accepted_but_suspect": [
+      {
+        "id": "missing-schema-version",
+        "note": "The import validator never inspects schemaVersion, so its absence still imports.",
+        "text": "{\n  \"name\": \"No Schema Version\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": []\n}\n"
+      },
+      {
+        "id": "unknown-behavior-string",
+        "note": "The validator is behavior-sensitive only for the daily branch; an unknown behavior imports.",
+        "text": "{\n  \"schemaVersion\": \"0.1.0\",\n  \"name\": \"Unknown Behavior\",\n  \"behavior\": \"archive\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": []\n}\n"
+      },
+      {
+        "id": "empty-triggers-list",
+        "note": "An empty triggers list is optional data, not a validation failure.",
+        "text": "{\n  \"schemaVersion\": \"0.1.0\",\n  \"name\": \"No Triggers\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": [],\n  \"triggers\": []\n}\n"
+      }
+    ],
+    "malformed": [
+      {
+        "id": "not-json",
+        "note": "A truncated export is not JSON at all.",
+        "text": "{\n  \"name\": \"Broken\",\n  \"behavior\": \"create\"\n",
+        "expect_defect_code": "json.parse-error"
+      },
+      {
+        "id": "top-level-array",
+        "note": "A template export is a single object.",
+        "text": "[]\n",
+        "expect_defect_code": "document.not-object"
+      },
+      {
+        "id": "missing-note-content-format",
+        "note": "noteContentFormat is required by the import validator.",
+        "text": "{\n  \"name\": \"No Body\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"properties\": []\n}\n",
+        "expect_defect_code": "template.missing-field"
+      },
+      {
+        "id": "missing-name",
+        "note": "name is required by the import validator.",
+        "text": "{\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": []\n}\n",
+        "expect_defect_code": "template.missing-field"
+      },
+      {
+        "id": "non-daily-missing-path",
+        "note": "A non-daily behavior requires path and noteNameFormat.",
+        "text": "{\n  \"name\": \"No Path\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": []\n}\n",
+        "expect_defect_code": "template.missing-destination"
+      },
+      {
+        "id": "properties-as-object",
+        "note": "properties must be an array.",
+        "text": "{\n  \"name\": \"Object Properties\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": {\n    \"title\": \"{{title}}\"\n  }\n}\n",
+        "expect_defect_code": "properties.not-array"
+      },
+      {
+        "id": "property-missing-value",
+        "note": "Each property entry needs name and value.",
+        "text": "{\n  \"name\": \"Valueless\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": [\n    {\n      \"name\": \"title\",\n      \"type\": \"text\"\n    }\n  ]\n}\n",
+        "expect_defect_code": "property.missing-field"
+      },
+      {
+        "id": "property-invalid-type",
+        "note": "An out-of-enum property type is the validator's one enumerated rejection.",
+        "text": "{\n  \"name\": \"Bad Type\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": [\n    {\n      \"name\": \"tags\",\n      \"value\": \"clippings\",\n      \"type\": \"tags\"\n    }\n  ]\n}\n",
+        "expect_defect_code": "property.invalid-type"
+      },
+      {
+        "id": "context-not-string",
+        "note": "context must be a string when present.",
+        "text": "{\n  \"name\": \"Numeric Context\",\n  \"behavior\": \"create\",\n  \"noteNameFormat\": \"{{title}}\",\n  \"path\": \"Clippings\",\n  \"noteContentFormat\": \"{{content}}\",\n  \"properties\": [],\n  \"context\": 7\n}\n",
+        "expect_defect_code": "template.context-not-string"
+      }
+    ]
+  },
+  "doctor": {
+    "evidence_schema": "obsidian-doctor/evidence@1",
+    "bundles": [
+      {
+        "id": "optional-channels-absent",
+        "note": "Only the runtime channel is supplied: every optional channel must report not_applicable rather than being invented.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-001",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1",
+            "cli_commands_confirmed": [
+              "dev:errors"
+            ]
+          }
+        },
+        "expect": {
+          "check_status": {
+            "runtime-unavailable": "ruled_out",
+            "plugin-unavailable": "not_applicable",
+            "templater-reference-error": "not_applicable",
+            "fixture-not-sanitized": "ruled_out"
+          }
+        }
+      },
+      {
+        "id": "plugin-channel-present-but-unobserved",
+        "note": "The plugin channel exists but its state was never observed: the check must stay unknown instead of assuming availability.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-002",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "plugin": {
+            "id": "templater-obsidian"
+          }
+        },
+        "expect": {
+          "check_status": {
+            "plugin-unavailable": "unknown"
+          },
+          "expect_indeterminate": true
+        }
+      },
+      {
+        "id": "plugin-channel-observed-available",
+        "note": "Install and enable state explicitly observed as true.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-003",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": true,
+            "manifest": {
+              "id": "templater-obsidian",
+              "version": "2.14.1",
+              "minAppVersion": "1.9.0"
+            }
+          }
+        },
+        "expect": {
+          "check_status": {
+            "plugin-unavailable": "ruled_out",
+            "plugin-version-mismatch": "ruled_out"
+          }
+        }
+      },
+      {
+        "id": "plugin-installed-but-disabled",
+        "note": "A disabled plugin explains every downstream symptom.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-004",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": false
+          }
+        },
+        "expect": {
+          "check_status": {
+            "plugin-unavailable": "confirmed"
+          }
+        }
+      },
+      {
+        "id": "runtime-reported-unavailable",
+        "note": "The app is reported as not running, which blocks live diagnosis.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-005",
+          "runtime": {
+            "app_running": false,
+            "cli_available": false
+          }
+        },
+        "expect": {
+          "check_status": {
+            "runtime-unavailable": "confirmed"
+          }
+        }
+      },
+      {
+        "id": "app-older-than-min-app-version",
+        "note": "The running app is older than the manifest minimum.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-006",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.8.9"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": true,
+            "manifest": {
+              "id": "templater-obsidian",
+              "version": "2.14.1",
+              "minAppVersion": "1.9.0"
+            }
+          }
+        },
+        "expect": {
+          "check_status": {
+            "plugin-version-mismatch": "confirmed"
+          }
+        }
+      },
+      {
+        "id": "app-version-not-plain-numeric",
+        "note": "A non-numeric app version cannot be compared, so compatibility stays unknown.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-007",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1-insider"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": true,
+            "manifest": {
+              "id": "templater-obsidian",
+              "version": "2.14.1",
+              "minAppVersion": "1.9.0"
+            }
+          }
+        },
+        "expect": {
+          "check_status": {
+            "plugin-version-mismatch": "unknown"
+          },
+          "expect_indeterminate": true
+        }
+      },
+      {
+        "id": "templater-unbound-identifier",
+        "note": "A bare identifier with no binding, corroborated by a console ReferenceError.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-008",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": true
+          },
+          "template": {
+            "path": "Templates/Synthetic.md",
+            "source": "# <% projectName %>\n"
+          },
+          "console_errors": [
+            "ReferenceError: projectName is not defined"
+          ]
+        },
+        "expect": {
+          "check_status": {
+            "templater-reference-error": "confirmed"
+          }
+        }
+      },
+      {
+        "id": "template-named-without-source",
+        "note": "A template was named but its source was withheld: bindings cannot be checked.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-009",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "template": {
+            "path": "Templates/Synthetic.md"
+          }
+        },
+        "expect": {
+          "check_status": {
+            "templater-reference-error": "unknown"
+          },
+          "expect_indeterminate": true
+        }
+      },
+      {
+        "id": "unsanitized-host-and-secret-values",
+        "note": "A bundle carrying a file:// path and a secret-named key must be flagged by location only, never echoed.",
+        "bundle": {
+          "schema": "obsidian-doctor/evidence@1",
+          "case_id": "neutral-010",
+          "runtime": {
+            "app_running": true,
+            "cli_available": true,
+            "app_version": "1.9.1"
+          },
+          "plugin": {
+            "id": "templater-obsidian",
+            "installed": true,
+            "enabled": true,
+            "api_token": "PLACEHOLDER-NOT-A-REAL-VALUE"
+          },
+          "template": {
+            "path": "file:///example/synthetic/Template.md",
+            "source": "# <% tp.file.title %>\n"
+          }
+        },
+        "expect": {
+          "check_status": {
+            "fixture-not-sanitized": "confirmed"
+          },
+          "must_not_echo": [
+            "file:///example/synthetic/Template.md",
+            "PLACEHOLDER-NOT-A-REAL-VALUE"
+          ]
+        }
+      }
+    ],
+    "unloadable": [
+      {
+        "id": "truncated-json",
+        "note": "Not parseable as JSON.",
+        "text": "{\n  \"schema\": \"obsidian-doctor/evidence@1\"\n"
+      },
+      {
+        "id": "empty-file",
+        "note": "An empty file is not an evidence bundle.",
+        "text": ""
+      },
+      {
+        "id": "top-level-array",
+        "note": "The bundle must be a JSON object.",
+        "text": "[]\n"
+      },
+      {
+        "id": "wrong-schema",
+        "note": "An unrecognised evidence schema is refused, not guessed.",
+        "text": "{\n  \"schema\": \"obsidian-doctor/evidence@99\",\n  \"case_id\": \"x\"\n}\n"
+      },
+      {
+        "id": "schema-absent",
+        "note": "A bundle with no schema key is refused.",
+        "text": "{\n  \"case_id\": \"x\"\n}\n"
+      }
+    ]
+  }
+}

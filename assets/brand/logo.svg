@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"
+     role="img" aria-labelledby="osLogoTitle osLogoDesc">
+  <title id="osLogoTitle">Obsidian Skills</title>
+  <desc id="osLogoDesc">Nine equally sized diamond facets arranged in a three-by-three lattice on a dark
+    violet panel. The facets are the same shape and size and none is central or larger, standing for nine
+    independent Agent Skills packages with no root skill and no shared runtime.</desc>
+
+  <defs>
+    <linearGradient id="osLogoPanel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1533"/>
+      <stop offset="0.55" stop-color="#120e22"/>
+      <stop offset="1" stop-color="#09070f"/>
+    </linearGradient>
+    <!-- Resolved in the rotated lattice's own user space, so the sweep stays centred on the mark. -->
+    <linearGradient id="osLogoFacet" gradientUnits="userSpaceOnUse" x1="-88" y1="-94" x2="88" y2="94">
+      <stop offset="0" stop-color="#c8b8ff"/>
+      <stop offset="0.40" stop-color="#8b5cf6"/>
+      <stop offset="0.76" stop-color="#5b8def"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+    <radialGradient id="osLogoGlow" cx="0.30" cy="0.20" r="0.88">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Self-contained panel: the mark stays legible on light and on dark page backgrounds. -->
+  <rect x="2" y="2" width="252" height="252" rx="56" fill="url(#osLogoPanel)"/>
+  <rect x="2" y="2" width="252" height="252" rx="56" fill="url(#osLogoGlow)"/>
+
+  <!-- Nine facets: one square grid rotated 45 degrees. Identical geometry per cell, by design. -->
+  <g transform="translate(128 128) rotate(45)" fill="url(#osLogoFacet)">
+    <rect x="-77" y="-77" width="46" height="46" rx="7"/>
+    <rect x="-23" y="-77" width="46" height="46" rx="7"/>
+    <rect x="31"  y="-77" width="46" height="46" rx="7"/>
+    <rect x="-77" y="-23" width="46" height="46" rx="7"/>
+    <rect x="-23" y="-23" width="46" height="46" rx="7"/>
+    <rect x="31"  y="-23" width="46" height="46" rx="7"/>
+    <rect x="-77" y="31"  width="46" height="46" rx="7"/>
+    <rect x="-23" y="31"  width="46" height="46" rx="7"/>
+    <rect x="31"  y="31"  width="46" height="46" rx="7"/>
+  </g>
+
+  <!-- Violet hairline keeps the silhouette readable against a dark page. -->
+  <rect x="2.75" y="2.75" width="250.5" height="250.5" rx="55.25"
+        fill="none" stroke="#a78bfa" stroke-opacity="0.34" stroke-width="1.5"/>
+</svg>

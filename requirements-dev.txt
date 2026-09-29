@@ -1,0 +1,27 @@
+# Development/test dependencies for the candidate test suite.
+#
+# Runtime skills ship no Python dependency. Only the test suite needs a YAML
+# parser; everything else in tests/ is Python standard library on purpose:
+# json, unittest, subprocess, hashlib, tempfile, pathlib, re, importlib.
+#
+# Python itself: 3.8 or newer, and not only for the tests. `./install.sh copy`
+# runs its filesystem work through scripts/install_packages.py, which anchors
+# every write to a directory handle (os.open(..., dir_fd=), O_NOFOLLOW,
+# O_DIRECTORY) because POSIX sh cannot hold one. That file is part of this
+# checkout and imports nothing outside the standard library, so it is not a pip
+# dependency and nothing below installs it. Without python3 on PATH, `copy`
+# refuses; there is no unanchored fallback. The rest of install.sh -- routes,
+# skills, native, --help -- is plain POSIX sh and needs no interpreter.
+#
+# Install:   python3 -m pip install -r requirements-dev.txt
+# Run all:   python3 -m unittest discover -s tests -t . -v
+# Run one:   python3 -m unittest tests.test_install -v
+#
+# The `-t .` form needs tests/ to be an importable package (tests/__init__.py).
+# Without it, use `python3 -m unittest discover -s tests -v`, which makes tests/
+# the top-level directory instead.
+#
+# The suite writes only inside throwaway temporary directories and runs
+# install.sh with HOME and TMPDIR redirected there. It never reads or writes a
+# real vault, profile, skill directory, or network resource.
+PyYAML==6.0.3

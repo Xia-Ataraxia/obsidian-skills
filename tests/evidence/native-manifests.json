@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "kind": "package-consumer-test-report",
+  "checks": [
+    {"command": ["claude", "plugin", "validate", ".", "--strict"], "exitCode": 0, "observed": "Validating marketplace manifest; Validation passed"},
+    {"command": ["claude", "plugin", "validate", ".claude-plugin/plugin.json", "--strict"], "exitCode": 0, "observed": "Validating plugin manifest; Validation passed"}
+  ],
+  "scope": "Actual local schema validation run by the leader, not runtime installation or discovery",
+  "limitations": ["CLI version was not recorded with these runs", "No marketplace registration", "No plugin installation", "No fresh-load evidence"]
+}

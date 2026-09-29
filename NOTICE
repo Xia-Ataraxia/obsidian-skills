@@ -1,0 +1,178 @@
+obsidian-skills — third-party notices
+=====================================
+
+This repository is distributed under the MIT License in `LICENSE`. Part of it is
+derived from MIT-licensed upstream work; the rest is authored here. This file
+records which is which, file by file, so the notice travels with the copies that
+require it.
+
+The machine-readable version of the same record — with the SHA-256 digest of
+every source file, the responsibility units inside it, and the feature that owns
+each adopted behaviour — is `source-inventory.json`, checked by
+`scripts/audit_inventory.py`. Narrative lineage is in `PROVENANCE.md`.
+
+
+1. MIT-licensed upstream: obsidian-skills
+-----------------------------------------
+
+Upstream project: obsidian-skills — https://github.com/kepano/obsidian-skills
+Revision imported: 3ccff5338ea700537839b21900aa5358a0402c98
+Upstream licence file at that revision: `LICENSE` (MIT), SHA-256
+64c64d48361edfe8610016441bf593256ea9b67f133b00f47c55aa29ee878567
+
+The following notice covers every file listed in section 1.1. It is reproduced
+verbatim from that upstream `LICENSE`, and its copyright line is also carried in
+this repository's root `LICENSE` beside this repository's own copyright line:
+
+    MIT License
+
+    Copyright (c) 2026 Steph Ango (@kepano)
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+
+
+1.1 Files in this repository derived from that upstream
+------------------------------------------------------
+
+Each line is `this repository` <- `upstream path at 3ccff533`. Every one of
+these files was imported and then modified; the modifications are listed in the
+owning package's `CHANGELOG.md`. Each of these four packages also carries a copy
+of the MIT text in `skills/<package>/LICENSE` so the notice stays with the
+package when a single package is installed on its own.
+
+    skills/obsidian-markdown/SKILL.md                      <- skills/obsidian-markdown/SKILL.md
+    skills/obsidian-markdown/references/CALLOUTS.md        <- skills/obsidian-markdown/references/CALLOUTS.md
+    skills/obsidian-markdown/references/EMBEDS.md          <- skills/obsidian-markdown/references/EMBEDS.md
+    skills/obsidian-markdown/references/PROPERTIES.md      <- skills/obsidian-markdown/references/PROPERTIES.md
+    skills/obsidian-bases/SKILL.md                         <- skills/obsidian-bases/SKILL.md
+    skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md <- skills/obsidian-bases/references/FUNCTIONS_REFERENCE.md
+    skills/obsidian-canvas/SKILL.md                        <- skills/json-canvas/SKILL.md
+    skills/obsidian-canvas/references/EXAMPLES.md          <- skills/json-canvas/references/EXAMPLES.md
+    skills/obsidian-cli/SKILL.md                           <- skills/obsidian-cli/SKILL.md
+
+One further upstream section is owned elsewhere in this repository: the Mermaid
+diagram-block section of the upstream Markdown skill is answered by
+`skills/obsidian-mermaid/`. That package's own rules were re-derived from public
+Mermaid and Obsidian documentation rather than copied, so it is not listed above;
+the imported section itself survives inside `skills/obsidian-markdown/SKILL.md`
+and is covered by the notice in section 1.
+
+Not imported from that upstream, and no rights exercised over them here: its
+`skills/defuddle/` and `skills/knap/` packages.
+
+
+2. Packages authored in this repository
+---------------------------------------
+
+The following packages contain no upstream-derived file. They are original work
+covered by this repository's `LICENSE`, and no part of section 1's notice applies
+to them:
+
+    skills/obsidian-mermaid/
+    skills/obsidian-visualize/
+    skills/obsidian-clipper/
+    skills/obsidian-doctor/
+    skills/obsidian-sync/
+
+Each of these also ships `skills/<package>/LICENSE` — this repository's MIT
+licence, not a third-party notice — so an independently installed package still
+carries its own terms and attribution.
+
+The repository-level files (`install.sh`, `scripts/`, `tests/`, `docs/`,
+`AGENTS.md`, `README.md`, `README.ko.md`, the plugin and marketplace manifests,
+and this file) are likewise authored here.
+
+
+2.1 Public sources consulted for facts, with nothing copied
+-----------------------------------------------------------
+
+The packages in section 2 ground their format, command, and schema statements in
+public documentation and, where documentation was insufficient, in public source
+code. Those readings yielded facts — a keyword, a field name, an enumeration, a
+version gate — not expression. No file from any project below is vendored,
+reproduced, or redistributed here, so none of them imposes a notice obligation on
+this repository and none of them endorses it. Exact URLs, and where applicable
+exact revisions, are recorded in each package's `CHANGELOG.md` and attribution
+section.
+
+    Obsidian Help and Obsidian developer documentation   all nine packages
+    Mermaid documentation, and the mermaid-js/mermaid
+      diagram detectors on its development branch        skills/obsidian-mermaid
+    JSON Canvas 1.0 specification                        skills/obsidian-canvas,
+                                                         skills/obsidian-visualize
+    zsviczian/obsidian-excalidraw-plugin, including its
+      published automation type surface                   skills/obsidian-visualize
+    obsidianmd/obsidian-clipper (MIT) at
+      6d56d618b00bd970aa738d6a7a61edee27783e81, and its
+      obsidianmd/knap template engine                     skills/obsidian-clipper
+    the obsidian-headless npm package and its observed
+      command surface                                     skills/obsidian-sync
+
+"Obsidian" and the names above identify third-party products. No vendor logo,
+icon, UI asset, or trademark is included in this repository, and no affiliation
+is claimed.
+
+
+3. Requirements evidence that grants no rights
+----------------------------------------------
+
+A second source was read while building this repository: the `craft-skills`
+repository (https://github.com/Xia-Ataraxia/craft-skills) at revision
+836eb8778134d68f3ea675cd30ee5f9ae692f9e3, read-only, as behavioural and
+requirements evidence for what the nine features must do.
+
+That revision contains no `LICENSE`, `COPYING`, or `NOTICE` file. Its only
+licence statement is the string `MIT` in two plugin manifests, and its own README
+states that MIT is declared in the plugin manifest with no licence file present.
+A declaration without the copyright line and permission text is not a notice this
+repository can honour or pass on. Accordingly:
+
+- No code, prose, table, checklist, example, asset, or corpus string from that
+  source is copied into or redistributed by this repository.
+- Every behaviour adopted from it was re-expressed from the underlying
+  requirement and grounded in public vendor documentation, which each package
+  cites in its own `CHANGELOG.md`.
+- `source-inventory.json` records all 37 inventoried files of that source with
+  their digests and marks every one of them `evidence-only`, which
+  `scripts/audit_inventory.py` enforces: a unit may not be marked `imported`
+  unless its source file carries a licence that permits copying.
+
+That source's own changelog claims a further third-party lineage for material
+that predates it, also without a licence notice. Since no expression from it is
+reproduced here, no rights over that third-party material are claimed, granted,
+or implied by this repository.
+
+
+4. Assets
+---------
+
+`assets/brand/logo.svg`, `assets/brand/hero.svg`, and `assets/demo/workflow.svg`
+are authored for this repository. `assets/asset-ledger.json` records their origin
+and terms. They embed no third-party font, icon set, or trademark, and they are
+not derived from the Obsidian application's own marks or artwork.
+
+
+5. Scope of this notice
+-----------------------
+
+This file is an attribution record. It is not a statement about deployment: this
+repository is an unpublished candidate, and nothing here installs it on a host,
+publishes it to a marketplace, or retires, replaces, or supersedes any other
+project — including either source named above, both of which remain their owners'
+to maintain. See `docs/cutover.md` for what a change of ownership would require.

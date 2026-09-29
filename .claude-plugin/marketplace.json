@@ -1,0 +1,43 @@
+{
+  "name": "obsidian-skills",
+  "version": "0.1.0",
+  "description": "Obsidian Agent Skills by Xia-Ataraxia: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is unreleased and is registered from a repository or a local path, not from a public plugin directory.",
+  "owner": {
+    "name": "Xia-Ataraxia",
+    "url": "https://github.com/Xia-Ataraxia"
+  },
+  "plugins": [
+    {
+      "name": "obsidian-skills",
+      "source": "./",
+      "displayName": "Obsidian Skills",
+      "description": "Nine self-contained Obsidian Agent Skills. Each skill is a portable SKILL.md package under skills/ with its own references and assets; the plugin is a distribution container only and ships no router, no dispatcher, and no shared runtime.",
+      "category": "knowledge-management",
+      "tags": [
+        "obsidian",
+        "markdown",
+        "bases",
+        "canvas",
+        "mermaid",
+        "vault",
+        "knowledge-management"
+      ],
+      "metadata": {
+        "releaseStatus": "unreleased",
+        "router": "none",
+        "packageCount": 9,
+        "packages": [
+          "obsidian-markdown",
+          "obsidian-bases",
+          "obsidian-canvas",
+          "obsidian-mermaid",
+          "obsidian-visualize",
+          "obsidian-cli",
+          "obsidian-clipper",
+          "obsidian-doctor",
+          "obsidian-sync"
+        ]
+      }
+    }
+  ]
+}

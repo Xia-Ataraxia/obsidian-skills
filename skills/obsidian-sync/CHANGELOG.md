@@ -26,7 +26,7 @@ Read 2026-09-29 on the acting host, read-only. No account, network, or pairing o
 - Requirements evidence came from four files of a local craft-skills checkout pinned at commit `836eb8778134d68f3ea675cd30ee5f9ae692f9e3`, opened read-only: `skills/obsidian/references/sync.md`, `sync-cli-commands.md`, `sync-daemon-operations.md`, and `sync-recovery.md`. They were used only to scope which failure modes an operator needs covered.
 - No prose, table, checklist, command block, or example was copied from those files. That checkout publishes no root license or notice file, so nothing from it is redistributed here and no rights claim about it is made. Every rule in this package was re-derived from the installed build and re-authored independently.
 - Three claims carried by that source material were contradicted by the installed build and are corrected here rather than repeated: the client configuration root is `~/.obsidian-headless` only on macOS and Windows, and follows `XDG_CONFIG_HOME` on Linux; `sync.log` is append-only with no rotation or size cap, not a rolling log; and `--file-types` governs attachments while `.md`, `.canvas`, and `.base` are always synced.
-- All files in this package are original work for this repository, covered by the root [`LICENSE`](../../LICENSE). No upstream MIT notice applies, because no upstream-derived file is included.
+- All files in this package are original work for this repository, covered by its bundled [`LICENSE`](LICENSE). No upstream MIT notice applies, because no upstream-derived file is included.
 - Every example is synthetic and public. No credentials, account identifiers, vault identifiers, workstation paths, private notes, or raw logs appear in any file.
 
 ### Limitations
