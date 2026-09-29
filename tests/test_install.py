@@ -1162,11 +1162,35 @@ class CopierAnchoringTest(unittest.TestCase):
         root_fd = self.open_dir(self.anchor)
         source_fd = self.open_dir(self.make_source())
         with patch.object(self.copier, "copy_tree", side_effect=self.copier.Interrupted(15)):
-            with contextlib.redirect_stdout(io.StringIO()):
+            with contextlib.redirect_stdout(io.StringIO()) as output:
                 with self.assertRaises(self.copier.Interrupted):
                     self.copier.install_one(
                         root_fd, "pkg", source_fd, os.fstat(source_fd), str(self.anchor / "pkg"))
         self.assertFalse((self.anchor / "pkg").exists())
+        self.assertIn("private staging rolled back", output.getvalue())
+
+    def test_interrupted_copy_quarantines_staging_when_cleanup_is_incomplete(self):
+        from unittest.mock import patch
+        root_fd = self.open_dir(self.anchor)
+        source_fd = self.open_dir(self.make_source())
+        copy = self.copier.copy_tree
+
+        def copy_then_interrupt(*args):
+            copy(*args)
+            raise self.copier.Interrupted(15)
+
+        with patch.object(self.copier, "copy_tree", side_effect=copy_then_interrupt):
+            with patch.object(self.copier, "rollback", return_value=False):
+                with contextlib.redirect_stdout(io.StringIO()) as output:
+                    with self.assertRaises(self.copier.Interrupted):
+                        self.copier.install_one(
+                            root_fd, "pkg", source_fd, os.fstat(source_fd), str(self.anchor / "pkg"))
+        self.assertFalse((self.anchor / "pkg").exists())
+        staging = list(self.anchor.iterdir())
+        self.assertEqual(len(staging), 1)
+        self.assertFalse((staging[0] / "SKILL.md").exists())
+        self.assertTrue((staging[0] / "SKILL.unpublished").exists())
+        self.assertIn("private staging retained", output.getvalue())
 
     def test_incomplete_cleanup_names_the_staging_it_actually_retained(self):
         """Cleanup that cannot finish leaves staging, so staging is what is named.

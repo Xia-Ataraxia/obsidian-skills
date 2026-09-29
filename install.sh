@@ -41,10 +41,11 @@
 #
 # Exit codes: 0 ok · 1 refused (collision / escape / unsupported / incomplete)
 #             2 usage · 128+N interrupted by signal N. An interrupted copy never
-#             reports success and never publishes the package it was working on;
+#             reports success and never publishes a partial/unverified package;
 #             the private staging it retains is named in the report, its SKILL.md
 #             is quarantined as SKILL.unpublished, cleanup of that staging may be
-#             incomplete, and packages published earlier stay published.
+#             incomplete. Complete packages may already be published even when
+#             their installed report was interrupted; inspect destinations too.
 
 set -eu
 
@@ -243,10 +244,10 @@ require_copier() {
 #
 # The wait is deliberate. A caught signal interrupts `wait`, so INT or TERM is
 # acted on the moment it arrives: it is forwarded to the copier, which stops
-# where it is, never publishes the package it was working on, names whatever
+# where it is, never publishes partial/unverified content, names whatever
 # private staging it retains, and reports that cleanup may be incomplete; this
-# script then exits non-zero. Packages published before the signal stay
-# published. A handler that merely cleaned up and returned would let an
+# script then exits non-zero. Complete packages may be published even without
+# an installed report. A handler that merely cleaned up and returned would let an
 # interrupted run carry on copying and still report success.
 run_copier() {
   _c_status=0
@@ -590,11 +591,11 @@ BEHAVIOUR
     Finding one in a destination is a readback failure rather than an exclusion,
     and your checkout is never modified.
   * INT or TERM stops the run where it is and the exit status is 128 plus the
-    signal number; an interrupted copy never reports success. The package being
-    worked on is never published: the private staging that is retained is named
+    signal number; an interrupted copy never reports success. Partial/unverified
+    packages are never published. The private staging that is retained is named
     in the report and its SKILL.md is quarantined as SKILL.unpublished, and
-    cleanup of that staging may be incomplete. Packages reported as installed
-    before the signal stay published.
+    cleanup of that staging may be incomplete. Complete packages may already be
+    published even if their installed report was interrupted; inspect destinations.
   * An unknown runtime is refused. No route is inferred, and a directory import
     is never presented as a native plugin install.
   * The script never reaches the network, never runs a runtime CLI, and never
