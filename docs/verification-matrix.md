@@ -2,7 +2,7 @@
 
 What this candidate has actually been shown to do, how it was shown, and — just as important — what each result does not prove. A row is upgraded only by new evidence of the named kind. A plausible-looking run is not evidence, a passing parse is not a render, and an exit code is not a result.
 
-The machine-readable report for the application and CLI rows is tracked at [`tests/evidence/native-app.json`](../tests/evidence/native-app.json).
+The machine-readable report for the application and CLI rows is tracked at [`tests/evidence/native-app.json`](../tests/evidence/native-app.json). The publication, native canary, isolated-plugin, and Web Clipper rows come from [`tests/evidence/publication-canary.json`](../tests/evidence/publication-canary.json).
 
 ## Evidence ladder
 
@@ -20,9 +20,10 @@ The machine-readable report for the application and CLI rows is tracked at [`tes
 | Obsidian desktop app | 1.12.7, fresh isolated profile |
 | Official CLI | 1.12.7 (installer 1.12.7), explicit `vault=` targeting with an exact vault-path pre-flight |
 | Vault | isolated synthetic vault; fixtures only (`Field.md`, `Field.canvas`, `Studies.base`, `Welcome.md`, CLI fixtures) |
+| Plugins | Templater 2.19.3 and Excalidraw 2.27.3, installed in that isolated vault |
 | Host | macOS, arm64 |
 | Date | 2026-09-29 |
-| Scope | not a deployed consumer and not an agent-native installation |
+| Scope | isolated synthetic vault and fresh app profile for the rows below; a separate isolated consumer project for the native canary; a separate disposable browser profile for the Web Clipper run. No deployed consumer, no production profile, no live account. |
 
 Screenshots and automation detail stay in untracked local test evidence; no personal vault, account, or profile was used, and none is published.
 
@@ -47,6 +48,52 @@ Non-target control for every row above: `Welcome.md`, SHA-256 `d1b27bcb…39ed8f
 
 Recorded in an untracked local probe log during the same session: `obsidian version` → `1.12.7 (installer 1.12.7)`; `vault=<fixture> vault info=path` resolved the exact fixture vault; `help move|create|search|unresolved` returned the parameter surface the package documents (`file=`/`path=`, `to=`, `content=`, `format=text|json`, `total`, `counts`, `verbose`); `search query=<needle> format=json` returned `["CLI-fixture.md"]`; `unresolved format=json` returned `No unresolved links found.`
 
+## Passed — publication and public rendering
+
+Recorded in [publication-canary.json](../tests/evidence/publication-canary.json). The release is immutable and is not retagged, so every row here is pinned to that one revision.
+
+| Claim | Method | Observed | Level |
+| --- | --- | --- | --- |
+| The candidate is public at an immutable pin | tag and reachable-object inspection of the published repository | tag `v0.1.0` (prerelease) at commit `0e658b5a09ac4c789392ac634dcff8a195fa3116`, tag object `04f9dfe25157040dd08a8d14158f8a5d2bbc50ca`, tree `10dff62e017df86883d5dd4042f065760e576346`; 5 commits, 57 trees and 95 blobs reachable and scanned | published artifact identity |
+| The archive that was downloaded is that revision | SHA-256 of the downloaded release archive | `74d97b113a590d83bf082ba8c80a8f93b316da5c11cdfbca14d791c556cbb608` | materialized readback |
+| Both public articles render on the repository host | the English and the Korean article opened on the host in Chromium | both rendered; `assets/brand/hero.svg` and `assets/demo/workflow.svg` loaded with their alt text; repository-relative links resolved to paths that exist in the published commit | rendered verification |
+
+Limit: one host, one browser, one commit — nothing is claimed for another browser, another host, or any later revision. The published 0.1.0 tree predates the corrections in this file and in [install-matrix.md](install-matrix.md), and it is not rewritten to match them.
+
+## Passed — native canary: one runtime, isolated consumer project
+
+| Claim | Method | Observed | Level |
+| --- | --- | --- | --- |
+| A published package installs by native plugin identity | Claude Code marketplace add, then `claude plugin install obsidian-skills@obsidian-skills --scope project`, run in an isolated consumer project whose origin is a detached clone of the published commit above | both the marketplace add and the install returned success; `obsidian-skills@obsidian-skills` version 0.1.0 installed | native install |
+| The runtime fresh-loads the installed packages | fresh Skill tool calls in that runtime | `obsidian-skills:obsidian-cli` and `obsidian-skills:obsidian-sync` answered as fresh calls; `obsidian-skills:obsidian-canvas` answered in a separate fresh response | fresh-load discovery |
+| The loaded packages keep their evidence lines | the recorded false-success checks exercised through the installed packages | a CLI collision exiting 0 was not read as success; a missing headless configuration was not read as healthy network Sync; a dangling Canvas edge was rejected without inventing a node; parsing stayed distinct from rendering | behavior under the installed identity |
+| Unrelated content in that project survives | non-target sentinel compared after the run | sentinel unchanged | materialized readback |
+
+Limits recorded with the run: this is not a production user-profile deployment, no fresh-load is claimed for any other native runtime, and no consumer retirement is claimed. An existing session or cache entry would not have counted; each call above is a fresh load.
+
+## Passed — plugins in an isolated app profile
+
+| Claim | Method | Observed | Level |
+| --- | --- | --- | --- |
+| Templater runs and fails loudly in the app | Templater 2.19.3 loaded in an isolated synthetic vault on Obsidian 1.12.7 | a synthetic template produced `Synthetic templater result`; a deliberately broken one failed with `missingSyntheticVariable is not defined`; non-target notes unchanged | rendered verification |
+| An Excalidraw scene opens and draws | Excalidraw 2.27.3, same vault, actual plugin view plus screenshot inspection | a five-element scene rendered: *Study* and *Evidence* text boxes connected by an arrow | rendered verification |
+
+Version note: Templater 2.25.1's manifest requires app 1.13.0, so the compatible 2.19.3 was installed instead of forcing a version. Limits: a single isolated synthetic vault, one version of each plugin; no production plugin incident was reproduced and no account or plugin configuration on a real profile was changed. `obsidian-doctor` still classifies sanitized evidence — a synthetic error is not a live incident.
+
+## Passed — Web Clipper extraction; delivery not established
+
+Web Clipper 1.7.1, taken from the official Chrome release archive and installed into a separate disposable browser profile.
+
+| Claim | Method | Observed | Level |
+| --- | --- | --- | --- |
+| A failed browser attach was recovered, not reported as success | first attachment had no page target; an isolated inspection page was created and the extension loaded natively | `Extensions.loadUnpacked` succeeded, the background service worker appeared, and the actual settings UI rendered | runtime load |
+| The shipped template imports without displacing the built-in one | extension settings UI | `clipping-template.json` imported as *General clipping*; the built-in *Default* template preserved alongside it | rendered verification |
+| The extension extracts a real page | actual extension action popup on `example.org`, with *General clipping* selected | the *Example Domain* title, the source URL, and the source text were extracted into the note preview | rendered verification |
+
+**Not activated: *Add to Obsidian*.** The destination still read *Last used*, so no clip was delivered: delivery into an exact vault and a readback of the created note are unverified. That is the one open Clipper surface — extension execution, template import, and extraction are established. No user browser profile and no vault note was changed.
+
+The synthetic and public-page selector work in [clipper-selectors.json](../tests/evidence/clipper-selectors.json) stays separate: it is a DOM-selector check, and the extension evidence above is what proves execution.
+
 ## False-success hazards found while verifying
 
 These are the reasons a green-looking run can still be wrong. They are findings, not caveats bolted on afterwards.
@@ -64,22 +111,26 @@ These are the reasons a green-looking run can still be wrong. They are findings,
 | --- | --- | --- | --- |
 | Both READMEs render locally | markdown-it parse plus Chromium rendering, English and Korean | original images loaded with their alt text; no horizontal overflow at 1200 px; the Korean page and the hero banner were visually inspected | local rendering only |
 
-Rendering on a public repository host has **not** been executed. Per [cutover.md](cutover.md) step 2, the actual public README rendering, images, links, and advertised install paths are separate evidence that local rendering does not provide.
+This is the pre-publication record and is kept as history. The public-host rendering that [cutover.md](cutover.md) step 2 requires — the actual articles, images, and links on the repository host — has since been executed and is recorded above under *Passed — publication and public rendering*; local rendering never provided it.
 
-## Routes confirmed, installs not verified
+## Routes confirmed; one native install verified, four native routes unrun, two runtimes without a native route
 
-All seven runtime routes in [install-matrix.md](install-matrix.md) carry route-specific documentation or observed CLI evidence. GJC has installed CLI evidence, not a public-documentation claim. No native route has been executed: no marketplace was added, no plugin installed, and no runtime has been observed discovering, loading, or advertising these packages. `./install.sh native` states this in its closing line.
+All seven runtime rows in [install-matrix.md](install-matrix.md) carry route-specific documentation or observed CLI evidence. GJC has installed CLI evidence, not a public-documentation claim. Five rows are native routes; one of them has been executed — Claude Code, in one isolated consumer project, as recorded above. The four other native routes (Codex, GJC, Grok, Hermes) have never been run, and no runtime other than Claude Code has been observed discovering, loading, or advertising these packages. Cursor and vendor-neutral Agent Skills have no native route at all, so there is nothing native to verify for them: their route is the Agent Skills directory copy, which `tests/test_install.py` exercises in disposable roots. Copying files is not runtime discovery.
+
+`./install.sh native` prints routes and executes nothing, so its output is never install evidence; it names the one executed Claude Code route separately from the four unrun native routes, and prints the directory import for the two runtimes without a native one. The immutable 0.1.0 tree predates that wording and is not retagged.
 
 ## Not attempted — do not read any of these as supported
 
 | Area | State | Consequence |
 | --- | --- | --- |
-| Excalidraw drawings | plugin not installed | the `.excalidraw.md` builder reaches static validation only; it proves nothing about rendering |
-| Web Clipper extension | extension not installed; no capture into a vault | JSON templates and browser DOM selectors were checked; extension import, filters, logic and note readback remain unverified |
-| Headless Sync network effects | no pairing, network transfer, daemon run or remote recovery | `ob` 0.0.14 rejected an empty disposable directory with exit 3; this local failure branch does not prove any remote effect |
-| Plugin/Templater diagnosis against a live failure | no plugin was installed, reloaded, or broken on purpose | `obsidian-doctor` classifies sanitized evidence fixtures; it has not been run against a real incident |
-| Agent-native install and discovery | no runtime install, load, or advertisement | every native route is confirmed, not verified |
-| Publication and deployed cutover | this candidate has not been published; no consumer pointer moved | remote availability is unverified; public rendering, canary, retirement and deployed recovery evidence do not exist |
+| Excalidraw beyond one scene | one five-element scene rendered in the plugin view; no other scene, version, or vault | the builder is proven for that case only; scale, other scene shapes and other plugin versions stay unverified |
+| Web Clipper delivery into a vault | *Add to Obsidian* deliberately not activated while the destination read *Last used* | extraction is proven above; clip delivery, the destination decision and the created-note readback are unverified |
+| Headless Sync network effects | no account pairing, remote-vault selection, network transfer, daemon run or remote recovery | `ob` 0.0.14 rejected an empty disposable directory with exit 3; this local failure branch does not prove any remote effect, and a live account has never been used |
+| Plugin/Templater diagnosis against a production incident | Templater 2.19.3 produced a real success and a real error in an isolated synthetic vault; no production profile was involved | `obsidian-doctor` classifies sanitized evidence fixtures; a synthetic failure is not a reproduced live incident |
+| Native install on Codex, GJC, Grok and Hermes | those four native routes have never been executed | they are confirmed routes, not verified installs; no user-profile or production install exists on any runtime |
+| Native discovery for Cursor and vendor-neutral Agent Skills | neither runtime has a native route to execute; only the directory copy was exercised, in disposable roots | a copied directory is not proof that either runtime discovered, loaded, or advertised these packages |
+| Package discovery beyond three | the canary fresh-loaded `obsidian-cli`, `obsidian-sync` and `obsidian-canvas` — 3 of the 9 | the other six packages were never invoked inside a native runtime; their discovery is unverified even on Claude Code |
+| Deployed cutover | published and canaried; no consumer pointer moved, no old owner retired, no post-change caller audit | steps 5–7 of [cutover.md](cutover.md) are outstanding, and a deployed consumer change is admitted in the source-local authoring path, separately from anything in this repository |
 | Other platforms | Windows and non-macOS hosts not exercised | `install.sh` is POSIX `sh`; portability is unverified |
 
 ## Passed — local package, helper and inventory checks
@@ -88,12 +139,12 @@ All seven runtime routes in [install-matrix.md](install-matrix.md) carry route-s
 | --- | --- |
 | Package structure and isolation | `tests/test_packages.py`: nine identities, isolated resource closure, privacy and metadata checks; no root router. This is not native agent discovery. |
 | Installer behavior | `tests/test_install.py`: disposable HOME/project roots, dry-run and apply, collisions, malformed arguments, preservation and exact-config rollback simulation. This is not a deployed install or cutover. |
-| Drawing helper | `tests/test_visualize.py`: 84 tests for Unicode, deterministic IDs/geometry, malformed scenes, bindings, guarded writes and non-target preservation. No Excalidraw plugin render is claimed. |
+| Drawing helper | `tests/test_visualize.py`: 84 tests for Unicode, deterministic IDs/geometry, malformed scenes, bindings, guarded writes and non-target preservation. The suite itself claims no plugin render; the one rendered scene is the separate Excalidraw 2.27.3 row above. |
 | Diagnostic helper | `tests/test_doctor.py`: 70 subprocess tests for diagnostic evidence, malformed input, unknowns, cancellation risks and privacy; additional contracts in `tests/test_contracts.py`. Not a reproduced live plugin incident. |
 | Format semantics | `tests/test_contracts.py`: actual JSON/YAML parsing and schema checks on neutral good/bad cases and shipped examples. These do not execute Clipper's template engine or replace native app checks. |
 | Source ownership and rights | `scripts/audit_inventory.py` checked both pinned source trees: 50 files, 135 responsibility units, 95 functional single-owner units, 40 supporting units. `tests/test_inventory.py` exercises omission, duplication, rights and digest tampering. |
 | Original assets | `tests/test_assets.py` checks every SVG against its rights ledger, exact hashes/bytes, safe XML and bilingual image references. |
-| Native metadata | `claude plugin validate . --strict` and validation of `.claude-plugin/plugin.json` passed; actual invocations and observed results are in [native-manifests.json](../tests/evidence/native-manifests.json). Other native JSON manifests parsed; loading remains unverified. |
+| Native metadata | `claude plugin validate . --strict` and validation of `.claude-plugin/plugin.json` passed; actual invocations and observed results are in [native-manifests.json](../tests/evidence/native-manifests.json). The other native JSON manifests parsed only; loading is verified for Claude Code alone, in the canary above, and remains unverified everywhere else. |
 
 The integrated suite is run with `python3 -m unittest discover -s tests -t . -v`.
 Supply `OBSIDIAN_SKILLS_CRAFT_SOURCE` and `OBSIDIAN_SKILLS_UPSTREAM_SOURCE` pointing
@@ -104,7 +155,9 @@ are separate from formatting.
 Browser selector checks are recorded in [clipper-selectors.json](../tests/evidence/clipper-selectors.json):
 synthetic selectors returned expected values and class-name drift returned no match.
 The public-page selector assertion failed because the expected heading was absent;
-no capture was attempted and this is not a successful live capture claim.
+no clip was delivered in that check. It is a DOM-selector probe, not the extension
+evidence — actual extension execution and extraction are recorded in their own
+section above, and clip delivery remains unverified there too.
 The local Headless failure is recorded in [headless-local.json](../tests/evidence/headless-local.json).
 
 Optional-policy absence and unselected presence are supported by independent package

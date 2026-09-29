@@ -19,7 +19,11 @@ the interference between the exact two calls it belongs between. No test depends
 on winning a race, and none skips itself for losing one.
 
 What these tests do not claim: that a runtime discovered, loaded, or executed a
-copied package. A directory copy is a filesystem fact, not an install.
+copied package. A directory copy is a filesystem fact, not an install. The one
+native install and fresh-load that has been verified -- Claude Code, isolated
+project scope only, from a clone of the published 0.1.0 prerelease tag -- was
+performed by hand outside this suite. Every other runtime's install is
+unverified, and nothing here executes a runtime CLI to change that.
 
 Run:  python3 -m unittest discover -s tests -t . -v
 """
@@ -63,6 +67,14 @@ def declared_packages() -> list:
 
 def known_runtimes() -> list:
     return re.search(r"^KNOWN_RUNTIMES='([^']*)'", installer_source(), re.M).group(1).split()
+
+
+def release_status() -> str:
+    return re.search(r"^PKG_STATUS=(\S+)", installer_source(), re.M).group(1)
+
+
+def release_pin() -> str:
+    return re.search(r"^PKG_PIN=(\S+)", installer_source(), re.M).group(1)
 
 
 def route_kinds() -> dict:
@@ -292,6 +304,87 @@ class ReadOnlyCommandTest(InstallerHarness):
             with self.subTest(runtime=runtime):
                 self.assertIn(runtime, result.stdout)
                 self.assertIn(kind, result.stdout)
+
+    def test_routes_reports_the_prerelease_status_and_the_one_verified_install(self):
+        """The status line must not read as unreleased or as a blanket no-install."""
+        result = self.run_installer("routes")
+        self.assertEqual(result.returncode, OK, result.stderr)
+        self.assertEqual(release_status(), "prerelease")
+        self.assertIn("prerelease", result.stdout)
+        self.assertNotIn("unreleased", result.stdout)
+        self.assertIn("Claude Code only", result.stdout)
+        self.assertIn("isolated project", result.stdout)
+        self.assertIn("native installs remain unverified", result.stdout)
+        self.assertIn("Cursor and Agent Skills have no native", result.stdout)
+        self.assertIn("directory-copy behavior was tested separately", result.stdout)
+        self.assertIn("Local-source routes require a clone pinned", result.stdout)
+
+    def test_native_scopes_the_verified_install_to_claude_and_no_other_runtime(self):
+        """Only claude may report a verified install; the rest stay unverified."""
+        claude = self.run_installer("native", "--runtime", "claude")
+        self.assertEqual(claude.returncode, OK, claude.stderr)
+        self.assertIn("fresh-loaded", claude.stdout)
+        self.assertIn("isolated project scope only", claude.stdout)
+        self.assertIn("still unverified", claude.stdout)
+        self.assertNotIn("Route confirmed is not install verified", claude.stdout)
+        self.assertNotIn("No native route exists to verify", claude.stdout)
+
+        kinds = route_kinds()
+        for runtime in known_runtimes():
+            if runtime == "claude":
+                continue
+            with self.subTest(runtime=runtime):
+                result = self.run_installer("native", "--runtime", runtime)
+                self.assertEqual(result.returncode, OK, result.stderr)
+                self.assertNotIn("fresh-loaded", result.stdout)
+                if kinds[runtime] == "skill-directory":
+                    self.assertIn("No native route exists to verify", result.stdout)
+                    self.assertNotIn(
+                        "Route confirmed is not install verified", result.stdout
+                    )
+                else:
+                    self.assertIn(
+                        "Route confirmed is not install verified", result.stdout
+                    )
+                    self.assertNotIn("No native route exists to verify", result.stdout)
+
+    def test_native_without_a_plugin_route_reports_directory_copy_only(self):
+        """skill-directory runtimes have no native route to call verified at all."""
+        bare = [r for r, k in route_kinds().items() if k == "skill-directory"]
+        self.assertTrue(bare, "the route table must still declare a skill-directory kind")
+        for runtime in bare:
+            with self.subTest(runtime=runtime):
+                result = self.run_installer("native", "--runtime", runtime)
+                self.assertEqual(result.returncode, OK, result.stderr)
+                self.assertIn("UNSUPPORTED", result.stdout)
+                self.assertIn("No native route exists to verify", result.stdout)
+                self.assertIn("only supported route", result.stdout)
+                self.assertIn("a filesystem fact, not an", result.stdout)
+                self.assertIn("is itself unverified", result.stdout)
+
+    def test_native_marks_the_local_path_as_not_the_verified_pin(self):
+        """A local marketplace source is this checkout, not the verified revision."""
+        pin = release_pin()
+        self.assertRegex(pin, r"^[0-9a-f]{40}$")
+        offered = 0
+        for runtime in known_runtimes():
+            result = self.run_installer("native", "--runtime", runtime)
+            self.assertEqual(result.returncode, OK, result.stderr)
+            with self.subTest(runtime=runtime):
+                if str(REPO) not in result.stdout:
+                    # No local source was offered, so no pin caveat is claimed.
+                    self.assertNotIn("not by itself the verified revision", result.stdout)
+                    continue
+                offered += 1
+                self.assertIn("from a local checkout", result.stdout)
+                self.assertIn("not by itself the verified revision", result.stdout)
+                self.assertIn("checked out at the public", result.stdout)
+                self.assertIn(pin, result.stdout)
+                self.assertIn(
+                    "A checkout at any other revision, or one carrying local",
+                    result.stdout,
+                )
+        self.assertTrue(offered, "at least one runtime must offer a local source")
 
     def test_routes_resolves_user_directories_from_the_overridden_home(self):
         result = self.run_installer("routes")

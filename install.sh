@@ -62,7 +62,10 @@ PYTHON=''
 
 PKG_NAME=obsidian-skills
 PKG_VERSION=0.1.0
-PKG_STATUS=unreleased
+PKG_STATUS=prerelease
+# The public revision the verified result was reproduced from. A local checkout
+# is only that revision when it is checked out at this commit, unmodified.
+PKG_PIN=0e658b5a09ac4c789392ac634dcff8a195fa3116
 PKG_ORG=Xia-Ataraxia
 PKG_SLUG="${PKG_ORG}/${PKG_NAME}"
 PKG_LICENSE=MIT
@@ -283,10 +286,16 @@ cmd_routes() {
   say '    skill-directory     no self-serve native plugin route; the Agent Skills'
   say '                        directory import is the only route'
   blank
-  say "  ${PKG_NAME} ${PKG_VERSION} is ${PKG_STATUS}: nothing is published to a public"
-  say '  plugin directory, and no runtime lists it. A native route therefore needs'
-  say "  either a published repository or a local path to this checkout — run"
-  say "  './${PROG} native --runtime <id>' for the exact commands."
+  say "  ${PKG_NAME} ${PKG_VERSION} is a public ${PKG_STATUS}: it is published at the"
+  say '  repository tag, not in any runtime public plugin directory, so no runtime'
+  say '  lists it. Use the published repository where the native route supports it.'
+  say "  Local-source routes require a clone pinned at ${PKG_PIN} to reproduce"
+  say "  the canary. Run './${PROG} native --runtime <id>' for supported source forms."
+  blank
+  say '  Installed and fresh-loaded so far: Claude Code only, in an isolated project'
+  say '  scope, from a clone of the published tag. Codex, GJC, Grok and Hermes'
+  say '  native installs remain unverified. Cursor and Agent Skills have no native'
+  say '  plugin route; their directory-copy behavior was tested separately.'
   blank
   say '  A runtime outside this table has no resolved route and is refused, not guessed.'
   blank
@@ -331,12 +340,16 @@ cmd_native() {
     plugin-marketplace)
       say '  Run these yourself; this script executes nothing and reaches no network.'
       blank
+      # Set by every arm that prints a local path, so the pin caveat below is only
+      # claimed where a local source was actually offered.
+      _local_source=no
       case "$R_ID" in
         claude)
           say '    1. register the marketplace, from the published repository'
           cmdline "claude plugin marketplace add ${PKG_SLUG}"
-          say "       or, while ${PKG_VERSION} is ${PKG_STATUS}, from this checkout"
+          say "       or, while ${PKG_VERSION} is a ${PKG_STATUS}, from a local checkout"
           cmdline "claude plugin marketplace add ${REPO_DIR}"
+          _local_source=yes
           say '    2. install the plugin, as <entry-name>@<marketplace-name>'
           cmdline "claude plugin install ${PKG_NAME}@${PKG_NAME}"
           blank
@@ -346,8 +359,9 @@ cmd_native() {
         codex)
           say '    1. register the marketplace, from the published repository'
           cmdline "codex plugin marketplace add ${PKG_SLUG}"
-          say "       or, while ${PKG_VERSION} is ${PKG_STATUS}, from this checkout"
+          say "       or, while ${PKG_VERSION} is a ${PKG_STATUS}, from a local checkout"
           cmdline "codex plugin marketplace add ${REPO_DIR}"
+          _local_source=yes
           say '    2. install the plugin, as <plugin>@<marketplace>'
           cmdline "codex plugin add ${PKG_NAME}@${PKG_NAME}"
           blank
@@ -366,8 +380,9 @@ cmd_native() {
         grok)
           say '    1. register the marketplace source'
           cmdline "grok plugin marketplace add ${PKG_SLUG}"
-          say "       or, while ${PKG_VERSION} is ${PKG_STATUS}, from this checkout"
+          say "       or, while ${PKG_VERSION} is a ${PKG_STATUS}, from a local checkout"
           cmdline "grok plugin marketplace add ${REPO_DIR}"
+          _local_source=yes
           say '    2. install it from the TUI Marketplace tab; grok plugin marketplace'
           say '       list shows the source and the plugins it exposes'
           blank
@@ -378,6 +393,16 @@ cmd_native() {
           note 'grok plugin install takes a git URL, GitHub shorthand or local path, never a plugin@marketplace id'
           ;;
       esac
+      if [ "$_local_source" = yes ]; then
+        blank
+        say '  The local path printed above is this working checkout, whatever it holds'
+        say '  right now. That is not by itself the verified revision. To reproduce the'
+        say "  verified result, register a clone checked out at the public ${PKG_VERSION} pin:"
+        cmdline "git clone https://github.com/${PKG_SLUG}.git"
+        cmdline "git -C ${PKG_NAME} checkout ${PKG_PIN}"
+        say '  A checkout at any other revision, or one carrying local modifications, is'
+        say '  not the revision anything here was verified at.'
+      fi
       ;;
     registry-tap)
       say '  This runtime reads no plugin manifest from this repository. Its native'
@@ -414,8 +439,28 @@ cmd_native() {
   say '  The Agent Skills directory import is available for every runtime in the table:'
   cmdline "./${PROG} copy --runtime ${R_ID} --skill <name>|all --scope user|project"
   blank
-  say "  Route confirmed is not install verified. Nothing above has been executed, and"
-  say '  no runtime has loaded this package as a result of running this script.'
+  say '  Nothing above has been executed, and no runtime has loaded this package as a'
+  say '  result of running this script.'
+  blank
+  if [ "$R_ID" = claude ]; then
+    say '  Verified separately, by running the commands above by hand against a clone'
+    say "  checked out at the public ${PKG_VERSION} pin ${PKG_PIN}:"
+    say "  ${R_LABEL} installed this package by native plugin identity and fresh-loaded"
+    say '  it, in an isolated project scope only. A user-profile or production install'
+    say '  is still unverified, and a checkout at another revision was not the one'
+    say '  verified.'
+  elif [ "$R_KIND" = skill-directory ]; then
+    say "  No native route exists to verify: ${R_LABEL} offers this package no"
+    say '  self-serve native plugin or marketplace route at all, so there is no native'
+    say '  install here that could be verified or unverified. The directory copy above'
+    say '  is the only supported route, and a copy is a filesystem fact, not an'
+    say '  install: whether this runtime then discovers and loads the copied packages'
+    say '  is itself unverified.'
+  else
+    say "  Route confirmed is not install verified: no ${R_LABEL} install of this"
+    say '  package has been observed. Claude Code, in an isolated project scope, is'
+    say '  the only runtime whose native install and fresh-load are verified.'
+  fi
   blank
 }
 

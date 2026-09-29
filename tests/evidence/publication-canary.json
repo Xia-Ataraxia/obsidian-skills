@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "kind": "package-consumer-test-report",
+  "date": "2026-09-29",
+  "limitations": ["Isolated canaries do not establish production consumer deployment or retirement.", "Account-bound Sync and exact-destination clip delivery remain unverified."],
+  "publication": {
+    "url": "https://github.com/Xia-Ataraxia/obsidian-skills",
+    "release": "https://github.com/Xia-Ataraxia/obsidian-skills/releases/tag/v0.1.0",
+    "commit": "0e658b5a09ac4c789392ac634dcff8a195fa3116",
+    "tagObject": "04f9dfe25157040dd08a8d14158f8a5d2bbc50ca",
+    "tree": "10dff62e017df86883d5dd4042f065760e576346",
+    "downloadedArchiveSha256": "74d97b113a590d83bf082ba8c80a8f93b316da5c11cdfbca14d791c556cbb608",
+    "prerelease": true,
+    "reachableObjectsScanned": {"commits": 5, "trees": 57, "blobs": 95},
+    "publicRendering": "Actual GitHub English and Korean articles rendered in Chromium; both original SVG images loaded with alt text. Repository-relative links resolved to existing committed paths."
+  },
+  "nativeCanary": {
+    "runtime": "Claude Code",
+    "scope": "isolated consumer project",
+    "origin": "Detached clone of the public immutable commit above",
+    "plugin": "obsidian-skills@obsidian-skills",
+    "version": "0.1.0",
+    "installation": "Native marketplace add and plugin install returned success",
+    "commands": ["claude plugin marketplace add <detached-public-pin-clone> --scope project", "claude plugin install obsidian-skills@obsidian-skills --scope project --json"],
+    "freshSkillToolCalls": ["obsidian-skills:obsidian-cli", "obsidian-skills:obsidian-sync"],
+    "separateFreshResponse": "obsidian-skills:obsidian-canvas",
+    "checks": ["CLI collision exit-zero is not success", "Missing headless configuration is not healthy network Sync", "Canvas dangling edge rejected without invented node", "Parsing distinguished from rendering"],
+    "nonTargetSentinelUnchanged": true,
+    "limitations": ["Not a production user-profile deployment", "No other native runtime fresh-load claim", "No consumer retirement claim"]
+  },
+  "isolatedPlugins": {
+    "app": "Obsidian 1.12.7",
+    "templater": {"version": "2.19.3", "loaded": true, "success": "Synthetic templater result", "error": "missingSyntheticVariable is not defined", "nonTargetUnchanged": true},
+    "excalidraw": {"version": "2.27.3", "loaded": true, "drawingElements": 5, "rendered": "Study and Evidence text boxes connected by an arrow; actual plugin view and screenshot inspected"},
+    "limitations": ["Single isolated synthetic vault", "No production plugin incident or account configuration changed", "Templater 2.25.1 manifest requires app 1.13.0; compatible version was selected instead"]
+  },
+  "clipperAttempt": {
+    "version": "1.7.1",
+    "source": "Official Chrome release archive",
+    "scope": "Separate disposable browser profile",
+    "result": "installed; settings rendered; shipped clipping-template.json imported as General clipping with Default preserved",
+    "extraction": "Actual extension action popup on example.org selected General clipping and extracted Example Domain title, source URL and source text into the note preview.",
+    "recovery": "Initial browser attachment had no page target. Created an isolated inspection page; native Extensions.loadUnpacked succeeded, background service worker appeared and actual settings UI rendered.",
+    "limitations": ["Add to Obsidian was not activated because destination remained Last used; delivery and vault readback not established", "No user browser profile or vault note changed"]
+  },
+  "remaining": ["Account-bound Sync pairing/remote-vault selection", "Source-local admitted consumer deployment", "Old-owner retirement and active-caller zero audit", "Deployed recovery"]
+}

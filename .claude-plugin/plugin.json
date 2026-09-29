@@ -2,7 +2,7 @@
   "name": "obsidian-skills",
   "displayName": "Obsidian Skills",
   "version": "0.1.0",
-  "description": "Nine self-contained Agent Skills for Obsidian vault work: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is unreleased.",
+  "description": "Nine self-contained Agent Skills for Obsidian vault work: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease: native install and fresh-load are verified on Claude Code in an isolated project scope only, and every other runtime install is unverified.",
   "author": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"
@@ -20,7 +20,7 @@
     "knowledge-management"
   ],
   "metadata": {
-    "releaseStatus": "unreleased",
+    "releaseStatus": "prerelease",
     "router": "none",
     "packageCount": 9,
     "packageRoot": "./skills/",

@@ -4,8 +4,11 @@
 Scope boundary: every assertion in this module is about the bytes checked into
 this repository. Nothing here loads a skill into a runtime, reaches a network,
 reads a profile, or proves that Obsidian, a plugin, or a marketplace accepted
-anything. A passing run means the packages are internally consistent and
-publishable-looking, not that they were published or installed.
+anything. A passing run means the packages are internally consistent and agree
+with the declared release identity -- not that a runtime installed them. 0.1.0
+is a public prerelease whose only verified native install and fresh-load is
+Claude Code in an isolated project scope; no assertion here observed that, and
+every other runtime's install is unverified.
 
 Run:  python3 -m unittest discover -s tests -t . -v
 """
@@ -313,6 +316,7 @@ class PackageIdentityTest(unittest.TestCase):
         pkg_name = re.search(r"^PKG_NAME=(\S+)", installer, re.M).group(1)
         pkg_version = re.search(r"^PKG_VERSION=(\S+)", installer, re.M).group(1)
         pkg_license = re.search(r"^PKG_LICENSE=(\S+)", installer, re.M).group(1)
+        pkg_status = re.search(r"^PKG_STATUS=(\S+)", installer, re.M).group(1)
 
         claude_plugin = load_json(REPO / ".claude-plugin" / "plugin.json")
         codex_plugin = load_json(REPO / ".codex-plugin" / "plugin.json")
@@ -337,6 +341,41 @@ class PackageIdentityTest(unittest.TestCase):
                 entries = manifest["plugins"]
                 self.assertEqual(len(entries), 1, "one plugin identity per marketplace")
                 self.assertEqual(entries[0]["name"], pkg_name)
+
+        # The published tag is immutable, so the version stays 0.1.0 and only the
+        # status moves. Installer and manifest must not disagree about which it is.
+        self.assertEqual(pkg_version, "0.1.0")
+        self.assertEqual(pkg_status, "prerelease")
+        self.assertEqual(claude_plugin["metadata"]["releaseStatus"], pkg_status)
+        self.assertEqual(claude_market["version"], pkg_version)
+        self.assertEqual(
+            claude_market["plugins"][0]["metadata"]["releaseStatus"], pkg_status
+        )
+
+    def test_manifest_prose_states_the_prerelease_and_its_verified_install_boundary(self):
+        """No manifest may still read as unreleased or claim a blanket install."""
+        claude = load_json(REPO / ".claude-plugin" / "plugin.json")
+        codex = load_json(REPO / ".codex-plugin" / "plugin.json")
+        market = load_json(REPO / ".claude-plugin" / "marketplace.json")
+        prose = {
+            "claude description": claude["description"],
+            "codex description": codex["description"],
+            "codex longDescription": codex["interface"]["longDescription"],
+            "claude marketplace description": market["description"],
+        }
+        for label, text in prose.items():
+            with self.subTest(field=label):
+                self.assertNotIn("unreleased", text)
+                self.assertIn("public prerelease", text)
+
+        for label, text in (
+            ("claude description", prose["claude description"]),
+            ("codex longDescription", prose["codex longDescription"]),
+        ):
+            with self.subTest(field=label):
+                self.assertIn("Claude Code", text)
+                self.assertIn("isolated project scope", text)
+                self.assertIn("unverified", text)
 
 
 class ResourceClosureTest(unittest.TestCase):
