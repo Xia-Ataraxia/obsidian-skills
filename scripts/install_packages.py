@@ -697,16 +697,35 @@ def publish_exclusive(root_fd, staged, name):
         raise OSError(error, os.strerror(error))
 
 
+def quarantine_entrypoint(staging_fd, staged):
+    """Rename SKILL.md aside inside staging this run is about to leave behind.
+
+    Acts through a handle on the staging directory itself, so it can never reach
+    something that took the name over: the object renamed within is the object
+    this run filled. Retained staging that still carries a callable SKILL.md
+    would be loadable by a runtime that scans the destination root.
+    """
+    try:
+        os.rename("SKILL.md", "SKILL.unpublished",
+                  src_dir_fd=staging_fd, dst_dir_fd=staging_fd)
+    except FileNotFoundError:
+        pass
+    except OSError as exc:
+        apply_line("WARNING", staged, "entrypoint quarantine failed: %s" % exc)
+
+
 def quarantine_staging(root_fd, staged):
     """Remove the callable entrypoint from retained, unpublished staging."""
     fd = None
     try:
         fd = open_dir_at(staged, root_fd)
-        os.rename("SKILL.md", "SKILL.unpublished", src_dir_fd=fd, dst_dir_fd=fd)
     except FileNotFoundError:
-        pass
+        return
     except OSError as exc:
         apply_line("WARNING", staged, "entrypoint quarantine failed: %s" % exc)
+        return
+    try:
+        quarantine_entrypoint(fd, staged)
     finally:
         close_all(fd)
 
@@ -811,10 +830,16 @@ def stage_one(root_fd, name, src_fd, src_root_st, destination):
     except Interrupted:
         emptied = rollback(reservation_fd, created)
         outcome = release_reservation(root_fd, name, reservation_ident, emptied)
+        if outcome == "left-behind":
+            # Cleanup could not finish. What survives is this run's own private
+            # staging, so its entrypoint is taken out of the way; nothing was
+            # published to the destination.
+            quarantine_entrypoint(reservation_fd, name)
         apply_line(
             "interrupted", name,
             "%s  (%s)" % (destination,
-                          "rolled back" if outcome == "rolled-back" else "left behind"),
+                          "private staging rolled back" if outcome == "rolled-back"
+                          else "private staging retained"),
         )
         raise
     finally:
@@ -830,7 +855,13 @@ def finish_failure(root_fd, name, destination, reservation_fd, reservation_ident
     elif outcome == "replaced":
         apply_line("NOT OURS", name, "%s  (replaced after the reservation; left untouched)" % destination)
     else:
-        apply_line("LEFT BEHIND", name, "%s  (remove it by hand)" % destination)
+        # The cleanup could not finish, so this run's private staging survives
+        # under ``name``. That is what has to be removed: this run never
+        # published anything to ``destination``, which is context only.
+        quarantine_entrypoint(reservation_fd, name)
+        apply_line("LEFT BEHIND", name,
+                   "private staging, remove by hand  (nothing was published to %s)"
+                   % destination)
     return False, reason
 
 

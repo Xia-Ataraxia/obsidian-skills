@@ -34,6 +34,7 @@ import json
 import os
 import re
 import shutil
+import signal
 import stat
 import subprocess
 import tempfile
@@ -98,6 +99,14 @@ def accepted_options() -> set:
 def accepted_commands() -> set:
     match = re.search(r"^  ([a-z|]+)\) COMMAND=\$1; shift ;;", installer_source(), re.M)
     return set(match.group(1).split("|"))
+
+
+def load_copier():
+    """The copier as a module, loaded from the path install.sh actually runs."""
+    spec = importlib.util.spec_from_file_location("obsidian_skills_copier", COPIER)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def snapshot(root: Path) -> dict:
@@ -957,9 +966,7 @@ class CopierAnchoringTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        spec = importlib.util.spec_from_file_location("obsidian_skills_copier", COPIER)
-        cls.copier = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(cls.copier)
+        cls.copier = load_copier()
 
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp(prefix="obsidian-skills-copier-"))
@@ -1161,6 +1168,46 @@ class CopierAnchoringTest(unittest.TestCase):
                         root_fd, "pkg", source_fd, os.fstat(source_fd), str(self.anchor / "pkg"))
         self.assertFalse((self.anchor / "pkg").exists())
 
+    def test_incomplete_cleanup_names_the_staging_it_actually_retained(self):
+        """Cleanup that cannot finish leaves staging, so staging is what is named.
+
+        Nothing is published before the readback passes, so the public
+        destination either does not exist or was created by somebody else.
+        Naming it as the thing to remove points at nothing or at another
+        process's directory, while the copied content that really survives goes
+        unnamed and stays callable.
+        """
+        from unittest.mock import patch
+        root_fd = self.open_dir(self.anchor)
+        source_fd = self.open_dir(self.make_source())
+        destination = self.anchor / "pkg"
+        failed = self.copier.VerifyFailed("content differs at SKILL.md")
+
+        # An incomplete rollback is the one outcome that keeps copied content.
+        with patch.object(self.copier, "verify_package", side_effect=failed):
+            with patch.object(self.copier, "rollback", return_value=False):
+                with contextlib.redirect_stdout(io.StringIO()) as reported:
+                    published, reason = self.copier.install_one(
+                        root_fd, "pkg", source_fd, os.fstat(source_fd), str(destination))
+
+        self.assertFalse(published)
+        self.assertIn("readback failed", reason)
+        self.assertFalse(destination.exists(), "nothing may be published")
+
+        retained = list(self.anchor.iterdir())
+        self.assertEqual(len(retained), 1, retained)
+        staging = retained[0]
+        self.assertTrue(staging.name.startswith(".obsidian-stage-"), staging.name)
+        self.assertFalse((staging / "SKILL.md").exists(),
+                         "retained staging must not stay callable")
+        self.assertTrue((staging / "SKILL.unpublished").is_file())
+
+        named = [line for line in reported.getvalue().splitlines() if "LEFT BEHIND" in line]
+        self.assertEqual(len(named), 1, reported.getvalue())
+        self.assertEqual(named[0].split()[:3], ["LEFT", "BEHIND", staging.name],
+                         "the report must name what survived")
+        self.assertIn("nothing was published to %s" % destination, named[0])
+
     def test_the_readback_rejects_a_generated_entry_in_the_destination(self):
         """Caches are never copied, so one in the destination is a failure.
 
@@ -1177,6 +1224,120 @@ class CopierAnchoringTest(unittest.TestCase):
 
         self.assertIn("unexpected entry", str(caught.exception))
         self.assertIn("__pycache__", str(caught.exception))
+
+
+class CopierEntryPointTest(unittest.TestCase):
+    """The copier's own entry point: its startup gates and its signal report.
+
+    Both branches sit outside the package loop -- one before any package work is
+    possible, one after the run has already stopped -- so they are driven
+    through ``main`` itself. Signalling a subprocess would decide by timing
+    which branch was taken; here the state that follows is the evidence.
+    """
+
+    maxDiff = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.copier = load_copier()
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="obsidian-skills-copier-main-"))
+        self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        self.repo = self.tmp / "checkout"
+        self.source = self.repo / "skills"
+        (self.source / "pkg").mkdir(parents=True)
+        (self.source / "pkg" / "SKILL.md").write_text(
+            "---\nname: pkg\n---\n", encoding="utf-8")
+        self.anchor = self.tmp / "anchor"
+        self.anchor.mkdir()
+        # main() installs its own INT/TERM handlers; the suite gets its own back.
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            previous = signal.getsignal(signum)
+            if previous is not None:
+                self.addCleanup(signal.signal, signum, previous)
+
+    def argv(self):
+        return [
+            "--repo", str(self.repo),
+            "--source", str(self.source),
+            "--anchor", str(self.anchor),
+            "--anchor-kind", "project",
+            "--route", ".cursor/skills",
+            "--scope", "project",
+            "--runtime", "cursor",
+            "--label", "Cursor",
+            "--kind", "skill-directory",
+            "--prog", "install.sh",
+            "--package", "obsidian-skills",
+            "--mode", "apply",
+            "pkg",
+        ]
+
+    def run_main(self, argv):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            status = self.copier.main(argv)
+        return status, out.getvalue(), err.getvalue()
+
+    def assert_nothing_was_written(self):
+        self.assertEqual(list(self.anchor.iterdir()), [],
+                         "a refusal before the run may not create the route")
+        self.assertFalse((self.anchor / ".cursor").exists())
+
+    # -- startup gates -------------------------------------------------------
+    def test_a_platform_without_anchored_calls_refuses_before_writing(self):
+        """Without dir_fd-anchored calls there is no safe copy, so none starts."""
+        from unittest.mock import patch
+        unreached = AssertionError("publication must not be reached")
+        with patch.object(self.copier, "O_DIRECTORY", 0), \
+                patch.object(self.copier, "publish_exclusive", side_effect=unreached):
+            status, _out, err = self.run_main(self.argv())
+
+        self.assertEqual(status, REFUSED)
+        self.assertIn("REFUSED:", err)
+        self.assertIn("directory handles", err)
+        self.assert_nothing_was_written()
+
+    def test_a_missing_publication_primitive_refuses_before_writing(self):
+        """The atomic no-replace rename is resolved before any destination work.
+
+        Resolving it late would mean a route created, a reservation filled and a
+        readback passed before the run discovered it cannot publish safely.
+        """
+        from unittest.mock import patch
+        unavailable = OSError("atomic no-replace publication is unavailable")
+        unreached = AssertionError("publication must not be reached")
+        with patch.object(self.copier, "publication_primitive", side_effect=unavailable), \
+                patch.object(self.copier, "publish_exclusive", side_effect=unreached):
+            status, _out, err = self.run_main(self.argv())
+
+        self.assertEqual(status, REFUSED)
+        self.assertIn("atomic no-replace publication is unavailable", err)
+        self.assert_nothing_was_written()
+
+    # -- the interrupted-run report ------------------------------------------
+    def test_a_signal_reports_what_may_remain_instead_of_a_clean_rollback(self):
+        """The handler main() installs turns a real signal into the exit report.
+
+        The report has to survive on its own: by the time it is printed the run
+        cannot know whether cleanup finished, and packages published earlier in
+        the same run are still published.
+        """
+        from unittest.mock import patch
+
+        def signalled_run(_args):
+            os.kill(os.getpid(), signal.SIGTERM)
+            raise AssertionError("SIGTERM did not stop the run")
+
+        with patch.object(self.copier, "run", signalled_run):
+            status, _out, err = self.run_main(self.argv())
+
+        self.assertEqual(status, 128 + signal.SIGTERM)
+        self.assertIn("interrupted by signal %d" % signal.SIGTERM, err)
+        self.assertIn("complete packages may remain published", err)
+        self.assertIn("cleanup may be incomplete", err)
+        self.assertNotIn("rolled back", err)
 
 
 class DisposableRollbackTest(InstallerHarness):

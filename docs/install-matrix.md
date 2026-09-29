@@ -91,7 +91,7 @@ Every `native` run ends with the same line: *"Route confirmed is not install ver
 | Post-copy verification | Same paths and types, every regular file byte-identical, `SKILL.md` present. Source symlinks are refused. Failed verification cannot publish a partial package; already published packages remain intact. |
 | Rollback | Only the entries this run recorded creating are removed, each re-identified by (device, inode) first. A destination that is no longer this run's own reservation, or one somebody has added content to, is reported and left exactly as found — it is never recursively deleted. |
 | Generated caches | `__pycache__`, `*.pyc`, `*.pyo`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `.DS_Store` are never copied, so there is no prune step that could fail unnoticed. One found in a destination is a readback failure, not an exclusion. |
-| Interruption | `INT`/`TERM` stop the run where it is: the unfinished reservation is rolled back and the status is 128 plus the signal number. An interrupted copy never reports success. |
+| Interruption | `INT`/`TERM` stop the run where it is and the status is 128 plus the signal number. An interrupted copy never reports success and never publishes the package it was working on. The private staging it retains is named in the report with its `SKILL.md` quarantined as `SKILL.unpublished`; cleanup of that staging may be incomplete, and packages reported as installed before the signal stay published. |
 | Writes | Anchored route directories, private staging and selected package destinations only. No profile configuration, marketplace registry, tap list, plugin cache or lockfile is changed. |
 | Network | None. The installer never reaches the network and never runs a runtime CLI. |
 | Naming | A directory copy is always labelled a generic Agent Skills import, never a native plugin install. |
@@ -103,7 +103,7 @@ Every `native` run ends with the same line: *"Route confirmed is not install ver
 | 0 | Completed: `routes`/`skills`/`native` printed, or a copy plan that is clean (dry run) or fully applied and read back. |
 | 1 | Refused: unknown runtime, illegal or undeclared skill name, symlinked source package, path escape, destination-root violation, a collision in the pre-flight report, a package that failed post-copy verification, or a missing python3/copier. |
 | 2 | Usage error: conflicting, repeated, misplaced, or empty-valued options. |
-| 128+N | Interrupted by signal N (130 for `INT`, 143 for `TERM`) after the unfinished reservation was rolled back. |
+| 128+N | Interrupted by signal N (130 for `INT`, 143 for `TERM`). The package in progress is never published; retained private staging is named on stderr, cleanup of it may be incomplete, and earlier published packages remain. |
 
 ### Observed refusals and usage errors
 

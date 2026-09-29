@@ -40,8 +40,11 @@
 # Dry run is the default. Copying requires an explicit --apply.
 #
 # Exit codes: 0 ok · 1 refused (collision / escape / unsupported / incomplete)
-#             2 usage · 128+N interrupted by signal N, after the unfinished
-#             reservation was removed.
+#             2 usage · 128+N interrupted by signal N. An interrupted copy never
+#             reports success and never publishes the package it was working on;
+#             the private staging it retains is named in the report, its SKILL.md
+#             is quarantined as SKILL.unpublished, cleanup of that staging may be
+#             incomplete, and packages published earlier stay published.
 
 set -eu
 
@@ -239,10 +242,12 @@ require_copier() {
 # Runs the copier as a job of this shell and waits for it.
 #
 # The wait is deliberate. A caught signal interrupts `wait`, so INT or TERM is
-# acted on the moment it arrives: it is forwarded to the copier, which rolls back
-# its own unfinished reservation, and this script then exits non-zero. A handler
-# that merely cleaned up and returned would let an interrupted run carry on
-# copying and still report success.
+# acted on the moment it arrives: it is forwarded to the copier, which stops
+# where it is, never publishes the package it was working on, names whatever
+# private staging it retains, and reports that cleanup may be incomplete; this
+# script then exits non-zero. Packages published before the signal stay
+# published. A handler that merely cleaned up and returned would let an
+# interrupted run carry on copying and still report success.
 run_copier() {
   _c_status=0
   "$@" &
@@ -584,9 +589,12 @@ BEHAVIOUR
     .ruff_cache, .DS_Store) are build residue, so they are never copied at all.
     Finding one in a destination is a readback failure rather than an exclusion,
     and your checkout is never modified.
-  * INT or TERM stops the run where it is. The unfinished reservation is rolled
-    back and the exit status is 128 plus the signal number; an interrupted copy
-    never reports success.
+  * INT or TERM stops the run where it is and the exit status is 128 plus the
+    signal number; an interrupted copy never reports success. The package being
+    worked on is never published: the private staging that is retained is named
+    in the report and its SKILL.md is quarantined as SKILL.unpublished, and
+    cleanup of that staging may be incomplete. Packages reported as installed
+    before the signal stay published.
   * An unknown runtime is refused. No route is inferred, and a directory import
     is never presented as a native plugin install.
   * The script never reaches the network, never runs a runtime CLI, and never

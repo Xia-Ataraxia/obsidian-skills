@@ -552,6 +552,34 @@ class SyntheticAuditTest(unittest.TestCase):
             f"unsafe feature package path: F09 -> {package}", self._audit(data)
         )
 
+    def test_two_features_declaring_the_same_package_are_rejected(self):
+        """A package holds one feature; an identical declaration is still a collision."""
+        data = copy.deepcopy(self.data)
+        shared = data["features"]["F01"]["package"]
+        data["features"]["F09"]["package"] = shared
+        # Follow F09's unit into the shared directory, so doubled ownership is the
+        # only fault left for the audit to report.
+        unit = next(u for u in data["units"] if u["owner"] == "F09")
+        unit["target"] = f"{shared}/SKILL.md"
+        unit["verification"] = [f"{shared}/SKILL.md#verification"]
+        self.assertEqual(["feature package shared by F01 and F09"], self._audit(data))
+
+    def test_two_features_aliased_onto_one_package_by_a_symlink_are_rejected(self):
+        """Two distinct repository paths that resolve to one directory are one package."""
+        alias = "skills/obsidian-alias"
+        owned = self.data["features"]["F09"]["package"]
+        (self.root / alias).symlink_to(self.root / owned, target_is_directory=True)
+        self.assertNotEqual(alias, owned)
+        self.assertTrue((self.root / alias).is_dir())
+        self.assertEqual((self.root / alias).resolve(), (self.root / owned).resolve())
+        data = copy.deepcopy(self.data)
+        data["features"]["F08"]["package"] = alias
+        # F08's unit follows the alias, so the aliased directory is the only fault.
+        unit = next(u for u in data["units"] if u["owner"] == "F08")
+        unit["target"] = f"{alias}/SKILL.md"
+        unit["verification"] = [f"{alias}/SKILL.md#verification"]
+        self.assertEqual(["feature package shared by F08 and F09"], self._audit(data))
+
     def test_wrong_schema_version_is_rejected(self):
         data = copy.deepcopy(self.data)
         data["schema_version"] = 1
