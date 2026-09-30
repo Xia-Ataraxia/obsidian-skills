@@ -7,6 +7,11 @@ refusals, byte-level determinism, and what the writer leaves alone — not the
 wording of the skill documents. Nothing here opens Obsidian, installs a plugin, or
 renders a drawing; rendered QA is a separate claim the package documents but this
 suite cannot make.
+
+The two handshake fences in `references/workbench.md` step 4 are also executed, as
+JavaScript under `node` against a stubbed page, when a `node` binary is present.
+That shows the shipped snippets refuse an unsubstituted run identity; it is not a
+claim that Obsidian, its plugin, or a real mutation ran.
 """
 
 from __future__ import annotations
@@ -16,6 +21,8 @@ import importlib.util
 import json
 import os
 import re
+import shutil
+import subprocess
 import unicodedata
 import unittest
 from pathlib import Path
@@ -679,6 +686,226 @@ class DeterminismTests(unittest.TestCase):
         self.assertTrue(report.removed_ids)
         self.assertEqual(report.added_ids, ())
         self.assertTrue(all(change.startswith("-") for change in report.binding_changes))
+
+
+# The two-step handshake documented in `references/workbench.md` step 4.
+WORKBENCH = PACKAGE / "references" / "workbench.md"
+
+#: Both evals leave their run identity undeclared on purpose: the caller generates
+#: one opaque nonce outside the page and substitutes the same JSON-quoted literal
+#: for this identifier in both snippets before sending them.
+NONCE_IDENTIFIER = "CALLER_RUN_ID"
+JS_FENCE_RE = re.compile(r"^```javascript[ \t]*$\n(.*?)^```[ \t]*$", re.M | re.S)
+NODE = shutil.which("node")
+
+#: What the stubbed `performTheMutation()` resolves with.
+MUTATION_VALUE = "the-mutation-result"
+
+#: A finished run left on the page by an earlier, unrelated nonce.
+STALE_RUN = {
+    "token": "an-earlier-nonce",
+    "state": "done",
+    "value": "an earlier run's result",
+    "error": None,
+}
+
+#: Runs a fence the way the official CLI's `eval` does: through an indirect
+#: `eval`, in ordinary global scope, where an unsubstituted identifier is simply
+#: undeclared — no `with` block and no scope proxy inventing names. `window` and
+#: `performTheMutation` are the only stubs, and the mutation only counts itself.
+NODE_HARNESS = """\
+"use strict";
+const payload = JSON.parse(require("fs").readFileSync(process.argv[2], "utf8"));
+
+let mutations = 0;
+globalThis.performTheMutation = () => {
+  mutations += 1;
+  return payload.mutationValue;
+};
+
+const attempt = (source) => {
+  try {
+    return {threw: false, value: (0, eval)(source)};
+  } catch (error) {
+    return {threw: true, name: error.name, message: String(error.message)};
+  }
+};
+
+const snapshot = () => {
+  const run = globalThis.window.__visualizeRun;
+  return run ? {...run} : null;
+};
+
+// A macrotask turn drains whatever promise chain a launch started, so a mutation
+// count read after it is a real count and not just an unfinished microtask.
+const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+const report = {};
+
+(async () => {
+  // Nothing substituted, pristine page.
+  globalThis.window = {};
+  mutations = 0;
+  report.unreplacedLaunch = attempt(payload.launch);
+  await settle();
+  report.mutationsAfterUnreplacedLaunch = mutations;
+  report.runAfterUnreplacedLaunch = snapshot();
+
+  // Nothing substituted, and a finished run under another nonce is still there.
+  globalThis.window = {__visualizeRun: payload.staleRun};
+  report.unreplacedPoll = attempt(payload.poll);
+  report.pageAfterUnreplacedPoll = snapshot();
+
+  // The caller substituted the same nonce into both evals.
+  globalThis.window = {};
+  mutations = 0;
+  report.launch = attempt(payload.launchSubstituted);
+  report.mutationsWhenLaunchReturned = mutations;
+  report.runAfterLaunch = snapshot();
+  report.pollWhileRunning = attempt(payload.pollSubstituted);
+  report.replayedLaunch = attempt(payload.launchSubstituted);
+  await settle();
+  report.pollAfterSettling = attempt(payload.pollSubstituted);
+  report.pollUnderAnotherNonce = attempt(payload.pollOtherNonce);
+  report.mutationsAtExit = mutations;
+
+  process.stdout.write(JSON.stringify(report));
+})();
+"""
+
+
+def handshake_fences():
+    """The launch and the poll fence from step 4, identified by what they do."""
+    fences = JS_FENCE_RE.findall(WORKBENCH.read_text(encoding="utf-8"))
+    launch = [fence for fence in fences if "window.__visualizeRun = run" in fence]
+    poll = [fence for fence in fences if "absent-or-stale" in fence]
+    if len(launch) != 1 or len(poll) != 1:
+        raise AssertionError(
+            "step 4 must ship exactly one launch and one poll fence; found "
+            f"{len(launch)} and {len(poll)}"
+        )
+    return launch[0], poll[0]
+
+
+def run_handshake_probe():
+    """Execute both fences under Node, unreplaced and then with a nonce.
+
+    Returns ``(nonce, other_nonce, report)``. The nonces are generated out here,
+    outside the page, exactly as the document requires of a caller.
+    """
+    launch, poll = handshake_fences()
+    nonce = "5c81f0b7a4d2"
+    other_nonce = "9ae3d16c02fb"
+    payload = {
+        "launch": launch,
+        "poll": poll,
+        "launchSubstituted": launch.replace(NONCE_IDENTIFIER, json.dumps(nonce)),
+        "pollSubstituted": poll.replace(NONCE_IDENTIFIER, json.dumps(nonce)),
+        "pollOtherNonce": poll.replace(NONCE_IDENTIFIER, json.dumps(other_nonce)),
+        "staleRun": STALE_RUN,
+        "mutationValue": MUTATION_VALUE,
+    }
+    with TemporaryDirectory() as directory:
+        root = Path(directory)
+        probe = root / "handshake-probe.js"
+        argument = root / "payload.json"
+        probe.write_text(NODE_HARNESS, encoding="utf-8")
+        argument.write_text(json.dumps(payload), encoding="utf-8")
+        completed = subprocess.run(
+            [NODE, str(probe), str(argument)],
+            cwd=str(root),
+            capture_output=True,
+            timeout=60,
+        )
+    stdout = completed.stdout.decode("utf-8")
+    stderr = completed.stderr.decode("utf-8")
+    if completed.returncode != 0 or not stdout:
+        raise AssertionError(
+            f"the handshake probe did not report ({completed.returncode}): {stderr[:400]}"
+        )
+    return nonce, other_nonce, json.loads(stdout)
+
+
+class HandshakeContractTests(unittest.TestCase):
+    """Step 4 hands its run identity to the caller instead of shipping one."""
+
+    def test_both_evals_read_the_same_undeclared_caller_nonce(self):
+        for name, fence in zip(("launch", "poll"), handshake_fences()):
+            with self.subTest(eval=name):
+                self.assertIn(f"const token = {NONCE_IDENTIFIER};", fence)
+                self.assertEqual(fence.count(NONCE_IDENTIFIER), 1)
+
+
+@unittest.skipUnless(NODE, "no node binary, so the handshake fences cannot be executed")
+class HandshakeBehaviourTests(unittest.TestCase):
+    """The shipped fences executed: unreplaced, substituted, and mismatched.
+
+    The page, the mutation and the run state are stubs. This says nothing about
+    Obsidian, the plugin, or a real scene.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.nonce, cls.other_nonce, cls.report = run_handshake_probe()
+
+    def polled(self, key):
+        """The poll eval returns JSON text, so a caller parses what it got."""
+        outcome = self.report[key]
+        self.assertFalse(outcome["threw"], outcome)
+        return json.loads(outcome["value"])
+
+    def test_an_unsubstituted_launch_throws_a_reference_error(self):
+        outcome = self.report["unreplacedLaunch"]
+        self.assertTrue(outcome["threw"], outcome)
+        self.assertEqual(outcome["name"], "ReferenceError")
+        self.assertIn(NONCE_IDENTIFIER, outcome["message"])
+
+    def test_an_unsubstituted_launch_never_reaches_the_mutation(self):
+        """Counted after the event loop drained, so a pending microtask cannot hide."""
+        self.assertEqual(self.report["mutationsAfterUnreplacedLaunch"], 0)
+        self.assertIsNone(self.report["runAfterUnreplacedLaunch"])
+
+    def test_an_unsubstituted_poll_throws_instead_of_reading_an_earlier_run(self):
+        outcome = self.report["unreplacedPoll"]
+        self.assertTrue(outcome["threw"], outcome)
+        self.assertEqual(outcome["name"], "ReferenceError")
+        self.assertEqual(self.report["pageAfterUnreplacedPoll"], STALE_RUN)
+
+    def test_the_substituted_launch_returns_its_nonce_while_the_work_is_pending(self):
+        outcome = self.report["launch"]
+        self.assertFalse(outcome["threw"], outcome)
+        self.assertEqual(outcome["value"], self.nonce)
+        self.assertEqual(
+            self.report["mutationsWhenLaunchReturned"],
+            0,
+            "the eval returns before the async operation it started can run",
+        )
+        self.assertEqual(
+            self.report["runAfterLaunch"],
+            {"token": self.nonce, "state": "running", "value": None, "error": None},
+        )
+
+    def test_the_same_nonce_polls_this_run_from_running_to_done(self):
+        self.assertEqual(
+            self.polled("pollWhileRunning"),
+            {"state": "running", "value": None, "error": None},
+        )
+        self.assertEqual(
+            self.polled("pollAfterSettling"),
+            {"state": "done", "value": MUTATION_VALUE, "error": None},
+        )
+
+    def test_another_nonce_polls_absent_or_stale_and_never_this_run(self):
+        self.assertEqual(
+            self.polled("pollUnderAnotherNonce"),
+            {"state": "absent-or-stale", "token": self.other_nonce},
+        )
+
+    def test_replaying_the_launch_under_the_same_nonce_mutates_nothing(self):
+        outcome = self.report["replayedLaunch"]
+        self.assertTrue(outcome["threw"], outcome)
+        self.assertIn("already launched", outcome["message"])
+        self.assertEqual(self.report["mutationsAtExit"], 1)
 
 
 class PackageIntegrityTests(unittest.TestCase):

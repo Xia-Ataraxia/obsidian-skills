@@ -90,11 +90,13 @@ if (!applied) throw new Error("addElementsToView did not apply the scene");
 
 The official CLI's `eval` returns synchronous values only, so an `await` inside it resolves after the value has already been returned. Drive the async call through a two-step handshake whose identity the caller owns.
 
+`CALLER_RUN_ID` is not defined by either snippet. Generate one fresh opaque nonce outside the page — never from the DOM, the scene, the plugin, or an earlier eval's output — and substitute the same JSON-quoted string literal (quotes included) for `CALLER_RUN_ID` in **both** evals before sending them. Left unreplaced it is an undeclared identifier: in a normal eval scope — no `with` block, no scope proxy inventing names — it throws `ReferenceError` on the first line, before `performTheMutation()` runs and before a poll can report an earlier run's state. That refusal is the point; a hard-coded literal shipped with the snippet would launch a mutation, and poll it, under a token that is not this run's.
+
 First eval — launch, using a nonce generated and kept by the caller, never read back from the page:
 
 ```javascript
 (() => {
-  const token = "PLACEHOLDER-substitute-the-caller-generated-run-id";
+  const token = CALLER_RUN_ID;
   if (window.__visualizeRun?.token === token) throw new Error("this token was already launched");
   const run = {token, state: "running", value: null, error: null};
   window.__visualizeRun = run;
@@ -110,7 +112,7 @@ Second eval — poll with the same token:
 
 ```javascript
 JSON.stringify((() => {
-  const token = "PLACEHOLDER-substitute-the-caller-generated-run-id";
+  const token = CALLER_RUN_ID;
   const run = window.__visualizeRun;
   if (!run || run.token !== token) return {state: "absent-or-stale", token};
   return {state: run.state, value: run.value ?? null, error: run.error};
