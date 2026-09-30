@@ -6,9 +6,10 @@ this repository. Nothing here loads a skill into a runtime, reaches a network,
 reads a profile, or proves that Obsidian, a plugin, or a marketplace accepted
 anything. A passing run means the packages are internally consistent and agree
 with the declared release identity -- not that a runtime installed them. 0.1.0
-is a public prerelease whose only verified native install and fresh-load is
-Claude Code in an isolated project scope; no assertion here observed that, and
-every other runtime's install is unverified.
+is a public prerelease with two verified native installs and fresh-loads: Claude
+Code in an isolated project scope, at the immutable tag, and Hermes Agent across
+five generic operator profiles, at the corrected pin and operator-reported. No
+assertion here observed either one; Codex, GJC and Grok remain unverified.
 
 Run:  python3 -m unittest discover -s tests -t . -v
 """
@@ -27,6 +28,7 @@ import yaml
 REPO = Path(__file__).resolve().parents[1]
 SKILLS_DIR = REPO / "skills"
 INSTALL_SH = REPO / "install.sh"
+PUBLICATION_CANARY = REPO / "tests" / "evidence" / "publication-canary.json"
 
 # Directories that are private working state, not publishable content. They are
 # excluded from every scan in this module; the exclusion itself is asserted.
@@ -60,6 +62,7 @@ FORBIDDEN_FRONTMATTER_KEYS = frozenset(
 # Agent Skills limits: one lowercase path segment, and a description a host can
 # hold in its skill index.
 NAME_SEGMENT_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 MAX_NAME_LEN = 64
 MAX_DESCRIPTION_LEN = 1024
 
@@ -376,6 +379,119 @@ class PackageIdentityTest(unittest.TestCase):
                 self.assertIn("Claude Code", text)
                 self.assertIn("isolated project scope", text)
                 self.assertIn("unverified", text)
+
+
+class RecordedEvidenceProvenanceTest(unittest.TestCase):
+    """A recorded result has to say who observed it, and at which revision.
+
+    The publication report now mixes two kinds of claim: canaries this repository
+    ran itself, and an install an operator ran on their own profiles and relayed.
+    A reader cannot weigh either one without being told which it is, so the
+    distinction is recorded as data rather than left to prose. Nothing here
+    re-observes any run; these are consistency checks over text already written.
+    """
+
+    def setUp(self):
+        self.report = load_json(PUBLICATION_CANARY)
+        self.installer = INSTALL_SH.read_text("utf-8")
+
+    def sections(self) -> dict:
+        return {
+            name: value
+            for name, value in self.report.items()
+            if isinstance(value, dict) and name != "reporters"
+        }
+
+    def installer_value(self, name: str) -> str:
+        match = re.search(rf"^{name}=(\S+)", self.installer, re.M)
+        if match is None:
+            raise AssertionError(f"install.sh no longer declares {name}")
+        return match.group(1)
+
+    def test_every_recorded_section_names_a_declared_reporter(self):
+        reporters = self.report["reporters"]
+        self.assertTrue({"leader", "operator"} <= set(reporters), sorted(reporters))
+        for label, description in reporters.items():
+            with self.subTest(reporter=label):
+                self.assertTrue(description.strip())
+        for name, section in self.sections().items():
+            with self.subTest(section=name):
+                self.assertIn(section.get("reportedBy"), reporters)
+
+    def test_an_operator_section_never_reads_as_something_observed_here(self):
+        operator = {
+            name: section
+            for name, section in self.sections().items()
+            if section["reportedBy"] == "operator"
+        }
+        self.assertTrue(operator, "the operator evidence is no longer recorded")
+        for name, section in operator.items():
+            with self.subTest(section=name):
+                limitations = section["limitations"]
+                self.assertTrue(
+                    any("Operator-reported" in entry for entry in limitations),
+                    "an operator section must say it was not observed here",
+                )
+
+    def test_the_installer_and_the_report_agree_on_the_two_revisions(self):
+        """Which commit is the tag, and which is the correction, is one fact."""
+        pin = self.installer_value("PKG_PIN")
+        tag_pin = self.installer_value("PKG_TAG_PIN")
+        for label, commit in (("PKG_PIN", pin), ("PKG_TAG_PIN", tag_pin)):
+            with self.subTest(pin=label):
+                self.assertRegex(commit, COMMIT_RE)
+        self.assertNotEqual(pin, tag_pin, "the correction has to be its own revision")
+
+        self.assertEqual(self.report["publication"]["commit"], tag_pin)
+        self.assertEqual(self.report["nativeCanary"]["commit"], tag_pin)
+        self.assertEqual(self.report["hermesNative"]["commit"], pin)
+        tagged = self.report["taggedRelease"]
+        self.assertEqual(tagged["commit"], tag_pin)
+        self.assertEqual(tagged["correctedAt"], pin)
+
+    def test_the_tagged_release_is_recorded_as_unusable_and_never_retagged(self):
+        tagged = self.report["taggedRelease"]
+        self.assertIs(tagged["retagged"], False)
+        self.assertIs(tagged["usableForFullHermesInstall"], False)
+        self.assertTrue(tagged["findings"], "a refusal has to name what it found")
+        for finding in tagged["findings"]:
+            with self.subTest(finding=finding[:40]):
+                self.assertTrue(finding.strip())
+
+    def test_the_operator_install_records_counts_rather_than_identities(self):
+        hermes = self.report["hermesNative"]
+        install = hermes["install"]
+        for key in ("packages", "profiles", "units", "safe"):
+            with self.subTest(count=key):
+                self.assertNotIsInstance(install[key], bool)
+                self.assertIsInstance(install[key], int)
+        self.assertEqual(install["packages"], len(declared_packages()))
+        self.assertEqual(install["units"], install["packages"] * install["profiles"])
+        self.assertEqual(install["safe"], install["units"], "a unit short of SAFE is not SAFE")
+        self.assertIs(install["forceUsed"], False)
+        # A profile is reported as a count and a generic word, never as a name,
+        # a path or an account.
+        for text in (hermes["scope"], install["unit"]):
+            with self.subTest(text=text):
+                for forbidden in ("/", "@", "~", "\\"):
+                    self.assertNotIn(forbidden, text)
+
+    def test_a_fresh_session_claim_stays_inside_what_it_exercised(self):
+        sessions = self.report["hermesNative"]["freshSessions"]
+        self.assertIsInstance(sessions["count"], int)
+        self.assertNotIsInstance(sessions["count"], bool)
+        self.assertIs(sessions["appVaultAccountOrNetworkOperation"], False)
+        invoked = sessions["skillsInvoked"]
+        untouched = sessions["skillsNotInvoked"]
+        declared = declared_packages()
+        self.assertTrue(invoked, "a fresh-load claim has to name what it loaded")
+        self.assertTrue(untouched, "the packages never invoked are a claim of their own")
+        self.assertEqual(set(invoked) & set(untouched), set(), "a package is one or the other")
+        self.assertEqual(
+            sorted(invoked + untouched),
+            sorted(declared),
+            "every installed package is either invoked or explicitly not claimed",
+        )
 
 
 class ResourceClosureTest(unittest.TestCase):

@@ -2,8 +2,14 @@
   "schemaVersion": 1,
   "kind": "package-consumer-test-report",
   "date": "2026-09-29",
-  "limitations": ["Isolated canaries do not establish production consumer deployment or retirement.", "Account-bound Sync and exact-destination clip delivery remain unverified."],
+  "updated": "2026-10-01",
+  "reporters": {
+    "leader": "Recorded by the publishing leader from its own isolated canary sessions on 2026-09-29.",
+    "operator": "Relayed from an operator running their own runtime and profiles. Nothing in an operator section was observed from this repository, and no profile name, path, account or raw runtime log is recorded here."
+  },
+  "limitations": ["Isolated canaries do not establish production consumer deployment or retirement.", "Account-bound Sync and exact-destination clip delivery remain unverified.", "Every section names its reporter: a leader section was observed here, an operator section was not.", "The leader canary and the operator install are at two different revisions and are not evidence about each other."],
   "publication": {
+    "reportedBy": "leader",
     "url": "https://github.com/Xia-Ataraxia/obsidian-skills",
     "release": "https://github.com/Xia-Ataraxia/obsidian-skills/releases/tag/v0.1.0",
     "commit": "0e658b5a09ac4c789392ac634dcff8a195fa3116",
@@ -15,9 +21,13 @@
     "publicRendering": "Actual GitHub English and Korean articles rendered in Chromium; both original SVG images loaded with alt text. Repository-relative links resolved to existing committed paths."
   },
   "nativeCanary": {
+    "reportedBy": "leader",
+    "date": "2026-09-29",
+    "status": "historical",
     "runtime": "Claude Code",
     "scope": "isolated consumer project",
     "origin": "Detached clone of the public immutable commit above",
+    "commit": "0e658b5a09ac4c789392ac634dcff8a195fa3116",
     "plugin": "obsidian-skills@obsidian-skills",
     "version": "0.1.0",
     "installation": "Native marketplace add and plugin install returned success",
@@ -26,15 +36,45 @@
     "separateFreshResponse": "obsidian-skills:obsidian-canvas",
     "checks": ["CLI collision exit-zero is not success", "Missing headless configuration is not healthy network Sync", "Canvas dangling edge rejected without invented node", "Parsing distinguished from rendering"],
     "nonTargetSentinelUnchanged": true,
-    "limitations": ["Not a production user-profile deployment", "No other native runtime fresh-load claim", "No consumer retirement claim"]
+    "limitations": ["Not a production user-profile deployment", "Claude Code only; the operator sections below are separate reports, not part of this canary", "Taken at the immutable tag, which predates the corrected pin, and not repeated there", "No consumer retirement claim"]
+  },
+  "hermesNative": {
+    "reportedBy": "operator",
+    "date": "2026-10-01",
+    "status": "new",
+    "runtime": "Hermes Agent",
+    "route": "registry-tap",
+    "commit": "c22ce26bae518e7973f078cac972ea88707b8e79",
+    "origin": "Corrected public revision, not the immutable v0.1.0 tag",
+    "scope": "five generic operator profiles",
+    "install": {"unit": "one package into one profile", "packages": 9, "profiles": 5, "units": 45, "safe": 45, "guard": "skills-guard-v6", "forceUsed": false},
+    "verification": ["Each installed package compared to its source by non-hidden recursive byte equality", "Every installed package listed in the registry tap/source-qualified"],
+    "freshSessions": {"count": 5, "mode": "read-only chat", "skillsInvoked": ["obsidian-cli", "obsidian-sync"], "skillsNotInvoked": ["obsidian-markdown", "obsidian-bases", "obsidian-canvas", "obsidian-mermaid", "obsidian-visualize", "obsidian-clipper", "obsidian-doctor"], "appVaultAccountOrNetworkOperation": false},
+    "notClaimed": ["No task invocation for the other seven installed packages", "No application, vault, account or network operation in any session", "No universal production readiness or old-owner retirement", "No Claude Code result at this revision; the Hermes tag attempt was rejected"],
+    "consumerUpdate": "The operator also reports a native downstream consumer update across these profiles; private source and admission details stay in its private record.",
+    "limitations": ["Operator-reported: this repository observed none of these runs", "Existing local user profiles were deployed; complete ownership migration is not established", "Install and fresh load are separate facts from anything a skill would then do in a vault"]
+  },
+  "taggedRelease": {
+    "reportedBy": "operator",
+    "date": "2026-10-01",
+    "tag": "v0.1.0",
+    "commit": "0e658b5a09ac4c789392ac634dcff8a195fa3116",
+    "retagged": false,
+    "usableForFullHermesInstall": false,
+    "findings": ["skills-guard-v6 reported DANGEROUS with two credential_exposure false positives on quoted placeholder nonce assignments in obsidian-visualize. No real credential was present; this was a pattern-scanner refusal, not a semantic execution verdict.", "An install attempt from the tag was reported Not installed while the CLI still exited 0, so its exit status was not install evidence."],
+    "correctedAt": "c22ce26bae518e7973f078cac972ea88707b8e79",
+    "guidance": "Install from the corrected public pin. The tag is immutable and stays on its own commit; it is never moved onto the correction.",
+    "limitations": ["Operator-reported; the tag itself is left exactly as published", "The historical Claude canary above was taken at this tag and is not re-verified by the correction"]
   },
   "isolatedPlugins": {
+    "reportedBy": "leader",
     "app": "Obsidian 1.12.7",
     "templater": {"version": "2.19.3", "loaded": true, "success": "Synthetic templater result", "error": "missingSyntheticVariable is not defined", "nonTargetUnchanged": true},
     "excalidraw": {"version": "2.27.3", "loaded": true, "drawingElements": 5, "rendered": "Study and Evidence text boxes connected by an arrow; actual plugin view and screenshot inspected"},
     "limitations": ["Single isolated synthetic vault", "No production plugin incident or account configuration changed", "Templater 2.25.1 manifest requires app 1.13.0; compatible version was selected instead"]
   },
   "clipperAttempt": {
+    "reportedBy": "leader",
     "version": "1.7.1",
     "source": "Official Chrome release archive",
     "scope": "Separate disposable browser profile",
@@ -43,5 +83,5 @@
     "recovery": "Initial browser attachment had no page target. Created an isolated inspection page; native Extensions.loadUnpacked succeeded, background service worker appeared and actual settings UI rendered.",
     "limitations": ["Add to Obsidian was not activated because destination remained Last used; delivery and vault readback not established", "No user browser profile or vault note changed"]
   },
-  "remaining": ["Account-bound Sync pairing/remote-vault selection", "Source-local admitted consumer deployment", "Old-owner retirement and active-caller zero audit", "Deployed recovery"]
+  "remaining": ["Account-bound Sync pairing/remote-vault selection", "Complete ownership migration beyond the reported local consumer update", "Old-owner retirement and active-caller zero audit", "Deployed recovery", "Claude Code native install and fresh load at the corrected pin", "Codex, GJC and Grok native installs at any revision"]
 }

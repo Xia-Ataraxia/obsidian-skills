@@ -63,9 +63,14 @@ PYTHON=''
 PKG_NAME=obsidian-skills
 PKG_VERSION=0.1.0
 PKG_STATUS=prerelease
-# The public revision the verified result was reproduced from. A local checkout
-# is only that revision when it is checked out at this commit, unmodified.
-PKG_PIN=0e658b5a09ac4c789392ac634dcff8a195fa3116
+# The corrected public revision to install from, and the revision the Hermes
+# native result was reproduced at. A local checkout is only that revision when it
+# is checked out at this commit, unmodified.
+PKG_PIN=c22ce26bae518e7973f078cac972ea88707b8e79
+# The immutable v0.1.0 tag. It is kept where it is and is never moved onto the
+# correction above, so it stays the revision the historical Claude Code canary
+# was taken at -- and it is not a revision to install from. See tag_warning().
+PKG_TAG_PIN=0e658b5a09ac4c789392ac634dcff8a195fa3116
 PKG_ORG=Xia-Ataraxia
 PKG_SLUG="${PKG_ORG}/${PKG_NAME}"
 PKG_LICENSE=MIT
@@ -88,6 +93,28 @@ usage_err() {
   printf 'USAGE ERROR: %s\n' "$*" >&2
   printf "Run './%s --help' for usage.\n" "$PROG" >&2
   exit 2
+}
+
+# The one caveat that outranks every route below, so it is stated in one place
+# and printed wherever a source revision is chosen.
+#
+# The v0.1.0 tag is immutable and stays on the revision it was cut at. It is not
+# moved onto the correction: a moved tag would make the same name mean two
+# different trees for anyone who already fetched it. So the tag and the revision
+# to install from are now two different commits, and the tag is the older one.
+tag_warning() {
+  say "  WARNING: the immutable v${PKG_VERSION} tag is not the revision to install from."
+  say "  It resolves to ${PKG_TAG_PIN}, which predates"
+  say '  the obsidian-visualize eval-nonce correction and therefore still ships that'
+  say '  handshake with quoted placeholder nonce strings. skills-guard-v6 reported'
+  say '  DANGEROUS: two credential_exposure false positives. No real credentials'
+  say '  were present; this was not a semantic execution verdict.'
+  say '  An operator reported that tag not usable for a full Hermes install: the'
+  say '  attempt was reported Not installed while the CLI still exited 0, so its'
+  say '  exit status was not install evidence either.'
+  say "  Install from the corrected public pin ${PKG_PIN}"
+  say '  instead. The tag is immutable and is left exactly where it is; it is never'
+  say '  moved onto the correction.'
 }
 
 # ── route table ───────────────────────────────────────────────────────────────
@@ -286,16 +313,20 @@ cmd_routes() {
   say '    skill-directory     no self-serve native plugin route; the Agent Skills'
   say '                        directory import is the only route'
   blank
-  say "  ${PKG_NAME} ${PKG_VERSION} is a public ${PKG_STATUS}: it is published at the"
-  say '  repository tag, not in any runtime public plugin directory, so no runtime'
-  say '  lists it. Use the published repository where the native route supports it.'
-  say "  Local-source routes require a clone pinned at ${PKG_PIN} to reproduce"
-  say "  the canary. Run './${PROG} native --runtime <id>' for supported source forms."
+  say "  ${PKG_NAME} ${PKG_VERSION} is a public ${PKG_STATUS}: it is published in the"
+  say '  repository, not in any runtime public plugin directory, so no runtime lists'
+  say '  it. Use the published repository where the native route supports it.'
+  say "  Local-source routes may use the recommended corrected pin ${PKG_PIN}."
+  say "  This is not a repeat of the historical canary. Run './${PROG} native --runtime <id>'."
   blank
-  say '  Installed and fresh-loaded so far: Claude Code only, in an isolated project'
-  say '  scope, from a clone of the published tag. Codex, GJC, Grok and Hermes'
-  say '  native installs remain unverified. Cursor and Agent Skills have no native'
+  say '  Claude Code: historical isolated-project canary at the immutable tag.'
+  say '  Hermes: 45 package installations across five operator profiles; fresh-loaded'
+  say '  only CLI/Sync in five read-only sessions, with no app/vault/account/network'
+  say '  operations. Installed bytes matched the corrected pin. Codex, GJC and'
+  say '  Grok native installs remain unverified. Cursor and Agent Skills have no native'
   say '  plugin route; their directory-copy behavior was tested separately.'
+  blank
+  tag_warning
   blank
   say '  A runtime outside this table has no resolved route and is refused, not guessed.'
   blank
@@ -396,12 +427,11 @@ cmd_native() {
       if [ "$_local_source" = yes ]; then
         blank
         say '  The local path printed above is this working checkout, whatever it holds'
-        say '  right now. That is not by itself the verified revision. To reproduce the'
-        say "  verified result, register a clone checked out at the public ${PKG_VERSION} pin:"
+        say '  right now. For the recommended corrected source, use this checkout:'
         cmdline "git clone https://github.com/${PKG_SLUG}.git"
         cmdline "git -C ${PKG_NAME} checkout ${PKG_PIN}"
-        say '  A checkout at any other revision, or one carrying local modifications, is'
-        say '  not the revision anything here was verified at.'
+        say '  This recommendation does not reproduce the historical Claude canary,'
+        say '  which ran only at the older tag; current native loading is not claimed.'
       fi
       ;;
     registry-tap)
@@ -420,9 +450,18 @@ cmd_native() {
       say '    then carries the in-repo path:'
       cmdline "hermes skills install ${PKG_SLUG}/skills/<name>"
       blank
+      say '    Either identifier resolves against whatever the repository holds when'
+      say '    it is read. These remote commands are not pinned by a local checkout.'
+      say '    Use this clone as a byte-comparison reference after installation:'
+      cmdline "git clone https://github.com/${PKG_SLUG}.git"
+      cmdline "git -C ${PKG_NAME} checkout ${PKG_PIN}"
+      blank
+      tag_warning
+      blank
       note "substitute <name> with one of the nine packages; './${PROG} skills' lists them"
       note 'a tap defaults to the repository skills/ directory, which is where these packages live'
       note 'repo-local project skills load only after "hermes skills trust"'
+      note 'an install unit is one package, so nine packages is nine units per profile'
       ;;
     skill-directory)
       say "  UNSUPPORTED: ${R_LABEL} offers no self-serve native plugin or marketplace"
@@ -444,11 +483,24 @@ cmd_native() {
   blank
   if [ "$R_ID" = claude ]; then
     say '  Verified separately, by running the commands above by hand against a clone'
-    say "  checked out at the public ${PKG_VERSION} pin ${PKG_PIN}:"
+    say "  checked out at the immutable v${PKG_VERSION} tag ${PKG_TAG_PIN}:"
     say "  ${R_LABEL} installed this package by native plugin identity and fresh-loaded"
     say '  it, in an isolated project scope only. A user-profile or production install'
     say '  is still unverified, and a checkout at another revision was not the one'
-    say '  verified.'
+    say '  verified. That canary is historical: it was taken at the tag above, which is'
+    say '  older than the corrected pin, and it has not been repeated at the corrected'
+    say '  pin. It is not evidence about the revision this script guides you to.'
+  elif [ "$R_ID" = hermes ]; then
+    say '  Verified separately: the operator used the native remote-source commands'
+    say "  while public main was ${PKG_PIN}; installed bytes matched that revision."
+    say "  ${R_LABEL} installed all nine packages by native registry identity into each"
+    say '  of five generic operator profiles -- 45 of 45 install units reported SAFE'
+    say '  under skills-guard-v6, with no force flag -- and every installed package matched'
+    say '  its source by non-hidden recursive byte equality, with the registry listing'
+    say '  each one tap/source-qualified. Five fresh sessions then fresh-loaded'
+    say '  obsidian-cli and obsidian-sync only, read-only: no application, vault,'
+    say '  account or network operation was run, and no task invocation is claimed for'
+    say '  the other seven packages.'
   elif [ "$R_KIND" = skill-directory ]; then
     say "  No native route exists to verify: ${R_LABEL} offers this package no"
     say '  self-serve native plugin or marketplace route at all, so there is no native'
@@ -458,8 +510,10 @@ cmd_native() {
     say '  is itself unverified.'
   else
     say "  Route confirmed is not install verified: no ${R_LABEL} install of this"
-    say '  package has been observed. Claude Code, in an isolated project scope, is'
-    say '  the only runtime whose native install and fresh-load are verified.'
+    say '  package has been observed. Claude Code, in an isolated project scope at the'
+    say '  immutable tag, and Hermes Agent, in generic operator profiles at the'
+    say '  corrected pin, are the only runtimes whose native install and fresh-load'
+    say '  are verified.'
   fi
   blank
 }

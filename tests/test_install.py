@@ -19,11 +19,13 @@ the interference between the exact two calls it belongs between. No test depends
 on winning a race, and none skips itself for losing one.
 
 What these tests do not claim: that a runtime discovered, loaded, or executed a
-copied package. A directory copy is a filesystem fact, not an install. The one
-native install and fresh-load that has been verified -- Claude Code, isolated
-project scope only, from a clone of the published 0.1.0 prerelease tag -- was
-performed by hand outside this suite. Every other runtime's install is
-unverified, and nothing here executes a runtime CLI to change that.
+copied package. A directory copy is a filesystem fact, not an install. The two
+native installs and fresh-loads that have been verified -- Claude Code, isolated
+project scope only, from a clone of the immutable 0.1.0 prerelease tag, and
+Hermes Agent, all nine packages into each of five generic operator profiles at
+the corrected public pin -- were performed by hand outside this suite, the
+second of them by an operator. Codex, GJC and Grok installs are unverified, and
+nothing here executes a runtime CLI to change that.
 
 Run:  python3 -m unittest discover -s tests -t . -v
 """
@@ -74,7 +76,13 @@ def release_status() -> str:
 
 
 def release_pin() -> str:
+    """The corrected public revision the installer guides a source clone to."""
     return re.search(r"^PKG_PIN=(\S+)", installer_source(), re.M).group(1)
+
+
+def tag_pin() -> str:
+    """The immutable v0.1.0 tag: the historical canary revision, never moved."""
+    return re.search(r"^PKG_TAG_PIN=(\S+)", installer_source(), re.M).group(1)
 
 
 def route_kinds() -> dict:
@@ -111,6 +119,15 @@ def accepted_options() -> set:
 def accepted_commands() -> set:
     match = re.search(r"^  ([a-z|]+)\) COMMAND=\$1; shift ;;", installer_source(), re.M)
     return set(match.group(1).split("|"))
+
+
+def flow(text: str) -> str:
+    """Output with its line wrapping collapsed, so a claim matches as prose.
+
+    Reflowing a paragraph is not a change of claim, and a test that breaks on it
+    would be testing the column the author happened to wrap at.
+    """
+    return re.sub(r"\s+", " ", text)
 
 
 def load_copier():
@@ -305,37 +322,60 @@ class ReadOnlyCommandTest(InstallerHarness):
                 self.assertIn(runtime, result.stdout)
                 self.assertIn(kind, result.stdout)
 
-    def test_routes_reports_the_prerelease_status_and_the_one_verified_install(self):
+    def test_routes_reports_the_prerelease_status_and_the_verified_installs(self):
         """The status line must not read as unreleased or as a blanket no-install."""
         result = self.run_installer("routes")
         self.assertEqual(result.returncode, OK, result.stderr)
         self.assertEqual(release_status(), "prerelease")
         self.assertIn("prerelease", result.stdout)
         self.assertNotIn("unreleased", result.stdout)
-        self.assertIn("Claude Code only", result.stdout)
-        self.assertIn("isolated project", result.stdout)
+        self.assertIn("Claude Code", result.stdout)
+        self.assertIn("historical isolated-project canary", result.stdout)
+        self.assertIn("Hermes Agent", result.stdout)
+        self.assertIn("45 package installations across five operator profiles", result.stdout)
+        self.assertIn("only CLI/Sync in five read-only sessions", result.stdout)
+        # The two runtimes that were never installed must not be swept into the
+        # verified set by the sentence that now names two that were.
+        self.assertNotIn("Claude Code only", result.stdout)
+        self.assertIn("Codex, GJC and", result.stdout)
         self.assertIn("native installs remain unverified", result.stdout)
         self.assertIn("Cursor and Agent Skills have no native", result.stdout)
         self.assertIn("directory-copy behavior was tested separately", result.stdout)
-        self.assertIn("Local-source routes require a clone pinned", result.stdout)
+        self.assertIn("recommended corrected pin", result.stdout)
+        self.assertIn(release_pin(), result.stdout)
 
-    def test_native_scopes_the_verified_install_to_claude_and_no_other_runtime(self):
-        """Only claude may report a verified install; the rest stay unverified."""
+    def test_native_scopes_the_verified_installs_to_claude_and_hermes_only(self):
+        """Only the two installed runtimes report one; the rest stay unverified."""
         claude = self.run_installer("native", "--runtime", "claude")
         self.assertEqual(claude.returncode, OK, claude.stderr)
+        self.assertIn("Verified separately", claude.stdout)
         self.assertIn("fresh-loaded", claude.stdout)
         self.assertIn("isolated project scope only", claude.stdout)
         self.assertIn("still unverified", claude.stdout)
+        # The Claude canary was taken at the tag, which is older than the pin the
+        # installer now guides a source clone to, and was never repeated at it.
+        self.assertIn(tag_pin(), claude.stdout)
+        self.assertIn("historical", claude.stdout)
+        self.assertIn("has not been repeated", claude.stdout)
         self.assertNotIn("Route confirmed is not install verified", claude.stdout)
         self.assertNotIn("No native route exists to verify", claude.stdout)
 
+        hermes = self.run_installer("native", "--runtime", "hermes")
+        self.assertEqual(hermes.returncode, OK, hermes.stderr)
+        self.assertIn("Verified separately", hermes.stdout)
+        self.assertIn("fresh-loaded", hermes.stdout)
+        self.assertIn(release_pin(), hermes.stdout)
+        self.assertNotIn("Route confirmed is not install verified", hermes.stdout)
+        self.assertNotIn("No native route exists to verify", hermes.stdout)
+
         kinds = route_kinds()
         for runtime in known_runtimes():
-            if runtime == "claude":
+            if runtime in ("claude", "hermes"):
                 continue
             with self.subTest(runtime=runtime):
                 result = self.run_installer("native", "--runtime", runtime)
                 self.assertEqual(result.returncode, OK, result.stderr)
+                self.assertNotIn("Verified separately", result.stdout)
                 self.assertNotIn("fresh-loaded", result.stdout)
                 if kinds[runtime] == "skill-directory":
                     self.assertIn("No native route exists to verify", result.stdout)
@@ -347,6 +387,51 @@ class ReadOnlyCommandTest(InstallerHarness):
                         "Route confirmed is not install verified", result.stdout
                     )
                     self.assertNotIn("No native route exists to verify", result.stdout)
+
+    def test_native_reports_the_hermes_result_at_the_level_it_was_observed(self):
+        """Counts, scope and the boundary of what the operator did not exercise."""
+        out = flow(self.run_installer("native", "--runtime", "hermes").stdout)
+        for claim in (
+            "the operator used the native remote-source commands",
+            f"while public main was {release_pin()}",
+            "remote commands are not pinned by a local checkout",
+            "byte-comparison reference after installation",
+            "installed all nine packages by native registry identity",
+            "into each of five generic operator profiles",
+            "45 of 45 install units reported SAFE under skills-guard-v6, with no force flag",
+            "matched its source by non-hidden recursive byte equality",
+            "the registry listing each one tap/source-qualified",
+            "Five fresh sessions then fresh-loaded obsidian-cli and obsidian-sync",
+            "read-only: no application, vault, account or network operation was run",
+            "no task invocation is claimed for the other seven packages",
+        ):
+            with self.subTest(claim=claim):
+                self.assertIn(claim, out)
+        # A profile count is not a production claim, and a copy is still a copy.
+        self.assertNotIn("production", out)
+
+    def test_every_source_revision_surface_warns_about_the_immutable_tag(self):
+        """The tag predates the correction, so it is never offered as a source."""
+        pin, tag = release_pin(), tag_pin()
+        self.assertRegex(tag, r"^[0-9a-f]{40}$")
+        self.assertNotEqual(pin, tag, "the correction has to be its own revision")
+        for argv in (["routes"], ["native", "--runtime", "hermes"]):
+            with self.subTest(argv=argv):
+                result = self.run_installer(*argv)
+                self.assertEqual(result.returncode, OK, result.stderr)
+                out = flow(result.stdout)
+                self.assertIn(f"tag is not the revision to install from. It resolves to {tag}", out)
+                self.assertIn("eval-nonce correction", out)
+                self.assertIn("skills-guard-v6 reported DANGEROUS", out)
+                self.assertIn("two credential_exposure false positives", out)
+                self.assertIn("No real credentials were present", out)
+                self.assertIn("not a semantic execution verdict", out)
+                self.assertIn("not usable for a full Hermes install", out)
+                self.assertIn("Not installed while the CLI still exited 0", out)
+                self.assertIn(f"Install from the corrected public pin {pin}", out)
+                self.assertIn("never moved onto the correction", out)
+                # Warning about a revision is not the same as offering it.
+                self.assertNotIn(f"checkout {tag}", out)
 
     def test_native_without_a_plugin_route_reports_directory_copy_only(self):
         """skill-directory runtimes have no native route to call verified at all."""
@@ -377,11 +462,11 @@ class ReadOnlyCommandTest(InstallerHarness):
                     continue
                 offered += 1
                 self.assertIn("from a local checkout", result.stdout)
-                self.assertIn("not by itself the verified revision", result.stdout)
-                self.assertIn("checked out at the public", result.stdout)
+                self.assertIn("recommended corrected source", result.stdout)
+                self.assertIn("does not reproduce the historical Claude canary", result.stdout)
                 self.assertIn(pin, result.stdout)
                 self.assertIn(
-                    "A checkout at any other revision, or one carrying local",
+                    "current native loading is not claimed",
                     result.stdout,
                 )
         self.assertTrue(offered, "at least one runtime must offer a local source")
