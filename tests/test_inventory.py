@@ -89,6 +89,7 @@ class SyntheticAuditTest(unittest.TestCase):
             self._write(self.licensed / path, body)
 
         self.data = self._manifest()
+        self.native_contract = copy.deepcopy(audit_inventory.native_projection(self.data))
         self.roots = {"unlicensed": self.unlicensed, "licensed": self.licensed}
 
     def _write(self, path, text):
@@ -222,7 +223,8 @@ class SyntheticAuditTest(unittest.TestCase):
 
     def _audit(self, data=None, with_sources=True):
         return audit(
-            data or self.data, self.root, self.roots if with_sources else None
+            data or self.data, self.root, self.roots if with_sources else None,
+            native_contract=self.native_contract,
         )
 
     # --- the baseline must be clean, or no negative test below proves anything ---
@@ -627,9 +629,16 @@ class SyntheticAuditTest(unittest.TestCase):
         self.assertEqual(([]), audit_inventory.load_manifest(json.dumps(self.data))[1])
 
     def test_knowledge_feature_owns_only_its_own_package(self):
-        (self.root / "skills/ingest").mkdir()
+        target = "skills/ingest/SKILL.md"
+        self._write(self.root / target, "# ingest\n")
         data = copy.deepcopy(self.data)
         data["features"]["K03"] = {"name": "ingest", "package": "skills/ingest"}
+        data["knowledge_capabilities"] = [{
+            "id": "K-03", "owner": "K03", "package": "ingest", "target": target,
+            "target_sha256": _digest("# ingest\n"), "source_row_sha256": "c" * 64,
+            "implementation_references": [target],
+            "references": [target], "verification": [target],
+        }]
         self.assertEqual([], self._audit(data))
         data["features"]["K03"]["package"] = "skills/obsidian-markdown"
         self.assertIn("knowledge feature K03 must own skills/ingest", self._audit(data))
@@ -662,6 +671,9 @@ class RealManifestTest(unittest.TestCase):
                 continue
             self.assertIsInstance(unit["owner"], str, unit["id"])
             owners.setdefault(unit["owner"], []).append(unit["id"])
+        for row in MANIFEST["knowledge_capabilities"]:
+            self.assertIsInstance(row["owner"], str, row["id"])
+            owners.setdefault(row["owner"], []).append(row["id"])
         self.assertEqual(set(MANIFEST["features"]), set(owners))
 
     def test_every_functional_unit_names_the_one_package_of_its_owner(self):
