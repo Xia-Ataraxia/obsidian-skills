@@ -20,6 +20,7 @@ import getpass
 import json
 import os
 import re
+import sys
 import unittest
 from pathlib import Path
 
@@ -249,6 +250,45 @@ class DeclaredPackagesTest(unittest.TestCase):
         for name in present:
             with self.subTest(package=name):
                 self.assertTrue((SKILLS_DIR / name / "SKILL.md").is_file())
+
+    def test_twenty_packages(self):
+        """Nine native plus eleven knowledge: one directory, one listing, one owner each."""
+        knowledge = knowledge_packages()
+        twenty = sorted(self.declared + knowledge)
+        self.assertEqual(len(set(twenty)), 20, twenty)
+        self.assertEqual(present_packages(), twenty)
+        for name in twenty:
+            with self.subTest(package=name):
+                self.assertTrue((SKILLS_DIR / name / "SKILL.md").is_file())
+
+        for label, metadata in (
+            ("claude plugin", load_json(REPO / ".claude-plugin" / "plugin.json")["metadata"]),
+            (
+                "claude marketplace",
+                load_json(REPO / ".claude-plugin" / "marketplace.json")["plugins"][0]["metadata"],
+            ),
+        ):
+            with self.subTest(manifest=label):
+                self.assertEqual(sorted(metadata["packages"]), sorted(self.declared))
+                self.assertEqual(sorted(metadata["knowledgePackages"]), sorted(knowledge))
+
+        sys.path.insert(0, str(REPO / "scripts"))
+        from audit_inventory import audit
+
+        inventory = load_json(REPO / "source-inventory.json")
+        self.assertEqual(audit(inventory, REPO), [])
+        self.assertEqual(
+            sorted(feature["package"] for feature in inventory["features"].values()),
+            ["skills/" + name for name in twenty],
+        )
+        self.assertEqual(
+            {unit["package"] for unit in inventory["units"] if unit["class"] == "functional"},
+            set(self.declared),
+        )
+        self.assertEqual(
+            sorted(row["package"] for row in inventory["knowledge_capabilities"]),
+            sorted(knowledge),
+        )
 
     def test_repository_ships_no_callable_root_skill(self):
         self.assertFalse((REPO / "SKILL.md").exists(), "a root SKILL.md would be a router")
