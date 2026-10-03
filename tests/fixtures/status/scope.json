@@ -1,0 +1,13 @@
+{
+  "schema": "status/scope@1",
+  "roots": [
+    {"name": "questions", "path": "20. Wiki/Questions"},
+    {"name": "personas", "path": "20. Wiki/Personas"}
+  ],
+  "paper_analyses": "40. Paper Analyses",
+  "inbox": "00. Inbox",
+  "snapshots": [
+    {"name": "agent-context", "path": "90. Settings/Derived/agent-context.md"}
+  ],
+  "properties": ["purpose", "source_locator"]
+}
