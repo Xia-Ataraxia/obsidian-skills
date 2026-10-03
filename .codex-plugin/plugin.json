@@ -1,7 +1,7 @@
 {
   "name": "obsidian-skills",
   "version": "0.1.0",
-  "description": "Nine self-contained Agent Skills for Obsidian vault work: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease. It is the native half of the secondbrain-skills collection; the eleven knowledge packages are listed here as each one lands.",
+  "description": "Nine self-contained Agent Skills for Obsidian vault work: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease. It is the native half of the secondbrain-skills collection; its eleven knowledge packages are listed here as well.",
   "author": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"

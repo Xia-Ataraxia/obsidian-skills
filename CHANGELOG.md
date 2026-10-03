@@ -13,4 +13,12 @@
 - From existing local source revision `25f484a63e7278e1864f08b372eea3d96e809289`, populated the existing `knowledgePackages` arrays in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` with `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context` and `onboard`.
 - Preserved native registration and every other metadata field, including version `0.1.0`. This records existing packages, not new behavior, installation or fresh-load proof. No code or asset import, relicensing or new source grant is involved; existing notices and rights limits remain unchanged.
 
+### Local release candidate documentation
+
+- Documented the twenty-package `secondbrain-skills` collection in both READMEs, the install matrix and the verification matrix: nine native packages and eleven knowledge packages, each with its role.
+- `install.sh --help` now names the twenty packages. Option grammar, routes, selection and copy behavior are unchanged.
+- Manifest prose no longer says the knowledge packages are listed as each one lands; all eleven are listed. Package lists, counts and version `0.1.0` are unchanged.
+- Evidence levels are kept apart: static manifest registration, temporary materialization by the directory copy, local script behavior, and the earlier native records for the nine published packages. No runtime load of a knowledge package, automatic discovery, app execution, Sync, deployment or deeplink opening is claimed.
+- The two transferred `ingest` helpers and their tests keep their unresolved origin rights and public-redistribution hold. This candidate is not a rights grant or a publication approval.
+
 This is a local candidate, not a published release. No deployed installation, private consumer change, old-owner retirement, or production recovery has occurred. Those effects require their own authorization and evidence. Unresolved lifecycle policy remains unresolved.

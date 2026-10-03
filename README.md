@@ -1,7 +1,7 @@
 <p align="center">
 
 > **Evidence boundary:** Hermes native installs resolved public main at `c22ce26bae518e7973f078cac972ea88707b8e79`; installed bytes were compared afterwards. A local clone checkout does not pin remote tap/install commands. The operator reports 45 installations in five existing local user profiles and a downstream consumer update; fresh task responses cover only CLI/Sync. The immutable `v0.1.0` refusal was two `skills-guard-v6` `credential_exposure` false positives on fake nonce strings, not real credentials or a semantic execution verdict. No scanner bypass was used.
-  <img src="assets/brand/hero.svg" alt="Obsidian Skills — nine independent Agent Skills for Obsidian vaults" width="880">
+  <img src="assets/brand/hero.svg" alt="Obsidian Skills: twenty independent Agent Skills for Obsidian vaults, nine native and eleven knowledge packages" width="880">
 </p>
 
 <p align="center">
@@ -10,7 +10,9 @@
 
 # Obsidian Skills
 
-Nine independent Agent Skills for working inside an Obsidian vault: Markdown, Bases, Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and headless Sync.
+Twenty independent Agent Skills, the `secondbrain-skills` collection. Nine native packages work with Obsidian itself: Markdown, Bases, Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and headless Sync. Eleven knowledge packages work with the notes: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`.
+
+> **Local release candidate.** This checkout adds the eleven knowledge packages to the published nine. It's a local candidate at version `0.1.0`, not a publication: the public pin and the evidence below describe the nine native packages only. Nothing here is a new rights grant or a publication approval. See [Local release candidate](#local-release-candidate-twenty-packages) for what was checked and what wasn't.
 
 Every package is a self-contained `SKILL.md` with its own references and scripts. There is no root skill, no dispatcher, no shared runtime, and no compatibility alias — your agent loads the one package the task needs, and nothing else.
 
@@ -46,7 +48,25 @@ Every package is a self-contained `SKILL.md` with its own references and scripts
 | `obsidian-doctor` | Plugin and Templater failure diagnosis from sanitized evidence, with a read-only classifier script. | *"Templater stopped firing on new notes — classify the evidence."* |
 | `obsidian-sync` | The headless `ob` client (npm `obsidian-headless`) for Obsidian Sync: pairing, direction, one-shot or continuous runs, incident containment. | *"Set up pull-only headless sync on a server and keep it reversible."* |
 
-Run `./install.sh skills` to see which of the nine are present in your checkout.
+## The eleven knowledge packages
+
+These are in the local release candidate only. None of them is in the published pin, and none has been loaded by a runtime.
+
+| Package | What it owns |
+| --- | --- |
+| `capture` | Saves explicitly selected tabs, URLs, files, conversations, or session spans as Inbox candidates. |
+| `inbox` | Lists, previews, and counts Inbox candidates, then hands a selected scope to `ingest`. |
+| `ingest` | Preserves selected source evidence in Raw and compiles source-grounded Wiki notes. Direct ingest doesn't need `capture`. |
+| `query` | Answers from existing notes with checked quotations, inherited sources, and exact Obsidian deeplinks. |
+| `verify` | Reviews selected claims against checked evidence and prepares an approval-bound record. |
+| `audit` | Samples a bounded scope for quality risks and states its coverage and limits. |
+| `lint` | Checks a bounded scope for structure, citations, properties, links, and derived-index drift. |
+| `status` | Reports read-only counts, backlog, and snapshot age from named roots. |
+| `reindex` | Refreshes search derivations for one audited collection in an isolated named index. |
+| `refresh-context` | Binds proposed derived context snapshots to exact source hashes and applies only approved paths. |
+| `onboard` | Initializes an independent personal or knowledge vault from a reviewed candidate, or previews additive settings changes. |
+
+Run `./install.sh skills` to see which of the twenty are present in your checkout.
 
 ## Install
 
@@ -144,6 +164,18 @@ Details: [docs/security-and-privacy.md](docs/security-and-privacy.md).
 
 Full matrix: [docs/verification-matrix.md](docs/verification-matrix.md). Route-by-route detail: [docs/install-matrix.md](docs/install-matrix.md).
 
+### Local release candidate: twenty packages
+
+These checks ran on the local candidate, not on a published revision. Each one says what level it reached.
+
+- **Static registration.** The Claude plugin and marketplace manifests list the nine native packages and the eleven knowledge packages. A manifest entry is a declaration. It doesn't show that any runtime discovered or loaded a package.
+- **Temporary materialization.** `./install.sh copy --runtime claude --skill all --scope project --apply` into a disposable project produced exactly twenty package directories, and every copied file matched the checkout byte for byte. A symlink at one package destination refused the whole run with exit 1, and the disposable tree was unchanged. A copy is a filesystem fact, not an install.
+- **Local behavior.** The test suite and the inventory audit pass on an exact export of the candidate. Knowledge scenarios ran as scripts in temporary vaults: onboarding, direct ingest with a query deeplink, capture through Inbox to ingest, and additive onboarding with collision refusals.
+- **Not established.** No runtime has loaded a knowledge package, and the native evidence below is the earlier, separate record for the nine published packages. Nothing here shows automatic discovery, app or plugin execution, Sync, deployment, or a deeplink opening in the app. A future runtime load is its own step with its own evidence.
+- **Rights hold.** `ingest` carries two helpers and their tests transferred from a private source. Their origin rights are unconfirmed and public redistribution stays on hold, as [PROVENANCE.md](PROVENANCE.md) records.
+
+### Earlier evidence for the nine native packages
+
 **Passed — local, isolated, neutral fixtures** (report: [tests/evidence/native-app.json](tests/evidence/native-app.json))
 
 - Official CLI 1.12.7 against an isolated synthetic vault: `create` → `search` → `move` → read back at the new path, with the old path gone; a move from a missing source created nothing. A destination collision preserved the source, destination and unrelated note hashes.
@@ -205,7 +237,7 @@ Full matrix: [docs/verification-matrix.md](docs/verification-matrix.md). Route-b
 ## Repository layout
 
 ```
-skills/obsidian-*/       one self-contained package each (SKILL.md, references/, scripts/)
+skills/<name>/           one self-contained package each (SKILL.md, references/, scripts/)
 install.sh               route table, collision-checked copy installer
 assets/                  original brand and demo art + asset-ledger.json
 docs/                    install matrix, verification matrix, security, cutover
@@ -218,6 +250,6 @@ AGENTS.md                repository contract for contributors and agents
 
 MIT — see [LICENSE](LICENSE), which carries both copyright notices.
 
-Material in `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, and `obsidian-cli` is imported from [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98` (MIT, Copyright © 2026 Steph Ango), then modified. The other five packages are original work authored here. Each package's `CHANGELOG.md` records the exact source revision, the files taken, and every modification made to them.
+Material in `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, and `obsidian-cli` is imported from [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98` (MIT, Copyright © 2026 Steph Ango), then modified. The other five native packages and the eleven knowledge packages are authored here, except for two `ingest` helpers and their tests, which were transferred from a private source with origin rights still unconfirmed; see [PROVENANCE.md](PROVENANCE.md). Each package's `CHANGELOG.md` records the exact source revision, the files taken, and every modification made to them.
 
 Brand and demo art in `assets/` is original vector work authored for this repository, with per-file creator, origin, and rights recorded in [assets/asset-ledger.json](assets/asset-ledger.json). No vendor logo, icon set, or application screenshot is included. "Obsidian" names the third-party application these skills target; no affiliation or endorsement is claimed.

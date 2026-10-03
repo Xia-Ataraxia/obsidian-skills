@@ -636,7 +636,9 @@ cmd_copy() {
 cmd_help() {
   cat <<EOF
 ${PKG_NAME} ${PKG_VERSION} (${PKG_STATUS}) — ${PKG_ORG} — ${PKG_LICENSE}
-Nine Obsidian Agent Skills. No router, no dispatcher: each package stands alone.
+Twenty Agent Skills, the secondbrain-skills collection: nine native Obsidian
+packages and eleven knowledge packages. No router, no dispatcher: each package
+stands alone.
 
 USAGE
   ./${PROG} <command> [options]
@@ -645,8 +647,8 @@ COMMANDS
   routes                     Print every runtime's confirmed route, the manifest
                              that backs it, its skill directories, its published
                              reference and the evidence it was confirmed from.
-  skills                     List the nine declared packages and whether each is
-                             present in this checkout.
+  skills                     List the twenty declared packages and whether each
+                             is present in this checkout.
   native  --runtime <id>     Print the native install commands for one runtime.
                              Nothing is executed. A runtime without a self-serve
                              native plugin route is reported as unsupported.
@@ -656,7 +658,8 @@ COMMANDS
 
 OPTIONS
   --runtime <id>             One of: ${KNOWN_RUNTIMES}. Give it once.
-  --skill <name>             Repeatable. Or 'all' for the nine declared packages.
+  --skill <name>             Repeatable. Or 'all' for the nine native packages
+                             plus every knowledge package present here.
                              'all' and named packages cannot be mixed.
   --scope user|project       Required for 'copy'. No default is assumed.
   --project-root <path>      Consumer project for --scope project. Default: \$PWD.
@@ -723,6 +726,10 @@ BEHAVIOUR
     reads or writes a profile, settings file, marketplace registry, tap list or
     plugin cache. It only creates the destination root and copies package
     directories. No temporary file is used anywhere.
+
+PACKAGES
+  native     ${PACKAGE_SKILLS}
+  knowledge  ${KNOWLEDGE_SKILLS}
 
 EXAMPLES
   ./${PROG} routes

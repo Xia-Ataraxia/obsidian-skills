@@ -269,6 +269,12 @@ No installation, native app execution or model/runtime proof is established.
 
 ## Status and limits
 
+- The local release candidate holds twenty packages: the nine native features
+  above and the eleven knowledge packages mapped in `source-inventory.json`.
+  Its documentation adds no source, code or asset. The local ingest transfer's
+  two helpers and three tests keep their unconfirmed origin rights and
+  public-redistribution hold; a local release candidate is not a new grant or a
+  publication approval.
 - This repository is an unpublished candidate at version `0.1.0`. Nothing recorded
   here installs it on a host, publishes it to a marketplace, or retires, replaces,
   or supersedes any other project — both sources above remain their owners' to
