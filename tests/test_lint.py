@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -51,7 +52,13 @@ class LintTest(unittest.TestCase):
             approval_path = Path(self.temporary.name) / "lint-approval.json"
             approval_path.write_text(json.dumps(approval), encoding="utf-8")
             command.extend(["--approval", str(approval_path)])
-        return subprocess.run(command, text=True, capture_output=True, check=False)
+        return subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=15,
+        )
 
     def request(self, mode: str = "report") -> dict:
         return {
@@ -161,6 +168,33 @@ class LintTest(unittest.TestCase):
             if finding["category"] == "broken_link"
         ]
         self.assertEqual(broken, ["Missing.md"])
+
+    def test_recursive_scope_rejects_nonregular_markdown_entries(self) -> None:
+        pipe = self.root / "Wiki" / "Pipe.md"
+        os.mkfifo(pipe)
+        (self.root / "Wiki" / "Pipe source.md").write_text(
+            "---\ntype: wiki\ncreated_by: agent\nauthorship: agent\n---\n"
+            "# Pipe source\n\n[[Wiki/Pipe]] [[Wiki/Missing]]\n",
+            encoding="utf-8",
+        )
+        before = hashes(self.root)
+        request = self.request()
+        request["scope"] = ["Wiki"]
+
+        completed = self.invoke(request)
+
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        result = json.loads(completed.stdout)
+        self.assertNotIn("Wiki/Pipe.md", result["checked_notes"])
+        broken = [
+            finding["detail"]
+            for finding in result["findings"]
+            if finding["category"] == "broken_link"
+        ]
+        self.assertEqual(broken, ["Wiki/Pipe", "Wiki/Missing"])
+        self.assertEqual(result["mutations_performed"], [])
+        self.assertEqual(hashes(self.root), before)
+        self.assertFalse(pipe.is_file())
 
     def test_fix_mode_changes_only_the_derived_index(self) -> None:
         request = self.request("report")

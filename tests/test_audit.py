@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -46,7 +47,13 @@ class AuditTest(unittest.TestCase):
             approval_path = Path(self.temporary.name) / "audit-approval.json"
             approval_path.write_text(json.dumps(approval), encoding="utf-8")
             command.extend(["--approval", str(approval_path)])
-        return subprocess.run(command, text=True, capture_output=True, check=False)
+        return subprocess.run(
+            command,
+            text=True,
+            capture_output=True,
+            check=False,
+            timeout=15,
+        )
 
     def request(self) -> dict:
         return {
@@ -85,6 +92,66 @@ class AuditTest(unittest.TestCase):
         self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
         self.assertFalse(report_path.exists())
         self.assertEqual(sha256(self.root / "Wiki" / "Attention.md"), sampled_before)
+
+    def test_link_resolution_removes_only_a_literal_markdown_suffix(self) -> None:
+        for name in ("Random", "System", "Item"):
+            (self.root / "Wiki" / (name + ".md")).write_text(
+                "---\ntype: wiki\n---\n# " + name + "\n",
+                encoding="utf-8",
+            )
+        (self.root / "Wiki" / "Source.md").write_text(
+            "---\ntype: wiki\n---\n# Source\n"
+            "[[Wiki/Random.md]] [[Wiki/System.md]] [[Wiki/Item]] "
+            "[[Wiki/Missing.md]] [[Wiki/Absent]]\n",
+            encoding="utf-8",
+        )
+        request = self.request()
+        request["scope"] = ["Wiki/Source.md"]
+        request["sample"] = ["Wiki/Source.md"]
+        request.pop("previous_report")
+        request.pop("report_path")
+
+        completed = self.invoke(request)
+
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        report = json.loads(completed.stdout)
+        broken = [
+            finding["detail"]
+            for finding in report["findings"]
+            if finding["category"] == "broken_link"
+        ]
+        self.assertEqual(broken, ["Wiki/Missing.md", "Wiki/Absent"])
+
+    def test_recursive_scope_rejects_nonregular_markdown_entries(self) -> None:
+        pipe = self.root / "Wiki" / "Pipe.md"
+        os.mkfifo(pipe)
+        source = self.root / "Wiki" / "Pipe source.md"
+        source.write_text(
+            "---\ntype: wiki\n---\n# Pipe source\n"
+            "[[Wiki/Pipe]] [[Wiki/Missing]]\n",
+            encoding="utf-8",
+        )
+        source_before = sha256(source)
+        request = self.request()
+        request["scope"] = ["Wiki"]
+        request["sample"] = ["Wiki/Pipe source.md"]
+        request.pop("previous_report")
+        request.pop("report_path")
+
+        completed = self.invoke(request)
+
+        self.assertEqual(completed.returncode, 0, completed.stdout + completed.stderr)
+        report = json.loads(completed.stdout)
+        self.assertNotIn("Wiki/Pipe.md", report["resolved_scope_notes"])
+        broken = [
+            finding["detail"]
+            for finding in report["findings"]
+            if finding["category"] == "broken_link"
+        ]
+        self.assertEqual(broken, ["Wiki/Pipe", "Wiki/Missing"])
+        self.assertEqual(report["mutations_performed"], [])
+        self.assertEqual(sha256(source), source_before)
+        self.assertFalse(pipe.is_file())
 
     def test_approved_save_creates_only_the_report(self) -> None:
         request = self.request()

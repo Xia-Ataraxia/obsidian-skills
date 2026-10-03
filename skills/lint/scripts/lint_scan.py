@@ -60,7 +60,12 @@ def corpus(root: Path, scopes: List[str]) -> List[str]:
                 )
                 for filename in sorted(filenames):
                     item = base / filename
-                    if filename.startswith(".") or item.is_symlink() or item.suffix != ".md":
+                    if (
+                        filename.startswith(".")
+                        or item.is_symlink()
+                        or not item.is_file()
+                        or item.suffix != ".md"
+                    ):
                         continue
                     notes.add(item.relative_to(root).as_posix())
         else:
@@ -80,7 +85,12 @@ def note_index(root: Path) -> Dict[str, str]:
         ]
         for filename in filenames:
             item = base / filename
-            if filename.startswith(".") or item.is_symlink() or item.suffix != ".md":
+            if (
+                filename.startswith(".")
+                or item.is_symlink()
+                or not item.is_file()
+                or item.suffix != ".md"
+            ):
                 continue
             path = item.relative_to(root).as_posix()
             by_name[path[:-3]] = path

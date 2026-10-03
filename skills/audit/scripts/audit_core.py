@@ -33,7 +33,12 @@ def corpus(root: Path, scopes: List[str]) -> List[str]:
                 )
                 for filename in sorted(filenames):
                     item = base / filename
-                    if filename.startswith(".") or item.is_symlink() or item.suffix != ".md":
+                    if (
+                        filename.startswith(".")
+                        or item.is_symlink()
+                        or not item.is_file()
+                        or item.suffix != ".md"
+                    ):
                         continue
                     notes.add(item.relative_to(root).as_posix())
         else:
@@ -52,7 +57,12 @@ def title_index(root: Path) -> Set[str]:
         ]
         for filename in filenames:
             item = base / filename
-            if filename.startswith(".") or item.is_symlink() or item.suffix != ".md":
+            if (
+                filename.startswith(".")
+                or item.is_symlink()
+                or not item.is_file()
+                or item.suffix != ".md"
+            ):
                 continue
             relative_path = item.relative_to(root).as_posix()
             titles.add(relative_path[:-3])
@@ -92,7 +102,8 @@ def inspect(root: Path, path: str, known_titles: Set[str]) -> List[dict]:
             {"category": "verification_followup", "path": path, "detail": "verified without manifest"}
         )
     for link in re.findall(r"\[\[([^\]|#]+)(?:#[^\]|]+)?(?:\|[^\]]+)?\]\]", body):
-        if link not in known_titles and link.rstrip(".md") not in known_titles:
+        link_without_suffix = link[:-3] if link.endswith(".md") else link
+        if link not in known_titles and link_without_suffix not in known_titles:
             findings.append({"category": "broken_link", "path": path, "detail": link})
     return findings
 
