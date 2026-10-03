@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "role": "personal",
+  "roots": ["00. Inbox", "15. Work", "90. Settings"],
+  "folders": ["00. Inbox", "15. Work", "90. Settings", "90. Settings/04 Index"],
+  "files": [
+    {"source": "candidates/common/sample.md", "path": "README.md"},
+    {"source": "candidates/personal/placement.md", "path": "15. Work/Placement.md"}
+  ]
+}
