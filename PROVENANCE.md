@@ -151,6 +151,54 @@ the owner-to-package match, the rights consistency, and the presence of the
 upstream notice. Adding the two checkout flags additionally verifies every digest
 and byte count and the exhaustive partition of both sources.
 
+## Local ingest transfer from bstack
+
+This record covers only the two helpers and three tests below, read in full and
+transferred from bstack revision `290cb51b48fb0310e58e8bc9c8be0d0d803dc3e6`.
+The originals remain in bstack until its separately authorized retirement.
+
+| source path | source SHA-256 | local destination and delta |
+|---|---|---|
+| `skills/ingest/scripts/web-source-validate.py` | `ba5662061094893f971d269c297df636522c71f5cb845270026bda1b012ff6c1` | same path, byte-identical |
+| `skills/ingest/scripts/youtube-transcript-extract.py` | `fd309b4d19781297ba66ac0c75d9e9a77fd11c0e35a41b4ba01f539b3155df85` | same path, byte-identical |
+| `tests/ingest/test_metadata_contract.py` | `84e6b27a0045a0eb8a21c3a5c24c82c8fd3bcfbd9d2a31cd3f66a5dbd4e0f36b` | `tests/test_ingest_metadata_contract_ports.py`; import path depth only |
+| `tests/ingest/test_web_source_validate.py` | `f156b3546b0dfc6715e49e5c69a5e10c655fa28c6bb70c03711b3afc5df0b238` | `tests/test_ingest_web_source_validate_ports.py`; import path depth only |
+| `tests/ingest/test_youtube_transcript_extract.py` | `fb48463d3397b6790d7447807c3e46abd2ccb2590acad9cf147a2b25fbb0978d` | `tests/test_ingest_youtube_transcript_extract_ports.py`; import path depth, two Python 3.8-compatible multi-manager statements, and one test synchronization repair |
+
+The destination gateway-overlap test additionally repairs a pre-existing source
+race: a worker now appends its observed completion index before signaling the
+dependent worker. The overlap barrier, bounded waits, observed `[2, 1, 0]` order,
+stable URL-priority result and every assertion remain intact. The other 26 port
+test methods retain their original behavioral AST; AST equality is not claimed
+for this one amended method. No bstack original or production extractor changed.
+
+Observed source-repository history records the web helper's creation at
+`e6c375ae7f2e5c7b89be40ed1a7e16b5c4b33197` and the transcript helper's creation at
+`f674baaba9e8584d764818ed32af0f00f19a20b5`, followed by later source-repository commits.
+The current paths and tests were recorded by the restructure commit
+`14e93009493f36613cb4faa4625169b46b17a66b`. Commit metadata is observed
+provenance, not proof of sole authorship; contributor and PR authorship has not
+been exhaustively established.
+
+No vendored third-party code was found on inspection of these five files. This
+is an inspection result, not a guarantee about unknown contributors. The source
+has no tracked root `LICENSE`, `COPYING` or `NOTICE`, and these files have no
+copyright or licence notice. Plugin metadata's MIT string is not treated as a
+permission grant. Owner confirmation was not obtained; neither sole authorship
+nor a confirmed MIT grant is claimed.
+
+The requested local code preparation and transfer are authorized. External
+redistribution remains subject to later exact-tree publication approvals and
+resolution of the origin rights; the destination's root MIT notice does not
+establish those rights. The helpers invoke optional tools/services rather than
+vendoring them. No external extraction, deployment or publication is proved by
+this transfer.
+
+Inventory integration for these five files is handed off as a private draft for
+serialized integration, not applied concurrently to `source-inventory.json`.
+The existing inventory's MIT-import classification must not be used to imply an
+unconfirmed grant.
+
 ## Status and limits
 
 - This repository is an unpublished candidate at version `0.1.0`. Nothing recorded
