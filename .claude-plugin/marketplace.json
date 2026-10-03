@@ -1,7 +1,7 @@
 {
   "name": "obsidian-skills",
   "version": "0.1.0",
-  "description": "Obsidian Agent Skills by Xia-Ataraxia: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease and is registered from a repository or a local path, not from a public plugin directory.",
+  "description": "Obsidian Agent Skills by Xia-Ataraxia: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease and is registered from a repository or a local path, not from a public plugin directory. It is the native half of the secondbrain-skills collection; the eleven knowledge packages are listed here as each one lands.",
   "owner": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"
@@ -20,7 +20,8 @@
         "canvas",
         "mermaid",
         "vault",
-        "knowledge-management"
+        "knowledge-management",
+        "secondbrain-skills"
       ],
       "metadata": {
         "releaseStatus": "prerelease",
@@ -36,7 +37,9 @@
           "obsidian-clipper",
           "obsidian-doctor",
           "obsidian-sync"
-        ]
+        ],
+        "collection": "secondbrain-skills",
+        "knowledgePackages": []
       }
     }
   ]

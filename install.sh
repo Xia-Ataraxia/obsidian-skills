@@ -77,6 +77,9 @@ PKG_LICENSE=MIT
 
 # The nine packages this release declares. A name outside this list is refused.
 PACKAGE_SKILLS='obsidian-markdown obsidian-bases obsidian-canvas obsidian-mermaid obsidian-visualize obsidian-cli obsidian-clipper obsidian-doctor obsidian-sync'
+# The eleven knowledge packages. They are declared by name so that one can be
+# copied on its own as soon as it exists; 'all' selects the ones present.
+KNOWLEDGE_SKILLS='capture inbox ingest query verify audit lint status reindex refresh-context onboard'
 
 KNOWN_RUNTIMES='claude codex gjc grok hermes cursor agent-skills'
 
@@ -232,7 +235,7 @@ require_runtime() {
 # ── validation ────────────────────────────────────────────────────────────────
 
 is_declared_skill() {
-  for _known in $PACKAGE_SKILLS; do
+  for _known in $PACKAGE_SKILLS $KNOWLEDGE_SKILLS; do
     if [ "$_known" = "$1" ]; then
       return 0
     fi
@@ -351,6 +354,20 @@ cmd_skills() {
   done
   blank
   say "  ${_present} of ${_total} declared packages are installable from this checkout."
+  _k_present=0
+  _k_total=0
+  for _s in $KNOWLEDGE_SKILLS; do
+    _k_total=$((_k_total + 1))
+    if [ -f "${SKILLS_SRC}/${_s}/SKILL.md" ]; then
+      printf '  [present] %s\n' "$_s"
+      _k_present=$((_k_present + 1))
+    elif [ -e "${SKILLS_SRC}/${_s}" ] || [ -L "${SKILLS_SRC}/${_s}" ]; then
+      printf '  [BROKEN ] %s  (present without SKILL.md)\n' "$_s"
+    else
+      printf '  [absent ] %s\n' "$_s"
+    fi
+  done
+  say "  ${_k_present} of ${_k_total} knowledge packages are installable from this checkout."
   say '  Each package stands alone: no router, no dispatcher, no shared runtime.'
   blank
 }
@@ -536,13 +553,18 @@ collect_selection() {
   fi
   if [ "$_want_all" = yes ]; then
     SELECTED=$PACKAGE_SKILLS
+    for _sel in $KNOWLEDGE_SKILLS; do
+      if [ -e "${SKILLS_SRC}/${_sel}" ] || [ -L "${SKILLS_SRC}/${_sel}" ]; then
+        SELECTED="${SELECTED} ${_sel}"
+      fi
+    done
     return 0
   fi
   for _sel in $OPT_SKILLS; do
     is_safe_segment "$_sel" \
       || refuse "illegal skill name '${_sel}': not a single lowercase Agent Skills path segment."
     is_declared_skill "$_sel" \
-      || refuse "'${_sel}' is not one of the nine packages declared by ${PKG_NAME} ${PKG_VERSION}."
+      || refuse "'${_sel}' is not one of the packages declared by ${PKG_NAME} ${PKG_VERSION}."
     _dup=no
     for _seen in $SELECTED; do
       if [ "$_seen" = "$_sel" ]; then _dup=yes; fi

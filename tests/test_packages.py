@@ -87,6 +87,18 @@ def declared_packages() -> list:
     return match.group(1).split()
 
 
+def knowledge_packages() -> list:
+    """The eleven knowledge package names install.sh declares."""
+    match = re.search(r"^KNOWLEDGE_SKILLS='([^']*)'", INSTALL_SH.read_text("utf-8"), re.M)
+    if match is None:
+        raise AssertionError("install.sh no longer declares KNOWLEDGE_SKILLS")
+    return match.group(1).split()
+
+
+def present_packages() -> list:
+    return sorted(p.name for p in SKILLS_DIR.iterdir() if p.is_dir())
+
+
 def public_files() -> list:
     """Every readable file that would ship, private working state excluded."""
     found = []
@@ -213,13 +225,34 @@ class DeclaredPackagesTest(unittest.TestCase):
         missing = [n for n in self.declared if not (SKILLS_DIR / n / "SKILL.md").is_file()]
         self.assertEqual(missing, [], f"declared but not installable from this checkout: {missing}")
 
+    def test_installer_declares_the_eleven_knowledge_names_without_a_native_prefix(self):
+        knowledge = knowledge_packages()
+        self.assertEqual(
+            sorted(knowledge),
+            sorted(
+                "capture inbox ingest query verify audit lint status reindex "
+                "refresh-context onboard".split()
+            ),
+        )
+        self.assertEqual(len(set(knowledge)), len(knowledge), "duplicate knowledge name")
+        self.assertEqual(set(knowledge) & set(self.declared), set())
+        for name in knowledge:
+            with self.subTest(package=name):
+                self.assertRegex(name, NAME_SEGMENT_RE)
+                self.assertFalse(name.startswith("obsidian-"), "knowledge names carry no prefix")
+
     def test_no_undeclared_package_directory_exists(self):
-        present = sorted(p.name for p in SKILLS_DIR.iterdir() if p.is_dir())
-        self.assertEqual(present, sorted(self.declared))
+        """Native packages all exist; a knowledge package may be absent, never unnamed."""
+        knowledge = set(knowledge_packages())
+        present = present_packages()
+        self.assertEqual([n for n in present if n not in knowledge], sorted(self.declared))
+        for name in present:
+            with self.subTest(package=name):
+                self.assertTrue((SKILLS_DIR / name / "SKILL.md").is_file())
 
     def test_repository_ships_no_callable_root_skill(self):
         self.assertFalse((REPO / "SKILL.md").exists(), "a root SKILL.md would be a router")
-        for name in self.declared:
+        for name in self.declared + knowledge_packages():
             package = SKILLS_DIR / name
             if not package.is_dir():
                 continue
@@ -354,6 +387,36 @@ class PackageIdentityTest(unittest.TestCase):
         self.assertEqual(
             claude_market["plugins"][0]["metadata"]["releaseStatus"], pkg_status
         )
+
+    def test_every_manifest_names_the_collection_and_lists_only_existing_packages(self):
+        """A manifest may not advertise a package this checkout cannot install."""
+        manifests = {
+            "claude plugin": REPO / ".claude-plugin" / "plugin.json",
+            "claude marketplace": REPO / ".claude-plugin" / "marketplace.json",
+            "codex plugin": REPO / ".codex-plugin" / "plugin.json",
+            "agents marketplace": REPO / ".agents" / "plugins" / "marketplace.json",
+        }
+        loaded = {}
+        for label, path in manifests.items():
+            with self.subTest(manifest=label):
+                loaded[label] = load_json(path)
+                self.assertIn("secondbrain-skills", json.dumps(loaded[label]))
+
+        knowledge = set(knowledge_packages())
+        present = present_packages()
+        for label, metadata in (
+            ("claude plugin", loaded["claude plugin"]["metadata"]),
+            ("claude marketplace", loaded["claude marketplace"]["plugins"][0]["metadata"]),
+        ):
+            with self.subTest(manifest=label):
+                self.assertEqual(metadata["collection"], "secondbrain-skills")
+                self.assertEqual(
+                    sorted(metadata["packages"]), [n for n in present if n not in knowledge]
+                )
+                self.assertEqual(
+                    sorted(metadata["knowledgePackages"]), [n for n in present if n in knowledge]
+                )
+                self.assertEqual(metadata["packageCount"], len(metadata["packages"]))
 
     def test_manifest_prose_states_the_prerelease_and_its_verified_install_boundary(self):
         """No manifest may still read as unreleased or claim a blanket install."""

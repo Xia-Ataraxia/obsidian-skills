@@ -12,6 +12,11 @@ Every repository path a manifest entry names -- a feature package, a unit target
 a verification reference -- must be a canonical relative path that resolves,
 through symlinks, to a real location inside this repository; a functional target
 must in addition resolve inside the package of the feature that owns it.
+
+Every functional unit maps to exactly one owning package. It names one owning
+feature and, in `package`, the package directory that feature declares. A unit
+that names several owners, names its owner twice, or names a package other than
+its owner's is refused by unit ID.
 """
 import argparse
 import fnmatch
@@ -22,11 +27,19 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES = {f"F{i:02}" for i in range(1, 10)}
+KNOWLEDGE_PACKAGES = (
+    "capture", "inbox", "ingest", "query", "verify", "audit", "lint", "status",
+    "reindex", "refresh-context", "onboard",
+)
+KNOWLEDGE_FEATURES = {
+    f"K{i:02}": name for i, name in enumerate(KNOWLEDGE_PACKAGES, start=1)
+}
+OWNER_KEYS = {"owner", "package"}
 CLASSES = {"functional", "supporting"}
 DISPOSITIONS = {"imported", "reimplemented", "not-adopted"}
 RIGHTS = {"mit-import", "mit-notice", "mit-reference", "evidence-only"}
 COPYABLE_RIGHTS = {"mit-import", "mit-notice"}
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 HEX = set("0123456789abcdef")
 PERMISSION_SENTENCE = (
     "The above copyright notice and this permission notice shall be included in all"
@@ -89,6 +102,31 @@ def _repo_path(root, path):
     return resolved, None
 
 
+def load_manifest(text):
+    """Parse a manifest. Returns `(data, problems)`.
+
+    `json.loads` keeps the last of two equal keys and drops the first without a
+    word, so a unit that declares its owner twice would otherwise be read as a
+    unit with one owner. Repeated keys are reported instead of resolved.
+    """
+    problems = []
+
+    def pairs_hook(pairs):
+        row = dict(pairs)
+        seen = set()
+        for key, _value in pairs:
+            if key in seen:
+                label = row.get("id") if isinstance(row.get("id"), str) else "<no id>"
+                if key in OWNER_KEYS:
+                    problems.append(f"duplicate owner declared for unit: {label}")
+                else:
+                    problems.append(f"duplicate key {key!r} in manifest object: {label}")
+            seen.add(key)
+        return row
+
+    return json.loads(text, object_pairs_hook=pairs_hook), problems
+
+
 def _walk(source_root):
     return sorted(
         str(path.relative_to(source_root).as_posix())
@@ -106,15 +144,26 @@ def audit(data, root=ROOT, source_roots=None):
         errors.append(f"schema_version must be {SCHEMA_VERSION}")
 
     features = data["features"]
-    if set(features) != FEATURES:
-        errors.append(f"feature registry must declare exactly {sorted(FEATURES)}")
+    declared = set(features)
+    if not FEATURES <= declared or declared - FEATURES - set(KNOWLEDGE_FEATURES):
+        errors.append(
+            f"feature registry must declare exactly {sorted(FEATURES)}"
+            f" and at most the knowledge features {sorted(KNOWLEDGE_FEATURES)}"
+        )
     packages = {}
     package_dirs = {}
+    package_names = {}
     for feature, row in sorted(features.items()):
         package = row.get("package")
         if not row.get("name") or not package:
             errors.append(f"incomplete feature registry entry: {feature}")
             continue
+        if isinstance(package, str):
+            package_names[feature] = package.rsplit("/", 1)[-1]
+        if feature in KNOWLEDGE_FEATURES and package != f"skills/{KNOWLEDGE_FEATURES[feature]}":
+            errors.append(
+                f"knowledge feature {feature} must own skills/{KNOWLEDGE_FEATURES[feature]}"
+            )
         directory, problem = _repo_path(root, package)
         if problem == "unsafe":
             errors.append(f"unsafe feature package path: {feature} -> {package}")
@@ -125,6 +174,8 @@ def audit(data, root=ROOT, source_roots=None):
         identity = directory if directory is not None else package
         if identity in packages:
             errors.append(f"feature package shared by {packages[identity]} and {feature}")
+            package_names.pop(packages[identity], None)
+            package_names.pop(feature, None)
         packages[identity] = feature
 
     sources = data["sources"]
@@ -190,17 +241,25 @@ def audit(data, root=ROOT, source_roots=None):
         if disposition == "imported" and row is not None:
             if row.get("rights") not in COPYABLE_RIGHTS:
                 errors.append(f"imported unit on non-copyable source: {key}")
+        label = unit_id or key
+        if any(isinstance(unit.get(field), (list, dict)) for field in OWNER_KEYS):
+            errors.append(f"unit must map to exactly one owning package: {label}")
+            continue
         for composed in unit.get("composes", []):
-            if composed not in FEATURES:
+            if composed not in declared:
                 errors.append(f"unknown composed feature: {key}")
             if composed == unit.get("owner"):
                 errors.append(f"unit composes its own owner: {key}")
         if unit.get("class") == "functional":
             owner = unit.get("owner")
-            if owner not in FEATURES:
+            if owner not in declared:
                 errors.append(f"missing or invalid single owner: {key}")
             else:
                 owners.add(owner)
+                if not unit.get("package"):
+                    errors.append(f"missing owning package: {label}")
+                elif owner in package_names and unit["package"] != package_names[owner]:
+                    errors.append(f"owning package is not the package of its owner: {label}")
             target = unit.get("target")
             resolved, problem = _repo_path(root, target)
             if not target or problem == "missing":
@@ -224,6 +283,8 @@ def audit(data, root=ROOT, source_roots=None):
         elif unit.get("class") == "supporting":
             if unit.get("owner") is not None:
                 errors.append(f"supporting unit has functional owner: {key}")
+            if unit.get("package") is not None:
+                errors.append(f"supporting unit has an owning package: {label}")
             target = unit.get("target")
             if target:
                 resolved, problem = _repo_path(root, target)
@@ -238,7 +299,7 @@ def audit(data, root=ROOT, source_roots=None):
 
     for file_id in sorted(files.keys() - covered):
         errors.append(f"uncovered source file: {file_id}")
-    if owners != FEATURES:
+    if FEATURES - owners:
         errors.append(f"uncovered feature owners: {sorted(FEATURES - owners)}")
 
     for file_id, row in sorted(files.items()):
@@ -332,8 +393,8 @@ def main():
     supplied = (("craft", args.craft_source), ("upstream", args.upstream_source))
     sources = {name: path for name, path in supplied if path}
     try:
-        data = json.loads(args.manifest.read_text(encoding="utf-8"))
-        errors = audit(data, args.root, sources)
+        data, errors = load_manifest(args.manifest.read_text(encoding="utf-8"))
+        errors += audit(data, args.root, sources)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"inventory error: {type(exc).__name__}", file=sys.stderr)
         return 2
@@ -346,7 +407,8 @@ def main():
     print(
         f"inventory: {len(data['files'])} source files, {len(data['units'])} units "
         f"({functional} functional, {len(data['units']) - functional} supporting), "
-        f"9 unique feature owners; digests and coverage checked for "
+        f"{len({unit['package'] for unit in data['units'] if unit['class'] == 'functional'})} "
+        f"owning packages, one per functional unit; digests and coverage checked for "
         f"{len(sources)} supplied checkout(s)"
     )
     return 0
