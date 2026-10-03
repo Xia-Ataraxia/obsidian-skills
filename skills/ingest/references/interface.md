@@ -14,6 +14,9 @@ Exit 1 is refusal/acquisition/I/O failure, including completed writes when a par
 No hidden registry, dispatcher, environment path or runtime effect exists.
 The caller must quiesce other writers during an approved update; a preimage check detects observed drift, not an unobserved race after that check.
 
+The CLI imports package-local modules, with paths relative to the package root: `scripts/request.py` parses and validates requests; `scripts/source.py` reads selected sources and retains conversion, range and candidate provenance; `scripts/storage.py` plans exact-path changes, checks approval and preimages, and applies writes with readback; `scripts/batch.py` binds handoff members to current selected files and builds one batch plan through the ingest builder.
+These are internal imports of `scripts/ingest.py`, not separate user tasks, aliases or a shared runtime.
+
 ## Request
 
 Use a JSON object with these fields:

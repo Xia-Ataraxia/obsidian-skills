@@ -4,6 +4,8 @@
 python3 scripts/lint.py --vault "$VAULT_ROOT" --request "$REQUEST_JSON"
 ```
 
+The helper imports two internal modules, with paths relative to this package root: `scripts/lint_core.py` validates requests, assembles lint results, and prepares derived-index proposals; `scripts/lint_scan.py` handles path validation, scoped note discovery, note-name indexing, and Markdown, link, boundary, and cross-vault checks. These are package-local imports, not independent CLIs, a shared runtime, or a root dispatcher.
+
 ## Request
 
 ```json

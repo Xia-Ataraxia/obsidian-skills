@@ -4,6 +4,8 @@
 python3 scripts/audit.py --vault "$VAULT_ROOT" --request "$REQUEST_JSON"
 ```
 
+The helper imports two internal modules, with paths relative to this package root: `scripts/audit_core.py` handles scope and sample validation, findings, report assembly, and prior-report comparison; `scripts/audit_io.py` handles path and JSON validation, proposal and approval bindings, and report publication with readback. These are package-local imports, not independent CLIs, a shared runtime, or a root dispatcher.
+
 ## Request
 
 ```json

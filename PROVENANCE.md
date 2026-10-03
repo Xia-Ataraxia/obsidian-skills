@@ -247,6 +247,26 @@ help/version probes timed out. No current registry execution, live routing or
 runtime behavior is proved. Earlier version-specific tests remain historical;
 no unchanged suite is rerun for these prose records.
 
+## Knowledge registration and resource corrections — Unreleased
+
+Source baseline: existing local revision
+`25f484a63e7278e1864f08b372eea3d96e809289`. These corrections keep version
+`0.1.0` and record existing packages and code, not new runtime behavior.
+
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` now list the
+  eleven canonical knowledge names in their existing `knowledgePackages` arrays.
+  Native registration, collection identity and all other metadata are unchanged.
+- The existing `references/interface.md` in `skills/ingest`, `skills/audit`,
+  `skills/lint` and `skills/verify` now declares ten existing package-local helper
+  paths and their roles. Their owning changelogs record the details; no helper,
+  callable role, protocol, dispatcher or shared runtime was added.
+
+No code or asset was imported, copied, modified or relicensed by these corrections.
+Existing source attribution and MIT notices remain intact. The local ingest
+transfer's unconfirmed origin rights and public-redistribution hold remain in
+force; this registration/documentation change supplies no new permission grant.
+No installation, native app execution or model/runtime proof is established.
+
 ## Status and limits
 
 - This repository is an unpublished candidate at version `0.1.0`. Nothing recorded

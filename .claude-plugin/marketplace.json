@@ -39,7 +39,19 @@
           "obsidian-sync"
         ],
         "collection": "secondbrain-skills",
-        "knowledgePackages": []
+        "knowledgePackages": [
+          "capture",
+          "inbox",
+          "ingest",
+          "query",
+          "verify",
+          "audit",
+          "lint",
+          "status",
+          "reindex",
+          "refresh-context",
+          "onboard"
+        ]
       }
     }
   ]

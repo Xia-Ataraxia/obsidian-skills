@@ -8,4 +8,9 @@
 - Added equivalent English and Korean onboarding, original SVG brand/demo assets, neutral fixtures, source-unit/provenance audits, and adversarial package/helper/installer tests.
 - Exercised selected format and official CLI operations in an isolated synthetic Obsidian 1.12.7 app profile. See the verification matrix for actual checks and unverified environments.
 
+### Knowledge registration correction
+
+- From existing local source revision `25f484a63e7278e1864f08b372eea3d96e809289`, populated the existing `knowledgePackages` arrays in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` with `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context` and `onboard`.
+- Preserved native registration and every other metadata field, including version `0.1.0`. This records existing packages, not new behavior, installation or fresh-load proof. No code or asset import, relicensing or new source grant is involved; existing notices and rights limits remain unchanged.
+
 This is a local candidate, not a published release. No deployed installation, private consumer change, old-owner retirement, or production recovery has occurred. Those effects require their own authorization and evidence. Unresolved lifecycle policy remains unresolved.

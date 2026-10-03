@@ -6,6 +6,8 @@ Run from the package or source checkout:
 python3 scripts/verify.py --vault "$VAULT_ROOT" --request "$REQUEST_JSON"
 ```
 
+The helper imports two internal modules, with paths relative to this package root: `scripts/verify_core.py` validates claim ranges, manifest membership, verdict gates, and evidence freshness, and assembles verification results; `scripts/verify_io.py` handles path and JSON validation, append-only record proposals, approval bindings, and target publication with readback. These are package-local imports, not independent CLIs, a shared runtime, or a root dispatcher.
+
 All paths are literal vault-relative Markdown paths.
 Hidden components, traversal, symlinks, missing files, and out-of-range line selections are refused.
 
