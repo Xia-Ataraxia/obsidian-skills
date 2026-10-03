@@ -199,6 +199,54 @@ serialized integration, not applied concurrently to `source-inventory.json`.
 The existing inventory's MIT-import classification must not be used to imply an
 unconfirmed grant.
 
+## Native obligation restoration — Unreleased
+
+These additive restorations keep the candidate at `0.1.0`. Requirement lineage
+is public `Xia-Ataraxia/craft-skills@836eb8778134d68f3ea675cd30ee5f9ae692f9e3`:
+native maintenance and operating requirements, Korean discovery intent, explicit
+vault-registry resolution, and append-only plugin evidence. The requirements were
+re-expressed, not copied as prose or evaluation-corpus examples. No new source
+permission grant is claimed; existing MIT copyright and permission notices and
+the local ingest transfer's unresolved origin-rights and redistribution hold
+remain unchanged.
+
+- `AGENTS.md` restores native-only official-documentation-first checking,
+  installed-version evidence, conflict disclosure and unknown facts; per-change
+  source/version records and affected evaluations when either moves; and the
+  prospective runtime-change order of documentation, evaluations, recipe,
+  version and changelog. It preserves relied-on description triggers, including
+  non-English intent, and the seven native operating steps: exact artifact and
+  effect, read first, preserve unrelated content, least destructive supported
+  selected surface, exact readback, evidence and prerequisites, unknown runtime
+  facts. This adds no shared runtime, dependency or write authority.
+- `skills/obsidian-markdown/SKILL.md` restores Korean note-cleanup discovery in
+  the description only; the existing English scope and body are unchanged.
+- `skills/obsidian-cli/SKILL.md` restores Korean backlinks discovery without
+  changing the existing description scope or body.
+  `skills/obsidian-cli/references/operations.md` adds supported read-only registry
+  lookup, task-selected name-to-root mapping and root cross-checking; missing,
+  stale or ambiguous registration stops before effects, without default changes
+  or fallback surfaces.
+- `skills/obsidian-doctor/references/plugins.yaml` changes only the header:
+  retired or renamed APIs retain version-scoped evidence and retirement is
+  appended, never deletes history. The whole parsed registry data is unchanged.
+
+The new CLI source is <https://help.obsidian.md/cli>, consulted through the
+publisher's raw document
+<https://raw.githubusercontent.com/obsidianmd/obsidian-help/master/en/Extending%20Obsidian/Obsidian%20CLI.md>:
+32,586 bytes, SHA-256
+`884d3f36a30ad2dc08bcdc84c1243e17e255677a2bd4a7a1aa0d8f77939fc012`.
+Lines 137-148 document explicit vault name/id first; lines 1208-1225 document
+`vault info=path` and `vaults verbose`. These are documentation facts, not proof
+that an installed build supports or executed them.
+
+Verification established static description/body preservation and whole-registry
+parsed-data equality; six existing frontmatter checks passed independently.
+Bundle metadata `1.12.7` is not a live CLI version or help response: the current
+help/version probes timed out. No current registry execution, live routing or
+runtime behavior is proved. Earlier version-specific tests remain historical;
+no unchanged suite is rerun for these prose records.
+
 ## Status and limits
 
 - This repository is an unpublished candidate at version `0.1.0`. Nothing recorded

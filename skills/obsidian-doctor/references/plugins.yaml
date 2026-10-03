@@ -10,10 +10,15 @@
 #   <plugin-id> is the `id` field inside the plugin's own manifest.json. It is
 #   not the display name and not necessarily the directory name.
 #
-# Append-only. `known_versions` and `failure_signatures` grow; an entry leaves
-# only when the publisher removes the API it describes. Never blank a list,
-# never replace a plugin key wholesale, and never regenerate this file from a
-# template: each line cost somebody a diagnosis.
+# Append-only, and nothing here is ever removed. `known_versions` and
+# `failure_signatures` grow, and an entry stays after the publisher removes or
+# renames the API it describes: what was recorded against a past version is
+# evidence about that version, and it outlives the surface it explains. An API
+# that is gone is appended as a retirement — a new version-scoped fact, a
+# superseded or withdrawn marker, or a note on what replaced it — never as a
+# deletion, so an old diagnosis still has the entry that explained it. Never
+# blank a list, never replace a plugin key wholesale, and never regenerate this
+# file from a template: each line cost somebody a diagnosis.
 #
 # Nothing host-specific belongs here. Cite plugin behaviour — never a note path,
 # vault name, account identifier, machine path, or raw console dump.

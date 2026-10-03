@@ -21,6 +21,30 @@ Resolve in this order and stop at the first that holds:
 
 `vault=` takes the vault name as Obsidian displays it, not a filesystem path, and it must be the first parameter.
 
+A name becomes a target only after the app's own vault registry confirms it.
+`obsidian vaults` lists the vaults the app knows, and its `verbose` flag adds each vault's root folder.
+Both are read-only, and `obsidian help vaults` shows whether the installed build has them; if it doesn't, that's [branch 4](#4-version-skew), not a reason to look elsewhere.
+
+```bash
+obsidian vaults verbose
+obsidian vault="My Vault" vault info=path
+```
+
+Match the name the task selected to exactly one listed entry, and keep that name together with its root as the target for the rest of the task.
+The second command asks the selected vault for its own root, so the two answers should agree.
+Say so plainly when they don't line up:
+
+- **Missing**: the selected name isn't listed. Report the name and the names that are listed.
+- **Stale**: the name is listed, but its root isn't the folder the task means, or the folder is gone.
+- **Ambiguous**: more than one entry fits the name, or the task's wording fits more than one entry.
+
+Stay read-only in all three cases, and until both the mapping and the authority to write are settled.
+A listed vault is a place a command can reach, not permission to change it.
+Once the mapping holds, reuse the authorization the task already gave instead of asking for it again.
+
+The lookup only reads.
+Don't use it to change which vault the app treats as active or default, don't test a remembered default to see whether it still answers, and don't read the app's own state files when the command is unavailable.
+
 Probe before mutating, using the same `vault=` value the write will use:
 
 ```bash
@@ -187,6 +211,7 @@ A failure report is complete when it names:
 ## Verification
 
 - [ ] The vault was resolved explicitly, and ambiguity was reported instead of defaulting to focus.
+- [ ] The selected vault name was mapped to one registered root, or the missing, stale, or ambiguous registration was reported and nothing was written.
 - [ ] An unavailable capability was confirmed by a second, different probe before being reported.
 - [ ] Empty output with exit code 0 was retried and then treated as indeterminate.
 - [ ] Every mutation was classified by readback as not applied, partially applied, or fully applied before any retry.
