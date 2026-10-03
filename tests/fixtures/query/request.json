@@ -1,0 +1,6 @@
+{
+  "schema": "query/request@1",
+  "question": "What does the article say about attention?",
+  "scope": ["Raw", "Wiki"],
+  "terms": ["attention"]
+}
