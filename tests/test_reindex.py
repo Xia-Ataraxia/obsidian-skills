@@ -113,6 +113,25 @@ class ReindexTest(unittest.TestCase):
         self.assertEqual(raised.exception.code, "missing_paper_analyses")
         self.assertFalse(self.log.exists())
 
+    def test_qmd_display_examples_are_not_index_membership(self):
+        # Given: qmd status includes usage placeholders after real collection rows.
+        shown = "Collection: knowledge\n  Path: " + str(self.vault) + "\n  Pattern: " + self.pattern
+        status = (
+            "Collections\n  knowledge (qmd://knowledge/)\n"
+            "\nExamples\n  qmd get qmd://knowledge/path/to/file.md\n"
+            "Tips\n  qmd context add qmd://<name>/ \"context\"\n"
+        )
+        # When / Then
+        self.assertEqual(REINDEX.audit_preflight(self.vault, self.scope, status, shown),
+                         {"40. Paper Analyses/paper.md"})
+
+    def test_qmd_display_columns_preserve_exact_member_paths(self):
+        # Given
+        displayed = "1.9 KB  Oct  6 19:58  qmd://knowledge/40. Paper Analyses/paper.md\n"
+        # When / Then
+        self.assertEqual(REINDEX.listed_files("knowledge", displayed),
+                         {"40. Paper Analyses/paper.md"})
+
     def test_forbidden_responsibility_root_is_refused_before_qmd(self):
         # Given
         mixed = dict(self.scope, include_roots=self.scope["include_roots"] + ["00. Inbox"])

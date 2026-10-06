@@ -127,6 +127,7 @@ def visible_markdown(root: Path, included: List[str]) -> set:
 def show_fields(shown: str) -> Tuple[str, str]:
     values = {}
     for line in shown.splitlines():
+        line = line.strip()
         for key in ("Path", "Pattern"):
             prefix = key + ":"
             if line.startswith(prefix):
@@ -141,7 +142,8 @@ def show_fields(shown: str) -> Tuple[str, str]:
 
 
 def audit_preflight(root: Path, scope: dict, status: str, shown: str) -> set:
-    names = set(re.findall(r"qmd://([^/\s]+)/", status))
+    names = set(re.findall(r"^\s+\S+ \(qmd://([^/\s]+)/\)\s*$",
+                           status, re.MULTILINE))
     if names != {scope["collection"]}:
         raise Refused("collection_not_isolated",
                       "named index must expose exactly the selected collection")
@@ -170,6 +172,9 @@ def listed_files(collection: str, output: str) -> set:
         line = raw.strip().lstrip("- ").strip()
         if not line:
             continue
+        displayed = re.match(r"^\d+(?:\.\d+)?\s+[BKMG]B?\s+.*?\s+(qmd://.*)$", line)
+        if displayed:
+            line = displayed.group(1)
         if line.startswith(prefix):
             candidate = line[len(prefix):]
         else:
