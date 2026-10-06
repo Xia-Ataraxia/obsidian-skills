@@ -393,7 +393,7 @@ class ReadOnlyCommandTest(InstallerHarness):
         out = flow(self.run_installer("native", "--runtime", "hermes").stdout)
         for claim in (
             "the operator used the native remote-source commands",
-            f"while public main was {release_pin()}",
+            "while public main was c22ce26bae518e7973f078cac972ea88707b8e79",
             "remote commands are not pinned by a local checkout",
             "byte-comparison reference after installation",
             "installed all nine packages by native registry identity",

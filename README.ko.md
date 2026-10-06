@@ -12,7 +12,7 @@
 
 독립된 Agent Skill 스무 개로 이루어진 `secondbrain-skills` 모음입니다. 네이티브 패키지 아홉 개는 Obsidian 자체를 다룹니다: Markdown, Bases, Canvas, Mermaid, 시각 형식 선택, 공식 CLI, Web Clipper, 볼트 진단, 헤드리스 Sync. 지식 패키지 열한 개는 노트를 다룹니다: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
 
-> **로컬 릴리스 후보.** 이 체크아웃은 배포된 아홉 개에 지식 패키지 열한 개를 더합니다. 버전 `0.1.0`의 로컬 후보이며 배포가 아닙니다. 공개 고정 커밋과 아래 증거는 네이티브 패키지 아홉 개에만 해당합니다. 여기의 어떤 것도 새 권리 부여나 배포 승인이 아닙니다. 확인한 것과 확인하지 않은 것은 [로컬 릴리스 후보](#로컬-릴리스-후보-스무-개-패키지)에 있습니다.
+> **현재 배포된 소스.** qmd 파서 수정을 포함한 스무 패키지는 <https://github.com/Xia-Ataraxia/secondbrain-skills>의 `2c6ed8458ba2736066054c2d6288e93db6e3c20d`에 있습니다. 아래의 옛 고정 커밋과 런타임 결과는 과거 증거이며 현재 소스 검증이 아닙니다. 과거 `v0.1.0` 태그는 그대로 두며 현재 모음의 릴리스 식별자는 `0.1.0`입니다.
 
 모든 패키지는 자체 참조 문서와 스크립트를 가진 독립 `SKILL.md`입니다. 루트 스킬도, 디스패처도, 공용 런타임도, 호환 별칭도 없습니다. 에이전트는 그 작업에 필요한 패키지 하나만 불러오고 나머지는 건드리지 않습니다.
 
@@ -50,7 +50,7 @@
 
 ## 지식 패키지 열한 개
 
-로컬 릴리스 후보에만 있습니다. 어느 것도 공개 고정 커밋에 없고, 어떤 런타임도 로드한 적이 없습니다.
+이 열한 패키지는 현재 배포된 소스에 포함됩니다. 아래의 과거 런타임 증거는 원래 리비전에 묶여 있습니다.
 
 | 패키지 | 소유 범위 |
 | --- | --- |
@@ -73,14 +73,14 @@
 ### 1. 배포된 고정 커밋 또는 이미 가진 체크아웃에서 시작
 
 ```sh
-git clone https://github.com/Xia-Ataraxia/obsidian-skills
-cd obsidian-skills
-git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # 수정된 공개 고정 커밋 — v0.1.0 태그 대신 이것을 쓰십시오
-./install.sh skills      # 아홉 패키지 중 이 체크아웃에 있는 것
+git clone https://github.com/Xia-Ataraxia/secondbrain-skills
+cd secondbrain-skills
+git checkout 2c6ed8458ba2736066054c2d6288e93db6e3c20d   # current twenty-package source, including the qmd parser fix
+./install.sh skills      # which of the twenty packages are present here
 ./install.sh routes      # 런타임별 공식 경로, 매니페스트, 스킬 디렉터리
 ```
 
-`v0.1.0`이나 `main`이 아니라 이 커밋에 고정하십시오. 태그는 불변이고 다시 태깅하지 않으므로 실제 Hermes 설치가 위험하다고 판단해 거부한 `obsidian-visualize`의 옛 eval 예제를 그대로 담고 있습니다 — **Hermes 설치에 `v0.1.0`을 쓰지 마십시오.** `main`은 움직이며, 움직이는 브랜치는 고정이 아닙니다. 나머지 여덟 패키지 트리는 두 커밋에서 동일하므로, 수정 커밋으로 옮긴다고 달라지는 것은 그 하나뿐입니다.
+위 현재 소스 고정 커밋에는 스무 패키지와 qmd 파서 수정이 포함됩니다. 아래의 옛 `c22ce26bae518e7973f078cac972ea88707b8e79` 고정 커밋은 아홉 패키지 Hermes 설치 증거이며 현재 모음이 아닙니다. 과거 `v0.1.0` 태그는 불변이며 다시 태깅하지 않습니다.
 
 네트워크에 접속하는 단계는 복제뿐입니다. `install.sh`는 네트워크에 접속하지 않고 런타임의 설치·마켓플레이스 명령도 실행하지 않습니다. 이미 가진 로컬 체크아웃도 똑같이 동작합니다 — 배포로 달라진 것은 어떤 소스 형식이 해석되는지이며, 온보딩 방식은 그대로입니다.
 
@@ -102,15 +102,15 @@ git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # 수정된 공개 고�
 
 ### 3. 런타임별 네이티브 경로
 
-`./install.sh native --runtime <id>`는 해당 런타임의 네이티브 명령을 그 경로를 확인한 근거와 함께 출력할 뿐 실행하지 않습니다. 아래의 `<source>`는 배포된 `Xia-Ataraxia/obsidian-skills`, 또는 고정 커밋으로 체크아웃한 로컬 복제본의 경로입니다.
+`./install.sh native --runtime <id>`는 해당 런타임의 네이티브 명령을 그 경로를 확인한 근거와 함께 출력할 뿐 실행하지 않습니다. 아래의 `<source>`는 배포된 `Xia-Ataraxia/secondbrain-skills`, 또는 고정 커밋으로 체크아웃한 로컬 복제본의 경로입니다.
 
 | 런타임 | 경로 종류 | 이 저장소의 매니페스트 | 스킬 디렉터리 — 사용자 / 프로젝트 | 네이티브 경로 (출력만, 절대 실행하지 않음) |
 | --- | --- | --- | --- | --- |
 | `claude` — Claude Code | plugin-marketplace | `.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json` | `~/.claude/skills` / `.claude/skills` | `claude plugin marketplace add <source>` → `claude plugin install obsidian-skills@obsidian-skills` (`--scope user\|project\|local`, 기본값 user) |
 | `codex` — Codex / ChatGPT 데스크톱 앱 | plugin-marketplace | `.agents/plugins/marketplace.json` + `.codex-plugin/plugin.json` | `~/.agents/skills` / `.agents/skills` | `codex plugin marketplace add <source>` → `codex plugin add obsidian-skills@obsidian-skills`; 설치 지점은 ChatGPT 데스크톱 앱의 Plugins Directory이며 등록 후 앱을 재시작합니다 |
-| `gjc` — GJC (Gajae Code) | plugin-marketplace | `.claude-plugin/marketplace.json` | `~/.gjc/agent/skills` / `.gjc/skills` | `gjc plugin marketplace add Xia-Ataraxia/obsidian-skills` → `gjc plugin install obsidian-skills@obsidian-skills --scope user`; 도움말이 `<source>`만 문서화하므로 로컬 경로 형식은 주장하지 않습니다 |
-| `grok` — Grok Build | plugin-marketplace (문서화된 Claude Code 호환) | `.claude-plugin/marketplace.json` — Grok 전용 매니페스트는 없음 | `~/.grok/skills` / `.grok/skills` | `grok plugin marketplace add <source>` 후 TUI Marketplace 탭에서 설치; 직접 설치는 `grok plugin install Xia-Ataraxia/obsidian-skills` (git URL·GitHub 단축형·로컬 경로이며 `plugin@marketplace`는 받지 않음) |
-| `hermes` — Hermes Agent | registry-tap (스킬 단위) | 없음 | `~/.hermes/skills` / `.hermes/skills` | `hermes skills tap add Xia-Ataraxia/obsidian-skills` → `hermes skills install Xia-Ataraxia/obsidian-skills/<name>` → `hermes skills update`; 탭 없이 설치하면 식별자에 경로가 들어갑니다: `…/obsidian-skills/skills/<name>`; 프로젝트 스킬은 `hermes skills trust` 이후에만 로드됩니다 |
+| `gjc` — GJC (Gajae Code) | plugin-marketplace | `.claude-plugin/marketplace.json` | `~/.gjc/agent/skills` / `.gjc/skills` | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills` → `gjc plugin install obsidian-skills@obsidian-skills --scope user`; 도움말이 `<source>`만 문서화하므로 로컬 경로 형식은 주장하지 않습니다 |
+| `grok` — Grok Build | plugin-marketplace (문서화된 Claude Code 호환) | `.claude-plugin/marketplace.json` — Grok 전용 매니페스트는 없음 | `~/.grok/skills` / `.grok/skills` | `grok plugin marketplace add <source>` 후 TUI Marketplace 탭에서 설치; 직접 설치는 `grok plugin install Xia-Ataraxia/secondbrain-skills` (git URL·GitHub 단축형·로컬 경로이며 `plugin@marketplace`는 받지 않음) |
+| `hermes` — Hermes Agent | registry-tap (스킬 단위) | 없음 | `~/.hermes/skills` / `.hermes/skills` | `hermes skills tap add Xia-Ataraxia/secondbrain-skills` → `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` → `hermes skills update`; 탭 없이 설치하면 식별자에 경로가 들어갑니다: `…/secondbrain-skills/skills/<name>`; 프로젝트 스킬은 `hermes skills trust` 이후에만 로드됩니다 |
 | `cursor` — Cursor | skill-directory | 없음 | `~/.cursor/skills` / `.cursor/skills` | **자가 등록형 네이티브 경로 없음:** Marketplace는 심사·제출 방식이고 팀 마켓플레이스는 Teams/Enterprise 기능이며, Agent Plugin은 이 패키지가 제공하지 않는 루트 `plugin.json`을 요구합니다. 디렉터리 가져오기를 사용하세요. |
 | `agent-skills` — 벤더 중립 | skill-directory | 없음 | `~/.agents/skills` / `.agents/skills` | **네이티브 경로 없음:** 이 명세는 패키지 형식만 정의합니다. Codex·Cursor·Grok이 모두 `~/.agents/skills`를 읽으므로 이 범위가 이식성 있는 사용자 수준 가져오기입니다. |
 

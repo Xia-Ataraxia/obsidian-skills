@@ -63,16 +63,16 @@ PYTHON=''
 PKG_NAME=obsidian-skills
 PKG_VERSION=0.1.0
 PKG_STATUS=prerelease
-# The corrected public revision to install from, and the revision the Hermes
-# native result was reproduced at. A local checkout is only that revision when it
-# is checked out at this commit, unmodified.
-PKG_PIN=c22ce26bae518e7973f078cac972ea88707b8e79
+# The current twenty-package public source, including the qmd parser fix.
+# Historical Hermes results below remain bound to their original revision;
+# a local checkout is this source only at this commit, unmodified.
+PKG_PIN=2c6ed8458ba2736066054c2d6288e93db6e3c20d
 # The immutable v0.1.0 tag. It is kept where it is and is never moved onto the
 # correction above, so it stays the revision the historical Claude Code canary
 # was taken at -- and it is not a revision to install from. See tag_warning().
 PKG_TAG_PIN=0e658b5a09ac4c789392ac634dcff8a195fa3116
 PKG_ORG=Xia-Ataraxia
-PKG_SLUG="${PKG_ORG}/${PKG_NAME}"
+PKG_SLUG="${PKG_ORG}/secondbrain-skills"
 PKG_LICENSE=MIT
 
 # The nine packages this release declares. A name outside this list is refused.
@@ -446,7 +446,7 @@ cmd_native() {
         say '  The local path printed above is this working checkout, whatever it holds'
         say '  right now. For the recommended corrected source, use this checkout:'
         cmdline "git clone https://github.com/${PKG_SLUG}.git"
-        cmdline "git -C ${PKG_NAME} checkout ${PKG_PIN}"
+        cmdline "git -C secondbrain-skills checkout ${PKG_PIN}"
         say '  This recommendation does not reproduce the historical Claude canary,'
         say '  which ran only at the older tag; current native loading is not claimed.'
       fi
@@ -471,7 +471,7 @@ cmd_native() {
       say '    it is read. These remote commands are not pinned by a local checkout.'
       say '    Use this clone as a byte-comparison reference after installation:'
       cmdline "git clone https://github.com/${PKG_SLUG}.git"
-      cmdline "git -C ${PKG_NAME} checkout ${PKG_PIN}"
+      cmdline "git -C secondbrain-skills checkout ${PKG_PIN}"
       blank
       tag_warning
       blank
@@ -509,7 +509,7 @@ cmd_native() {
     say '  pin. It is not evidence about the revision this script guides you to.'
   elif [ "$R_ID" = hermes ]; then
     say '  Verified separately: the operator used the native remote-source commands'
-    say "  while public main was ${PKG_PIN}; installed bytes matched that revision."
+    say "  while public main was c22ce26bae518e7973f078cac972ea88707b8e79; installed bytes matched that revision."
     say "  ${R_LABEL} installed all nine packages by native registry identity into each"
     say '  of five generic operator profiles -- 45 of 45 install units reported SAFE'
     say '  under skills-guard-v6, with no force flag -- and every installed package matched'

@@ -12,7 +12,7 @@
 
 Twenty independent Agent Skills, the `secondbrain-skills` collection. Nine native packages work with Obsidian itself: Markdown, Bases, Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and headless Sync. Eleven knowledge packages work with the notes: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`.
 
-> **Local release candidate.** This checkout adds the eleven knowledge packages to the published nine. It's a local candidate at version `0.1.0`, not a publication: the public pin and the evidence below describe the nine native packages only. Nothing here is a new rights grant or a publication approval. See [Local release candidate](#local-release-candidate-twenty-packages) for what was checked and what wasn't.
+> **Current published source.** All twenty packages, including the qmd parser fix, are public at `2c6ed8458ba2736066054c2d6288e93db6e3c20d` in <https://github.com/Xia-Ataraxia/secondbrain-skills>. The older pins and runtime results below are historical evidence, not verification of this current source. The historical `v0.1.0` tag is unchanged; the current collection release identity is `0.1.0`.
 
 Every package is a self-contained `SKILL.md` with its own references and scripts. There is no root skill, no dispatcher, no shared runtime, and no compatibility alias — your agent loads the one package the task needs, and nothing else.
 
@@ -50,7 +50,7 @@ Every package is a self-contained `SKILL.md` with its own references and scripts
 
 ## The eleven knowledge packages
 
-These are in the local release candidate only. None of them is in the published pin, and none has been loaded by a runtime.
+These eleven packages are included in the current published source. Historical runtime evidence below remains bound to its original revisions.
 
 | Package | What it owns |
 | --- | --- |
@@ -73,14 +73,14 @@ Run `./install.sh skills` to see which of the twenty are present in your checkou
 ### 1. Start from the published pin, or the checkout you already have
 
 ```sh
-git clone https://github.com/Xia-Ataraxia/obsidian-skills
-cd obsidian-skills
-git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # the corrected public pin — use this, not the v0.1.0 tag
-./install.sh skills      # which of the nine packages are present here
+git clone https://github.com/Xia-Ataraxia/secondbrain-skills
+cd secondbrain-skills
+git checkout 2c6ed8458ba2736066054c2d6288e93db6e3c20d   # current twenty-package source, including the qmd parser fix
+./install.sh skills      # which of the twenty packages are present here
 ./install.sh routes      # every runtime's official route, manifest and skill directory
 ```
 
-Pin to that commit rather than to `v0.1.0` or to `main`. The tag is immutable and is not retagged, so it still carries the old `obsidian-visualize` eval snippets that a real Hermes install refused as dangerous — do not use `v0.1.0` for a Hermes install; `main` moves, and a moving branch is not a pin. The other eight package trees are identical at both commits, so nothing else changes by moving to the corrected pin.
+The current source pin above includes all twenty packages and the qmd parser fix. The older `c22ce26bae518e7973f078cac972ea88707b8e79` pin below records the nine-package Hermes installation; it is not the current collection. The historical `v0.1.0` tag is immutable and is not retagged.
 
 The clone is the only step that reaches the network: `install.sh` never does, and never runs a runtime's own install or marketplace command. An existing local checkout works exactly the same way — the publication changes which sources resolve, not how onboarding works.
 
@@ -102,15 +102,15 @@ The clone is the only step that reaches the network: `install.sh` never does, an
 
 ### 3. Native route per runtime
 
-`./install.sh native --runtime <id>` prints one runtime's native commands, together with the evidence each route was confirmed from, and executes none of them. `<source>` below is the published `Xia-Ataraxia/obsidian-skills`, or the path to a local clone checked out at the pinned commit.
+`./install.sh native --runtime <id>` prints one runtime's native commands, together with the evidence each route was confirmed from, and executes none of them. `<source>` below is the published `Xia-Ataraxia/secondbrain-skills`, or the path to a local clone checked out at the pinned commit.
 
 | Runtime | Route kind | Manifest in this repo | Skill dirs — user / project | Native route (printed, never executed) |
 | --- | --- | --- | --- | --- |
 | `claude` — Claude Code | plugin-marketplace | `.claude-plugin/marketplace.json` + `.claude-plugin/plugin.json` | `~/.claude/skills` / `.claude/skills` | `claude plugin marketplace add <source>` → `claude plugin install obsidian-skills@obsidian-skills` (`--scope user\|project\|local`, default user) |
 | `codex` — Codex / ChatGPT desktop app | plugin-marketplace | `.agents/plugins/marketplace.json` + `.codex-plugin/plugin.json` | `~/.agents/skills` / `.agents/skills` | `codex plugin marketplace add <source>` → `codex plugin add obsidian-skills@obsidian-skills`; the ChatGPT desktop Plugins Directory is the install surface — restart the app after adding |
-| `gjc` — GJC (Gajae Code) | plugin-marketplace | `.claude-plugin/marketplace.json` | `~/.gjc/agent/skills` / `.gjc/skills` | `gjc plugin marketplace add Xia-Ataraxia/obsidian-skills` → `gjc plugin install obsidian-skills@obsidian-skills --scope user`; its help documents only `<source>`, so no local-path form is claimed |
-| `grok` — Grok Build | plugin-marketplace (documented Claude Code compatibility) | `.claude-plugin/marketplace.json` — no Grok-specific manifest exists | `~/.grok/skills` / `.grok/skills` | `grok plugin marketplace add <source>`, then install from the TUI Marketplace tab; direct source install is `grok plugin install Xia-Ataraxia/obsidian-skills` (git URL, GitHub shorthand or local path — never `plugin@marketplace`) |
-| `hermes` — Hermes Agent | registry-tap (one unit per skill) | none | `~/.hermes/skills` / `.hermes/skills` | `hermes skills tap add Xia-Ataraxia/obsidian-skills` → `hermes skills install Xia-Ataraxia/obsidian-skills/<name>` → `hermes skills update`; without the tap the identifier carries the path: `…/obsidian-skills/skills/<name>`; project skills load only after `hermes skills trust` |
+| `gjc` — GJC (Gajae Code) | plugin-marketplace | `.claude-plugin/marketplace.json` | `~/.gjc/agent/skills` / `.gjc/skills` | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills` → `gjc plugin install obsidian-skills@obsidian-skills --scope user`; its help documents only `<source>`, so no local-path form is claimed |
+| `grok` — Grok Build | plugin-marketplace (documented Claude Code compatibility) | `.claude-plugin/marketplace.json` — no Grok-specific manifest exists | `~/.grok/skills` / `.grok/skills` | `grok plugin marketplace add <source>`, then install from the TUI Marketplace tab; direct source install is `grok plugin install Xia-Ataraxia/secondbrain-skills` (git URL, GitHub shorthand or local path — never `plugin@marketplace`) |
+| `hermes` — Hermes Agent | registry-tap (one unit per skill) | none | `~/.hermes/skills` / `.hermes/skills` | `hermes skills tap add Xia-Ataraxia/secondbrain-skills` → `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` → `hermes skills update`; without the tap the identifier carries the path: `…/secondbrain-skills/skills/<name>`; project skills load only after `hermes skills trust` |
 | `cursor` — Cursor | skill-directory | none | `~/.cursor/skills` / `.cursor/skills` | **No self-serve native route:** its Marketplace is submission-reviewed, team marketplaces are Teams/Enterprise, and an Agent Plugin needs a root `plugin.json` this package does not ship. Use the directory import. |
 | `agent-skills` — vendor-neutral | skill-directory | none | `~/.agents/skills` / `.agents/skills` | **No native route:** the specification defines the package format only. Codex, Cursor, and Grok all read `~/.agents/skills`, so this is the portable user-level import. |
 
