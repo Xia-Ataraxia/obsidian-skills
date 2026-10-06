@@ -222,10 +222,10 @@ Application rows are observed in a running app with an isolated profile: the pre
 
 ```sh
 # Hermes rows, against a profile you are willing to install into:
-git clone https://github.com/Xia-Ataraxia/obsidian-skills && cd obsidian-skills
+git clone https://github.com/Xia-Ataraxia/secondbrain-skills && cd secondbrain-skills
 git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # not the v0.1.0 tag
-hermes skills tap add Xia-Ataraxia/obsidian-skills
-hermes skills install Xia-Ataraxia/obsidian-skills/<name>   # once per package; no force flag
+hermes skills tap add Xia-Ataraxia/secondbrain-skills
+hermes skills install Xia-Ataraxia/secondbrain-skills/<name>   # once per package; no force flag
 # then read the registry itself for each package: the guard classification and the
 # registered/not-registered state are the result. The command's exit code is not.
 diff -r -x '.*' skills/<name> <installed-skill-dir>/<name>   # must report no differences

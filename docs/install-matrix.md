@@ -2,6 +2,8 @@
 
 > **Evidence boundary:** Hermes native installs resolved public main at `c22ce26bae518e7973f078cac972ea88707b8e79`; installed bytes were compared afterwards. A local clone checkout does not pin remote tap/install commands. The operator reports 45 installations in five existing local user profiles and a downstream consumer update; fresh task responses cover only CLI/Sync. The immutable `v0.1.0` refusal was two `skills-guard-v6` `credential_exposure` false positives on fake nonce strings, not real credentials or a semantic execution verdict. No scanner bypass was used.
 
+Current source: `Xia-Ataraxia/secondbrain-skills` at `2c6ed8458ba2736066054c2d6288e93db6e3c20d` includes twenty packages and the qmd parser fix. Older pins and results below retain their historical provenance. Repository naming does not change the existing `obsidian-skills@obsidian-skills` plugin identity.
+
 Every route below comes from one place: the route table in `install.sh` (`route_load`) and the native command block (`cmd_native`). Each row carries a `confirmed by` field naming the evidence it rests on — the runtime's published documentation plus its observed CLI help. A runtime outside the table has no route at all; the installer refuses it instead of guessing.
 
 **Route confirmed is not install verified — with exactly two exceptions.** Confirming a route means the commands and directories are the ones the runtime documents. It does not mean this package was installed, loaded, or advertised. That has now happened on two runtimes.
@@ -48,7 +50,7 @@ Notes carried by the table itself: the marketplace root is this repository root,
 
 ## Native commands per runtime
 
-`./install.sh native --runtime <id>` prints these and executes none of them. `<source>` is the published `Xia-Ataraxia/obsidian-skills`, or the absolute path of a clone checked out at the pinned commit. Two of the blocks below were actually run by hand: the Claude Code pair, in an isolated consumer project against a detached clone of `0e658b5a…`; and the Hermes block, against `c22ce26ba…`, into five generic operator profiles. Do not run the Hermes block against the `v0.1.0` tag — `obsidian-visualize` is refused as dangerous there and reports `Not installed` despite exit 0.
+`./install.sh native --runtime <id>` prints these and executes none of them. `<source>` is the published `Xia-Ataraxia/secondbrain-skills`, or the absolute path of a clone checked out at the pinned commit. Two of the blocks below were actually run by hand: the Claude Code pair, in an isolated consumer project against a detached clone of `0e658b5a…`; and the Hermes block, against `c22ce26ba…`, into five generic operator profiles. Do not run the Hermes block against the `v0.1.0` tag — `obsidian-visualize` is refused as dangerous there and reports `Not installed` despite exit 0.
 
 ```sh
 # claude — 1. register the marketplace, 2. install the plugin
@@ -61,21 +63,21 @@ codex plugin marketplace add <source>                      # restart the app aft
 codex plugin add obsidian-skills@obsidian-skills
 
 # gjc — no local-path form is claimed: its help documents only <source>
-gjc plugin marketplace add Xia-Ataraxia/obsidian-skills
+gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills
 gjc plugin install obsidian-skills@obsidian-skills --scope user      # or --scope project
 
 # grok — marketplace route, then install from the TUI Marketplace tab
 grok plugin marketplace add <source>
 grok plugin marketplace list                               # shows the source and the plugins it exposes
 # direct source install instead (git URL, GitHub shorthand or local path — never plugin@marketplace):
-grok plugin install Xia-Ataraxia/obsidian-skills
+grok plugin install Xia-Ataraxia/secondbrain-skills
 
 # hermes — tapped form, one package at a time
-hermes skills tap add Xia-Ataraxia/obsidian-skills
-hermes skills install Xia-Ataraxia/obsidian-skills/<name>  # tapped: no skills/ segment
+hermes skills tap add Xia-Ataraxia/secondbrain-skills
+hermes skills install Xia-Ataraxia/secondbrain-skills/<name>  # tapped: no skills/ segment
 hermes skills update
 # without the tap, the identifier carries the in-repo path:
-hermes skills install Xia-Ataraxia/obsidian-skills/skills/<name>
+hermes skills install Xia-Ataraxia/secondbrain-skills/skills/<name>
 # repo-local project skills load only after: hermes skills trust
 
 # cursor, agent-skills

@@ -14,10 +14,10 @@ Today the manifests name the collection only as descriptive metadata:
 
 Every machine identity is still `obsidian-skills`: `PKG_NAME` in `install.sh` and the `name` field of each plugin and marketplace manifest. These fields move together, because the tests bind every manifest name to `PKG_NAME`.
 
-Two later changes are separate, and neither has happened yet:
+The hosted repository is now `Xia-Ataraxia/secondbrain-skills`. Its source URL is separate from the existing plugin identity:
 
 - Aligning the machine identity of the local candidate with the collection name is a source change in this repository, made when the release metadata is finalized.
-- Renaming the hosted repository and publishing under the new name is an external change with its own approval. The local alignment does not wait for it and does not perform it.
+- The hosted repository rename changes source URLs only; the current plugin and marketplace identities remain `obsidian-skills`.
 
 ## Packages
 
