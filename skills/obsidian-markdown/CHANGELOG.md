@@ -45,3 +45,9 @@ Behavioral requirements about target authorization, non-Markdown destination ide
 - No root router, no shared runtime core, no aliases, and no shadow copies of the upstream files.
 - No dependency on a personal vault, note, path, account, environment variable, or server; neutral examples only.
 - No local `.canvas`, `.base`, or CLI schema; those are reported as gaps when the matching skill is unavailable.
+
+### Native discovery restoration — Unreleased
+
+- Restored independently worded Korean note-cleanup intent in the `SKILL.md` description. Existing English discovery, exclusions and every body byte are unchanged; this is not a scope expansion or version bump.
+- Requirement lineage: public `Xia-Ataraxia/craft-skills@836eb8778134d68f3ea675cd30ee5f9ae692f9e3`, Korean note-cleanup routing intent, re-expressed without copied source prose or corpus examples. Existing MIT notices remain intact; no new source grant is claimed.
+- Direct static comparison confirmed description-only insertion and body preservation; existing frontmatter checks passed independently. Live skill discovery and routing were not exercised. Version remains `0.1.0`; these prose records add no test or runtime claim.

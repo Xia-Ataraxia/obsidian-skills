@@ -12,6 +12,11 @@ Every repository path a manifest entry names -- a feature package, a unit target
 a verification reference -- must be a canonical relative path that resolves,
 through symlinks, to a real location inside this repository; a functional target
 must in addition resolve inside the package of the feature that owns it.
+
+Every functional unit maps to exactly one owning package. It names one owning
+feature and, in `package`, the package directory that feature declares. A unit
+that names several owners, names its owner twice, or names a package other than
+its owner's is refused by unit ID.
 """
 import argparse
 import fnmatch
@@ -22,15 +27,24 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 FEATURES = {f"F{i:02}" for i in range(1, 10)}
+KNOWLEDGE_PACKAGES = (
+    "capture", "inbox", "ingest", "query", "verify", "audit", "lint", "status",
+    "reindex", "refresh-context", "onboard",
+)
+KNOWLEDGE_FEATURES = {
+    f"K{i:02}": name for i, name in enumerate(KNOWLEDGE_PACKAGES, start=1)
+}
+OWNER_KEYS = {"owner", "package"}
 CLASSES = {"functional", "supporting"}
 DISPOSITIONS = {"imported", "reimplemented", "not-adopted"}
 RIGHTS = {"mit-import", "mit-notice", "mit-reference", "evidence-only"}
 COPYABLE_RIGHTS = {"mit-import", "mit-notice"}
-SCHEMA_VERSION = 2
+SCHEMA_VERSION = 3
 HEX = set("0123456789abcdef")
 PERMISSION_SENTENCE = (
     "The above copyright notice and this permission notice shall be included in all"
 )
+NATIVE_CONTRACT_SHA256 = "f3519aed2225b4544d494b03a4a493577a87dc72b8958603423dd508a72642f7"
 
 
 def _matches(pattern, path):
@@ -89,6 +103,88 @@ def _repo_path(root, path):
     return resolved, None
 
 
+def _repo_file(root, path):
+    """Apply a file obligation without changing package-directory resolution."""
+    resolved, problem = _repo_path(root, path)
+    if problem is None and not resolved.is_file():
+        return resolved, "not-file"
+    return resolved, problem
+
+
+def _unique_strings(values, label, errors):
+    """Report malformed or repeated list members before any set conversion."""
+    if not isinstance(values, list) or any(
+        not isinstance(value, str) or not value for value in values
+    ):
+        errors.append(f"invalid string list: {label}")
+        return []
+    seen = set()
+    for value in values:
+        if value in seen:
+            errors.append(f"duplicate {label}: {value}")
+        seen.add(value)
+    return values
+
+
+def native_projection(data):
+    """Project recorded identities, not target bytes or functional quality.
+
+    Production expectations come only from the independently frozen asset.
+    Synthetic tests may project their untouched input once to build a fixture;
+    neither the CLI nor audit regenerates an expectation from candidate data.
+    """
+    units = []
+    for unit in data["units"]:
+        row = {field: unit.get(field) for field in (
+            "id", "file", "unit", "class", "owner", "source_anchor", "disposition",
+        )}
+        row["package"] = unit.get("package")
+        row["composes"] = unit.get("composes", [])
+        for field in ("behavior", "reason"):
+            value = unit.get(field)
+            row[field + "_sha256"] = (
+                hashlib.sha256(value.encode("utf-8")).hexdigest()
+                if isinstance(value, str) and value else None
+            )
+        units.append(row)
+    return {
+        "schema": "native-preservation/v1",
+        "sources": {
+            name: {field: row.get(field) for field in (
+                "repository", "revision", "coverage_roots", "partition",
+            )}
+            for name, row in data["sources"].items()
+        },
+        "files": data["files"],
+        "units": units,
+    }
+
+
+def load_manifest(text):
+    """Parse a manifest. Returns `(data, problems)`.
+
+    `json.loads` keeps the last of two equal keys and drops the first without a
+    word, so a unit that declares its owner twice would otherwise be read as a
+    unit with one owner. Repeated keys are reported instead of resolved.
+    """
+    problems = []
+
+    def pairs_hook(pairs):
+        row = dict(pairs)
+        seen = set()
+        for key, _value in pairs:
+            if key in seen:
+                label = row.get("id") if isinstance(row.get("id"), str) else "<no id>"
+                if key in OWNER_KEYS:
+                    problems.append(f"duplicate owner declared for unit: {label}")
+                else:
+                    problems.append(f"duplicate key {key!r} in manifest object: {label}")
+            seen.add(key)
+        return row
+
+    return json.loads(text, object_pairs_hook=pairs_hook), problems
+
+
 def _walk(source_root):
     return sorted(
         str(path.relative_to(source_root).as_posix())
@@ -97,24 +193,52 @@ def _walk(source_root):
     )
 
 
-def audit(data, root=ROOT, source_roots=None):
+def audit(data, root=ROOT, source_roots=None, *, native_contract=None):
+    """Audit production data, or an explicitly supplied synthetic test contract.
+
+    There is no CLI override for the authenticated production contract.
+    """
     errors = []
     root = Path(root)
     source_roots = source_roots or {}
+    production = native_contract is None
+
+    if not isinstance(data, dict):
+        return ["manifest must be an object"]
+    if production:
+        path, problem = _repo_file(root, "assets/native-preservation.json")
+        if problem:
+            return [f"native preservation contract {problem}: assets/native-preservation.json"]
+        native_contract, problems = load_manifest(path.read_text(encoding="utf-8"))
+        canonical = json.dumps(native_contract, sort_keys=True, separators=(",", ":"))
+        if problems or hashlib.sha256(canonical.encode("utf-8")).hexdigest() != NATIVE_CONTRACT_SHA256:
+            return problems + ["native preservation contract authentication failed"]
 
     if data.get("schema_version") != SCHEMA_VERSION:
         errors.append(f"schema_version must be {SCHEMA_VERSION}")
 
     features = data["features"]
-    if set(features) != FEATURES:
-        errors.append(f"feature registry must declare exactly {sorted(FEATURES)}")
+    declared = set(features)
+    if (not FEATURES <= declared or declared - FEATURES - set(KNOWLEDGE_FEATURES)
+            or production and declared != FEATURES | set(KNOWLEDGE_FEATURES)):
+        errors.append(
+            f"feature registry must declare exactly {sorted(FEATURES)}"
+            f" and the knowledge features {sorted(KNOWLEDGE_FEATURES)}"
+        )
     packages = {}
     package_dirs = {}
+    package_names = {}
     for feature, row in sorted(features.items()):
         package = row.get("package")
         if not row.get("name") or not package:
             errors.append(f"incomplete feature registry entry: {feature}")
             continue
+        if isinstance(package, str):
+            package_names[feature] = package.rsplit("/", 1)[-1]
+        if feature in KNOWLEDGE_FEATURES and package != f"skills/{KNOWLEDGE_FEATURES[feature]}":
+            errors.append(
+                f"knowledge feature {feature} must own skills/{KNOWLEDGE_FEATURES[feature]}"
+            )
         directory, problem = _repo_path(root, package)
         if problem == "unsafe":
             errors.append(f"unsafe feature package path: {feature} -> {package}")
@@ -122,9 +246,14 @@ def audit(data, root=ROOT, source_roots=None):
             errors.append(f"missing feature package: {feature} -> {package}")
         else:
             package_dirs[feature] = directory
+            entrypoint, file_problem = _repo_file(root, package + "/SKILL.md")
+            if file_problem:
+                errors.append(f"feature entrypoint {file_problem}: {feature} -> {package}/SKILL.md")
         identity = directory if directory is not None else package
         if identity in packages:
             errors.append(f"feature package shared by {packages[identity]} and {feature}")
+            package_names.pop(packages[identity], None)
+            package_names.pop(feature, None)
         packages[identity] = feature
 
     sources = data["sources"]
@@ -182,7 +311,7 @@ def audit(data, root=ROOT, source_roots=None):
         if row is None:
             errors.append(f"unknown source file: {unit.get('file')}")
         covered.add(unit.get("file"))
-        if not unit.get("behavior"):
+        if not isinstance(unit.get("behavior"), str) or not unit["behavior"]:
             errors.append(f"missing behavior description: {key}")
         disposition = unit.get("disposition")
         if disposition not in DISPOSITIONS:
@@ -190,21 +319,33 @@ def audit(data, root=ROOT, source_roots=None):
         if disposition == "imported" and row is not None:
             if row.get("rights") not in COPYABLE_RIGHTS:
                 errors.append(f"imported unit on non-copyable source: {key}")
-        for composed in unit.get("composes", []):
-            if composed not in FEATURES:
+        label = unit_id or key
+        if any(isinstance(unit.get(field), (list, dict)) for field in OWNER_KEYS):
+            errors.append(f"unit must map to exactly one owning package: {label}")
+            continue
+        for composed in _unique_strings(
+            unit.get("composes", []), f"composes for {label}", errors
+        ):
+            if composed not in declared:
                 errors.append(f"unknown composed feature: {key}")
             if composed == unit.get("owner"):
                 errors.append(f"unit composes its own owner: {key}")
         if unit.get("class") == "functional":
             owner = unit.get("owner")
-            if owner not in FEATURES:
+            if owner not in declared:
                 errors.append(f"missing or invalid single owner: {key}")
             else:
                 owners.add(owner)
+                if not unit.get("package"):
+                    errors.append(f"missing owning package: {label}")
+                elif owner in package_names and unit["package"] != package_names[owner]:
+                    errors.append(f"owning package is not the package of its owner: {label}")
             target = unit.get("target")
-            resolved, problem = _repo_path(root, target)
+            resolved, problem = _repo_file(root, target)
             if not target or problem == "missing":
                 errors.append(f"missing target: {key}")
+            elif problem == "not-file":
+                errors.append(f"target is not a file: {label} -> {target}")
             elif problem:
                 errors.append(f"unsafe target path: {key}")
             elif owner in package_dirs and package_dirs[owner] not in resolved.parents:
@@ -214,9 +355,11 @@ def audit(data, root=ROOT, source_roots=None):
                 errors.append(f"missing verification mapping: {key}")
             for entry in verification:
                 reference = _verification_path(entry)
-                found, problem = _repo_path(root, reference)
+                found, problem = _repo_file(root, reference)
                 if reference and problem == "unsafe":
                     errors.append(f"unsafe verification reference: {key} -> {entry}")
+                elif problem == "not-file":
+                    errors.append(f"verification is not a file: {label} -> {entry}")
                 elif found is None:
                     errors.append(f"unresolved verification reference: {key} -> {entry}")
             if disposition == "not-adopted":
@@ -224,11 +367,15 @@ def audit(data, root=ROOT, source_roots=None):
         elif unit.get("class") == "supporting":
             if unit.get("owner") is not None:
                 errors.append(f"supporting unit has functional owner: {key}")
+            if unit.get("package") is not None:
+                errors.append(f"supporting unit has an owning package: {label}")
             target = unit.get("target")
             if target:
-                resolved, problem = _repo_path(root, target)
+                resolved, problem = _repo_file(root, target)
                 if problem == "unsafe":
                     errors.append(f"unsafe target path: {key}")
+                elif problem == "not-file":
+                    errors.append(f"target is not a file: {label} -> {target}")
                 elif resolved is None:
                     errors.append(f"missing target: {key}")
             if disposition == "not-adopted" and not unit.get("reason"):
@@ -238,14 +385,82 @@ def audit(data, root=ROOT, source_roots=None):
 
     for file_id in sorted(files.keys() - covered):
         errors.append(f"uncovered source file: {file_id}")
-    if owners != FEATURES:
+    if FEATURES - owners:
         errors.append(f"uncovered feature owners: {sorted(FEATURES - owners)}")
 
     for file_id, row in sorted(files.items()):
-        expected = set(row.get("expected_units", []))
+        expected = set(_unique_strings(
+            row.get("expected_units", []), f"expected_units for {file_id}", errors
+        ))
         actual = {unit for source, unit in keys if source == file_id}
         if expected != actual:
             errors.append(f"unit inventory mismatch: {file_id}")
+
+    actual_native = native_projection(data)
+    for domain, noun in (("sources", "source"), ("files", "source record"), ("units", "unit")):
+        expected_rows = native_contract[domain]
+        actual_rows = actual_native[domain]
+        if domain != "sources":
+            expected_rows = {row["id"]: row for row in expected_rows}
+            actual_rows = {row["id"]: row for row in actual_rows}
+        for identity in sorted(expected_rows.keys() - actual_rows.keys()):
+            errors.append(f"missing native {noun}: {identity}")
+        for identity in sorted(actual_rows.keys() - expected_rows.keys()):
+            errors.append(f"unexpected native {noun}: {identity}")
+        for identity in sorted(expected_rows.keys() & actual_rows.keys()):
+            if expected_rows[identity] != actual_rows[identity]:
+                errors.append(f"native {noun} identity changed: {identity}")
+
+    expected_knowledge = {
+        "K-" + feature[1:] for feature in (
+            KNOWLEDGE_FEATURES if production else declared & set(KNOWLEDGE_FEATURES)
+        )
+    }
+    knowledge = data.get("knowledge_capabilities", [])
+    if not isinstance(knowledge, list):
+        errors.append("knowledge_capabilities must be a list")
+        knowledge = []
+    knowledge_ids = set()
+    for row in knowledge:
+        if not isinstance(row, dict) or not isinstance(row.get("id"), str):
+            errors.append("knowledge capability needs a stable string ID")
+            continue
+        label = row["id"]
+        if label in knowledge_ids:
+            errors.append(f"duplicate knowledge capability: {label}")
+        knowledge_ids.add(label)
+        owner = label.replace("-", "")
+        name = KNOWLEDGE_FEATURES.get(owner)
+        if (label not in expected_knowledge or row.get("owner") != owner
+                or not name or row.get("package") != name):
+            errors.append(f"knowledge owner mismatch: {label}")
+            continue
+        target = row.get("target")
+        found, problem = _repo_file(root, target)
+        if target != f"skills/{name}/SKILL.md" or problem:
+            errors.append(f"invalid knowledge target: {label} -> {target} ({problem})")
+        elif hashlib.sha256(found.read_bytes()).hexdigest() != row.get("target_sha256"):
+            errors.append(f"knowledge target digest mismatch: {label} -> {target}")
+        source_digest = row.get("source_row_sha256")
+        if (not isinstance(source_digest, str) or len(source_digest) != 64
+                or set(source_digest) - HEX):
+            errors.append(f"missing or malformed knowledge source digest: {label}")
+        for field in ("implementation_references", "references", "verification"):
+            entries = _unique_strings(row.get(field), f"{field} for {label}", errors)
+            if not entries:
+                errors.append(f"missing knowledge {field}: {label}")
+            for entry in entries:
+                reference = _verification_path(entry)
+                found, problem = _repo_file(root, reference)
+                if problem:
+                    errors.append(f"invalid knowledge {field}: {label} -> {entry} ({problem})")
+                elif (field != "verification" and owner in package_dirs
+                        and package_dirs[owner] not in found.parents):
+                    errors.append(f"knowledge reference outside owning package: {label} -> {entry}")
+    for label in sorted(expected_knowledge - knowledge_ids):
+        errors.append(f"missing knowledge capability: {label}")
+    for label in sorted(knowledge_ids - expected_knowledge):
+        errors.append(f"unexpected knowledge capability: {label}")
 
     inventoried = {}
     for row in files.values():
@@ -332,8 +547,8 @@ def main():
     supplied = (("craft", args.craft_source), ("upstream", args.upstream_source))
     sources = {name: path for name, path in supplied if path}
     try:
-        data = json.loads(args.manifest.read_text(encoding="utf-8"))
-        errors = audit(data, args.root, sources)
+        data, errors = load_manifest(args.manifest.read_text(encoding="utf-8"))
+        errors += audit(data, args.root, sources)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"inventory error: {type(exc).__name__}", file=sys.stderr)
         return 2
@@ -346,8 +561,12 @@ def main():
     print(
         f"inventory: {len(data['files'])} source files, {len(data['units'])} units "
         f"({functional} functional, {len(data['units']) - functional} supporting), "
-        f"9 unique feature owners; digests and coverage checked for "
-        f"{len(sources)} supplied checkout(s)"
+        f"{len({unit['package'] for unit in data['units'] if unit['class'] == 'functional'})} "
+        f"owning packages, one per functional unit; digests and coverage checked for "
+        f"{len(sources)} supplied checkout(s); "
+        f"{len(data['knowledge_capabilities'])} knowledge capabilities, "
+        f"{len(data['features'])} total owning packages; unmapped=0 "
+        f"(structural mapping only, not functional or runtime proof)"
     )
     return 0
 

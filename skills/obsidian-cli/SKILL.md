@@ -1,6 +1,6 @@
 ---
 name: obsidian-cli
-description: Drives a running Obsidian desktop app through its official `obsidian` command-line binary to read, create, search, move, append, and audit vault notes, properties, tasks, tags, and links, and to reload, evaluate, screenshot, and inspect plugins or themes. Use when the user asks to read or create a note from the terminal, move or rename a vault note, search vault content, set a property, check backlinks or unresolved links, or reload a plugin and check its errors. Not for Obsidian Markdown syntax or where a note belongs — use a format or vault-policy skill; not for a third-party CLI with a similar name, a headless sync client, or raw filesystem edits inside a vault.
+description: Drives a running Obsidian desktop app through its official `obsidian` command-line binary to read, create, search, move, append, and audit vault notes, properties, tasks, tags, and links, and to reload, evaluate, screenshot, and inspect plugins or themes. Use when the user asks to read or create a note from the terminal, move or rename a vault note, search vault content, set a property, check backlinks or unresolved links, or reload a plugin and check its errors. Also use for Korean requests such as "이 노트를 가리키는 백링크 확인해줘" or "어떤 노트가 여기로 링크하는지 찾아줘". Not for Obsidian Markdown syntax or where a note belongs — use a format or vault-policy skill; not for a third-party CLI with a similar name, a headless sync client, or raw filesystem edits inside a vault.
 license: MIT
 metadata:
   version: "0.1.0"

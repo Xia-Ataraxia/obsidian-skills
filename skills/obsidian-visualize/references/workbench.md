@@ -1,6 +1,13 @@
 # Live Plugin Edits (Exception Path)
 
-Use this path only for the two cases [`../SKILL.md`](../SKILL.md) names: an interactive edit inside a drawing the user has open right now, and embedding a file that must go through the plugin's own file store. Every other Excalidraw request is a file generated with [`../scripts/excalidraw_scene.py`](../scripts/excalidraw_scene.py) — element count is never the reason to come here.
+Use this path for the authorized native plugin edits in [`../SKILL.md`](../SKILL.md): selected edits of a plugin-managed drawing, Mermaid addition and embedding through the plugin's file store. Fresh geometry remains a deterministic file from [`../scripts/excalidraw_scene.py`](../scripts/excalidraw_scene.py); element count is never the reason to switch.
+
+[`plugin-workflow.md`](plugin-workflow.md) gives the pinned implementation facts
+and the executable helper with full live/disk/asset preimages and preservation
+checks. The older illustrative snapshot below covers only its enumerated fields;
+it does not by itself establish whole-element, Markdown or asset preservation.
+Use the executable helper for the strengthened transaction. No snippet here has
+been verified in a current installed plugin by this source change.
 
 This path trades a deterministic, re-runnable file for a mutation against live app state. It needs an installed plugin, an open drawing, and its own proof that the result reached disk. Nothing here installs, enables, or updates anything.
 

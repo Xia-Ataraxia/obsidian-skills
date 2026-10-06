@@ -1,5 +1,73 @@
 # Changelog
 
+## 0.2.0 — Unreleased source implementation
+
+- 2026-10-06 — Observed the native workflow in an isolated Obsidian 1.12.7, Electron 39.8.3 and Excalidraw 2.28.1 installation. Native drawing load, selected-color persistence, independently loaded image bytes and inspected plugin PNG/app views were observed. Strict serialization preservation first failed because native saving adds metadata and shortens attachment links.
+
+  The selected content-preservation contract now admits only equivalent native normalization, retaining element identities, custom fields, image bytes and the exact resolved attachment target. Content changes and redirected links still fail. The helper subscribes to the exact file modification before committing, flushes the native scene update, and requests a native forced save before independently reloading it.
+
+  The owning module passes all 14 checks using a physical temporary directory, and all 41 affected helper regressions pass. A fresh native transaction returned a clean persisted-readback receipt with only its selected color changed; the final PNG and app screenshot were inspected. Earlier failed transactions and the symlink-ancestry test failure remain recorded, not replayed or weakened. This observation does not certify Mermaid/image fallback coverage or a production installation. Official API/source references remain pinned below.
+- 2026-10-04 — Repaired the independently reproduced G1/G2 source-gate failures.
+  Saved assets are now captured through a fresh native template/embedded-files
+  loader, independently of the live asset cache, before and after commit.
+  Missing/changed saved data or unavailable/failed native readback cannot yield
+  a preservation receipt. Live and persisted element ids must be unique and
+  match the baseline plus exactly approved Mermaid additions. Post-attempt
+  failures expose `partialEffect: true`; no rollback or replay is attempted.
+  Added saved-asset corruption and separate live/persisted unexpected/duplicate
+  id regressions, plus a native-loader completion signal without sleeps.
+  Source correspondence includes public `EmbeddedFileLoader.ts` at the same
+  official pin below. Native C/D remains unverified.
+- 2026-10-04 — Absorbed useful source from
+  `Jonghakseo/pi-extension@a4a8107885d2e944d03d8ebc7d9b1cdcf8b7521f`
+  (`skill-excalidraw` 0.1.3) into this existing owner: read-only inspection/layout
+  lint and adapted skeleton/palette/spacing recipes. Retained its complete
+  `Copyright (c) 2026 Jonghak Seo` MIT grant in package `NOTICE`; full source-tree
+  digests, exclusions and target mappings are in `source-map.json`. No standalone
+  app/server/browser/build lifecycle, binary, font or new skill is shipped.
+- Added original `import_scene.py`: explicit inspected-source SHA-256 and new
+  `.excalidraw.md` destination, full scene/ids/custom-field/inline-asset
+  preservation, raw/original text index, exclusive creation and readback.
+  Existing drawings, skeletons and pending Mermaid are refused; native
+  plugin-managed compressed drawings are never patched as codec bytes.
+- Added original `plugin-workbench.js` for an already-enabled plugin: exact-target
+  live/disk/asset snapshots, selected-id copied edits, additive native
+  `addMermaid`, one persistent EA commit, independent reload/preservation checks,
+  and PNG export through the plugin's saved-template/asset loader. Preparation
+  rechecks stale preimages; post-commit failure is reported as a partial effect
+  without replay or automatic rollback. This is optimistic concurrency, not a
+  lock against a user editing during the commit.
+- Preserved the deterministic stdlib generator and all existing routing cases.
+  Added a final replacement-preimage check after temporary payload flush and
+  fixed deleted-text tombstone readback, matching its existing live text index.
+  Plugin-first guidance distinguishes file-only A/B from actual Obsidian C/D,
+  retains exact destination policy and CLI/doctor ownership, and specifies the
+  isolated synthetic native QA surface.
+- Official facts were read from
+  `zsviczian/obsidian-excalidraw-plugin@f30b4c5d3dcb66ac76ced8f05d9e95409ee94c79`
+  (source manifest 2.28.1): `docs/API/ExcalidrawAutomate.d.ts`,
+  `src/shared/ExcalidrawAutomate.ts`, and
+  `src/utils/excalidrawAutomateUtils.ts`. `getSceneFromFile` omits the binary
+  store; image preservation needs independent native saved-asset loading as
+  well as live/Markdown checks. The older
+  utility prose has fewer `addElementsToView` parameters/different save defaults,
+  so calls use explicit admitted methods. Native template creation's text-index
+  construction is not assumed to cover concatenated template elements; the
+  full-scene wrapper adapter tests that behavior instead. Exact official URLs
+  and sources are retained in package `PROVENANCE.md`.
+- Installed runtime version was not established. Historical isolated verification
+  and earlier inventories are not current plugin proof. Author checks cover
+  new-file import, ids/custom fields/assets/text-index preservation, deleted text,
+  late preimage conflict, malformed inputs, non-target controls, read-only
+  inspection and stateful native API-boundary success/refusal/partial-failure
+  cases. Those boundaries are tested without executing Obsidian; no current
+  C/D render or runtime Mermaid/image fallback is claimed.
+- `metadata.implementation_version` is now 0.2.0. `metadata.version` stays at the
+  collection's 0.1.0 release identity required by existing manifest tests;
+  manifests, authenticated native inventory, registration and existing release
+  artifacts are unchanged. New lineage uses the additive owner-local source map.
+  Later exact-tree release/privacy revalidation is required.
+
 ## 0.1.0 — Unreleased
 
 - 2026-09-29 — Established `obsidian-visualize` as the independent owner of visual-form selection and Excalidraw file generation in this repository. The package operates on its own: no callable root skill, no dispatcher, no shared runtime, and no compatibility alias. Neighboring packages (`obsidian-canvas`, `obsidian-mermaid`, `obsidian-markdown`, `obsidian-cli`) are named by identity only and are never loaded automatically; no document in this package links to a file outside it.

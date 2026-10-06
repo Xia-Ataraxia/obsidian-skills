@@ -10,6 +10,7 @@ import copy
 import hashlib
 import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -88,6 +89,7 @@ class SyntheticAuditTest(unittest.TestCase):
             self._write(self.licensed / path, body)
 
         self.data = self._manifest()
+        self.native_contract = copy.deepcopy(audit_inventory.native_projection(self.data))
         self.roots = {"unlicensed": self.unlicensed, "licensed": self.licensed}
 
     def _write(self, path, text):
@@ -120,6 +122,7 @@ class SyntheticAuditTest(unittest.TestCase):
             name = FEATURE_NAMES[owner]
             target = kwargs.pop("target", f"skills/obsidian-{name}/SKILL.md")
             row["target"] = target
+            row["package"] = f"obsidian-{name}"
             row["verification"] = kwargs.pop("verification", [f"{target}#verification"])
         row.update(kwargs)
         return row
@@ -220,7 +223,8 @@ class SyntheticAuditTest(unittest.TestCase):
 
     def _audit(self, data=None, with_sources=True):
         return audit(
-            data or self.data, self.root, self.roots if with_sources else None
+            data or self.data, self.root, self.roots if with_sources else None,
+            native_contract=self.native_contract,
         )
 
     # --- the baseline must be clean, or no negative test below proves anything ---
@@ -580,6 +584,72 @@ class SyntheticAuditTest(unittest.TestCase):
         unit["verification"] = [f"{alias}/SKILL.md#verification"]
         self.assertEqual(["feature package shared by F08 and F09"], self._audit(data))
 
+    # --- one owning package per capability unit ---
+
+    def test_unit_naming_two_owners_is_rejected_by_unit_id(self):
+        for field, value in (("owner", ["F01", "F02"]),
+                             ("package", ["obsidian-markdown", "obsidian-bases"])):
+            data = copy.deepcopy(self.data)
+            data["units"][0][field] = value
+            with self.subTest(field=field):
+                self.assertIn(
+                    "unit must map to exactly one owning package: u-mixed-markdown",
+                    self._audit(data),
+                )
+
+    def test_functional_unit_without_an_owning_package_is_rejected(self):
+        data = copy.deepcopy(self.data)
+        del data["units"][0]["package"]
+        self.assertIn("missing owning package: u-mixed-markdown", self._audit(data))
+
+    def test_owning_package_must_be_the_package_of_the_owner(self):
+        data = copy.deepcopy(self.data)
+        data["units"][0]["package"] = "obsidian-bases"
+        self.assertIn(
+            "owning package is not the package of its owner: u-mixed-markdown",
+            self._audit(data),
+        )
+
+    def test_supporting_unit_may_not_carry_an_owning_package(self):
+        data = copy.deepcopy(self.data)
+        data["units"][2]["package"] = "obsidian-markdown"
+        self.assertIn(
+            "supporting unit has an owning package: u-mixed-shared", self._audit(data)
+        )
+
+    def test_owner_declared_twice_in_the_manifest_text_is_reported_not_resolved(self):
+        """A plain JSON parse keeps the second owner and hides that there were two."""
+        text = json.dumps(self.data).replace(
+            '"owner": "F01"', '"owner": "F02", "owner": "F01"', 1
+        )
+        self.assertEqual(self.data, json.loads(text), "the injection must be invisible to json")
+        data, problems = audit_inventory.load_manifest(text)
+        self.assertEqual(self.data, data)
+        self.assertEqual(["duplicate owner declared for unit: u-mixed-markdown"], problems)
+        self.assertEqual(([]), audit_inventory.load_manifest(json.dumps(self.data))[1])
+
+    def test_knowledge_feature_owns_only_its_own_package(self):
+        target = "skills/ingest/SKILL.md"
+        self._write(self.root / target, "# ingest\n")
+        data = copy.deepcopy(self.data)
+        data["features"]["K03"] = {"name": "ingest", "package": "skills/ingest"}
+        data["knowledge_capabilities"] = [{
+            "id": "K-03", "owner": "K03", "package": "ingest", "target": target,
+            "target_sha256": _digest("# ingest\n"), "source_row_sha256": "c" * 64,
+            "implementation_references": [target],
+            "references": [target], "verification": [target],
+        }]
+        self.assertEqual([], self._audit(data))
+        data["features"]["K03"]["package"] = "skills/obsidian-markdown"
+        self.assertIn("knowledge feature K03 must own skills/ingest", self._audit(data))
+
+    def test_feature_outside_the_native_and_knowledge_registries_is_rejected(self):
+        data = copy.deepcopy(self.data)
+        data["features"]["K12"] = {"name": "extra", "package": "skills/obsidian-sync"}
+        self.assertTrue(
+            any(e.startswith("feature registry must declare exactly") for e in self._audit(data))
+        )
+
     def test_wrong_schema_version_is_rejected(self):
         data = copy.deepcopy(self.data)
         data["schema_version"] = 1
@@ -601,7 +671,53 @@ class RealManifestTest(unittest.TestCase):
                 continue
             self.assertIsInstance(unit["owner"], str, unit["id"])
             owners.setdefault(unit["owner"], []).append(unit["id"])
+        for row in MANIFEST["knowledge_capabilities"]:
+            self.assertIsInstance(row["owner"], str, row["id"])
+            owners.setdefault(row["owner"], []).append(row["id"])
         self.assertEqual(set(MANIFEST["features"]), set(owners))
+
+    def test_every_functional_unit_names_the_one_package_of_its_owner(self):
+        checked = 0
+        for unit in MANIFEST["units"]:
+            if unit["class"] != "functional":
+                self.assertNotIn("package", unit, unit["id"])
+                continue
+            package = MANIFEST["features"][unit["owner"]]["package"]
+            self.assertEqual(f"skills/{unit['package']}", package, unit["id"])
+            self.assertTrue((ROOT / package / "SKILL.md").is_file(), unit["id"])
+            checked += 1
+        self.assertGreater(checked, 0)
+
+    def test_the_audit_command_refuses_an_injected_duplicate_owner_by_unit_id(self):
+        """The shipped manifest, copied and tampered, through the real command."""
+        text = MANIFEST_PATH.read_text(encoding="utf-8")
+        unit = next(u for u in MANIFEST["units"] if u["class"] == "functional")
+        needle = f'"id": "{unit["id"]}"'
+        owner = f'"owner": "{unit["owner"]}"'
+        start = text.index(needle)
+        at = text.index(owner, start)
+        other = next(f for f in sorted(MANIFEST["features"]) if f != unit["owner"])
+        tampered = {
+            "repeated key": text[:at] + f'"owner": "{other}", ' + text[at:],
+            "owner list": text[:at] + f'"owner": ["{unit["owner"]}", "{other}"]'
+            + text[at + len(owner):],
+        }
+        script = ROOT / "scripts" / "audit_inventory.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            for label, body in {"untouched": text, **tampered}.items():
+                manifest = Path(tmp) / f"{label.replace(' ', '-')}.json"
+                manifest.write_text(body, encoding="utf-8")
+                result = subprocess.run(
+                    [sys.executable, str(script), "--manifest", str(manifest)],
+                    cwd=tmp, capture_output=True, text=True, timeout=60,
+                )
+                with self.subTest(manifest=label):
+                    if label == "untouched":
+                        self.assertEqual(0, result.returncode, result.stderr)
+                        continue
+                    self.assertEqual(1, result.returncode, result.stdout + result.stderr)
+                    self.assertIn(unit["id"], result.stderr)
+                    self.assertNotIn("inventory:", result.stdout)
 
     def test_single_feature_files_hold_one_unit_and_mixed_files_hold_several(self):
         counts = {}

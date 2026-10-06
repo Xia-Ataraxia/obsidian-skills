@@ -137,11 +137,16 @@ The same class of refusal also covers a repeated `--scope` or `--project-root` w
 
 ## Package presence
 
-`./install.sh skills` reports each of the nine declared packages as `[present]`, `[BROKEN ]` (a directory without `SKILL.md`), or `[absent ]`, prints how many are installable from the checkout, and closes by restating that each package stands alone — no router, no dispatcher, no shared runtime. The nine declared names are fixed in the installer, and a name outside that list is refused:
+`./install.sh skills` reports each declared package as `[present]`, `[BROKEN ]` (a directory without `SKILL.md`), or `[absent ]`, prints how many are installable from the checkout, and closes by restating that each package stands alone, with no router, no dispatcher and no shared runtime. Twenty names are fixed in the installer, and a name outside them is refused:
 
-`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-mermaid`, `obsidian-visualize`, `obsidian-cli`, `obsidian-clipper`, `obsidian-doctor`, `obsidian-sync`.
+- native: `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-mermaid`, `obsidian-visualize`, `obsidian-cli`, `obsidian-clipper`, `obsidian-doctor`, `obsidian-sync`;
+- knowledge: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
 
-Presence is a property of the checkout you are holding. At the time this file was written the command reported **9 of 9** installable, every package `[present]`. Run it yourself rather than trusting that number; a release is complete only when all nine still report `[present]` in the tree being published.
+`--skill all` selects the nine native packages plus every knowledge package present in the checkout.
+
+Presence is a property of the checkout you're holding. In the local release candidate the command reported **9 of 9** native and **11 of 11** knowledge packages installable. Run it yourself rather than trusting those numbers.
+
+In the same candidate, `copy --runtime claude --skill all --scope project --apply` into a disposable project produced exactly twenty package directories whose files all matched the checkout byte for byte, and a symlink at one package destination refused the run with exit 1 and left that tree unchanged. That's temporary materialization. The knowledge packages aren't in the published pin, and no runtime has loaded them; the native route evidence above covers the nine published packages only.
 
 ## Support limits
 

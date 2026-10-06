@@ -55,3 +55,9 @@ No Obsidian installation, vault, plugin, or `obsidian` executable was available 
 - Console classification recognises exactly three signatures (`ReferenceError: … is not defined`, `TypeError: … is not a function`, `TypeError: Cannot read properties of undefined/null`). Everything else is unclassified by design, which is the intended behaviour and also a permanent coverage limit: the registry has to grow for that set to widen.
 - Sanitization is pattern-based. It catches home-directory, per-user, temp, and `file://` paths, URL-embedded credentials, and secret-looking key names. It is a safety net, not a guarantee — a host-specific value in an unanticipated shape can still pass, so sanitize at capture.
 - The seed registry holds two plugins, one of them with no recorded behaviour at all. That is the honest state of the knowledge, not a gap to be filled with plausible entries.
+
+### Registry retention restoration — Unreleased
+
+- Corrected only the `references/plugins.yaml` header: retired or renamed APIs retain their version-scoped evidence, and retirement is appended rather than deleting historical entries. Whole-document parsed data and all bytes from `schema:` onward are unchanged.
+- Requirement lineage: public `Xia-Ataraxia/craft-skills@836eb8778134d68f3ea675cd30ee5f9ae692f9e3`, append-only plugin evidence retention, re-expressed without copying source prose or corpus examples. Existing rights and MIT notices remain unchanged; no new source grant is claimed.
+- Independent whole-registry YAML equality and direct header review confirmed retention without schema, key, entry or classifier changes. The seed still has zero observed entries; no plugin/app version or live reproduction is newly asserted. Version remains `0.1.0`; no new test or unchanged-suite rerun accompanies this prose record.

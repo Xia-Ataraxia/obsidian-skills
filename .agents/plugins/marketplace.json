@@ -1,7 +1,7 @@
 {
   "name": "obsidian-skills",
   "interface": {
-    "displayName": "Obsidian Skills"
+    "displayName": "Obsidian Skills (secondbrain-skills)"
   },
   "plugins": [
     {

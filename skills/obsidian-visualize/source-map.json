@@ -1,0 +1,172 @@
+{
+  "schema": "visualize-source-map/1",
+  "owner": "F05",
+  "package": "obsidian-visualize",
+  "repository": "https://github.com/Jonghakseo/pi-extension",
+  "revision": "a4a8107885d2e944d03d8ebc7d9b1cdcf8b7521f",
+  "license": {
+    "spdx": "MIT",
+    "copyright": "Copyright (c) 2026 Jonghak Seo",
+    "notice": "NOTICE"
+  },
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "98e16fcc766bfadb58da83c0ca4b127f199300f407d97758cf0b31aa8ae0f829",
+      "bytes": 1068,
+      "disposition": "imported-notice",
+      "target": "NOTICE",
+      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+    },
+    {
+      "path": "packages/skill-excalidraw/README.md",
+      "sha256": "c1349a3d64d59d979802f818a36d3c7d6fbdb3090080bb5ce556de1debe4cfd6",
+      "bytes": 1148,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/package.json",
+      "sha256": "8b23c320126cecb18d72d3dc4d9ba751fca4a5386f9babdf2aa27c4d02e8fe95",
+      "bytes": 1265,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/SKILL.md",
+      "sha256": "f14f64e4fdddad4bcd93d92e8d06bbd22cfe8143da04fb9e4f47bbf24d37ba2a",
+      "bytes": 5678,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/.gitignore",
+      "sha256": "c8015948b6eaefde5eaa3862f2fe5ce0245fcde4d6e66f7441dcdcbbed46e652",
+      "bytes": 18,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/.npmignore",
+      "sha256": "16d30e4462189fb14dd611bdb708c510630c576a1f35b9383e89a4352da36c97",
+      "bytes": 13,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/index.html",
+      "sha256": "1edf0159ccc0830e09768a3f57e32f81a4b5222afee940534f4115fc52042f62",
+      "bytes": 411,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/package.json",
+      "sha256": "97511ca24bc851df88c6c89da29298b9d76d6ef1446d51caa44bc9d5fdaafdd2",
+      "bytes": 387,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/src/main.jsx",
+      "sha256": "9b57518c09c1638642b3bf9ffc89663326cdd90b6f936ae2ed68a94c46414037",
+      "bytes": 13936,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/src/scene.js",
+      "sha256": "112774cc2e244c18080735ed31414695e590b038eea415c1efdb79fdecec8170",
+      "bytes": 9560,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/app/vite.config.js",
+      "sha256": "728030c9ceeea2dc6574b7ca88595bd3c814275a856284579e19765d49123f04",
+      "bytes": 610,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/assets/examples/flowchart.excalidraw",
+      "sha256": "4eb6b13a462c52b1d4c1c0e6c1ed87bbac79cc356cfba0f3d43f575f1167f564",
+      "bytes": 1704,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/references/setup.md",
+      "sha256": "9c8548d27783263c06a72fe524327475cd531cf70c522405c90702723d45b944",
+      "bytes": 1055,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/references/skeleton.md",
+      "sha256": "e2a4f9549a7628ffadad87bf51f1b5d3bb4d70406b274377ff6f788583e5acd9",
+      "bytes": 4281,
+      "disposition": "adapted",
+      "target": "references/skeleton.md",
+      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/references/style.md",
+      "sha256": "b72046fc126f6e66b114d96e3c00e0691f4155fbe055b92750914e8a9ce4db10",
+      "bytes": 3578,
+      "disposition": "adapted",
+      "target": "references/style.md",
+      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/references/sync-protocol.md",
+      "sha256": "b28f7823e36a5969fdbe63f81a1de986c7ab2b1bc2cb0cb255fe9b220c46d340",
+      "bytes": 5723,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/scripts/excal.mjs",
+      "sha256": "7152cf017c1da711e5e9c271629f2d99b6f4d33b0ad285e69873855837ccccd1",
+      "bytes": 15122,
+      "disposition": "adapted",
+      "target": "scripts/inspect.mjs",
+      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/scripts/lib.mjs",
+      "sha256": "981c7c7abacae5258f706d2ccb6b3904ad32d65409b8f4f0f525da7ef1e9fd96",
+      "bytes": 2326,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    },
+    {
+      "path": "packages/skill-excalidraw/skills/excalidraw/scripts/server.mjs",
+      "sha256": "db773b3da94b8e6a0a8f8fb633b0d073762642eaa3ccec155f67bd9c7fdc46b4",
+      "bytes": 14553,
+      "disposition": "not-adopted",
+      "target": null,
+      "reason": "Standalone lifecycle, app/dependency build, example, or package wrapper outside plugin-first scope."
+    }
+  ],
+  "verification": [
+    "tests/test_visualize_plugin.py",
+    "tests/fixtures/visualize-workbench.cjs",
+    "references/plugin-workflow.md"
+  ],
+  "nativeInventory": "Existing authenticated native inventory remains unchanged; this is the additive owner-local source map."
+}

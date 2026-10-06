@@ -1,0 +1,7 @@
+{
+  "schema": "audit/report@1",
+  "category_counts": {
+    "broken_link": 2,
+    "partial_source": 1
+  }
+}

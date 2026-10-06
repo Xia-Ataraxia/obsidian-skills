@@ -25,7 +25,7 @@ no dispatcher, and no shared runtime.
 | F02 | bases | `skills/obsidian-bases` | `obsidian-skills` `skills/obsidian-bases/` (MIT) | imported, then extended |
 | F03 | canvas | `skills/obsidian-canvas` | `obsidian-skills` `skills/json-canvas/` (MIT) | imported, renamed, then extended |
 | F04 | mermaid | `skills/obsidian-mermaid` | authored here from public Mermaid and Obsidian documentation | original |
-| F05 | visualize | `skills/obsidian-visualize` | authored here from the requirement that a drawing is a file, not a live plugin object | original |
+| F05 | visualize | `skills/obsidian-visualize` | original deterministic plugin drawing workflow, extended with MIT pi-extension inspection/layout source | original and adapted |
 | F06 | cli | `skills/obsidian-cli` | `obsidian-skills` `skills/obsidian-cli/` (MIT) | imported, then substantially extended |
 | F07 | clipper | `skills/obsidian-clipper` | authored here from the official Web Clipper documentation, with schema, enumerations, and import-validation facts checked against the MIT-licensed `obsidianmd/obsidian-clipper` source at `6d56d618b00bd970aa738d6a7a61edee27783e81`; nothing vendored | original |
 | F08 | doctor | `skills/obsidian-doctor` | authored here from the requirement that plugin diagnosis be a bounded, evidence-gated pipeline | original |
@@ -89,6 +89,14 @@ present; the package was written here.
 
 ## What the inventory covers
 
+The authenticated native inventory below is preserved. The plugin-first F05
+addition is an additive owner-local source map in
+`skills/obsidian-visualize/source-map.json`, with exact revision, complete package
+tree/digests, retained MIT notice, exclusions and verification paths. It is not
+represented as newly authenticated native rows or as part of an earlier release
+seal. Package `PROVENANCE.md` and `CHANGELOG.md` record the source-only
+implementation revision 0.2.0; collection metadata remains 0.1.0.
+
 Complete, digest-pinned, and audited:
 
 | source | inventoried files | units | coverage rule |
@@ -151,8 +159,143 @@ the owner-to-package match, the rights consistency, and the presence of the
 upstream notice. Adding the two checkout flags additionally verifies every digest
 and byte count and the exhaustive partition of both sources.
 
+## Local ingest transfer from bstack
+
+This record covers only the two helpers and three tests below, read in full and
+transferred from bstack revision `290cb51b48fb0310e58e8bc9c8be0d0d803dc3e6`.
+The originals remain in bstack until its separately authorized retirement.
+
+| source path | source SHA-256 | local destination and delta |
+|---|---|---|
+| `skills/ingest/scripts/web-source-validate.py` | `ba5662061094893f971d269c297df636522c71f5cb845270026bda1b012ff6c1` | same path, byte-identical |
+| `skills/ingest/scripts/youtube-transcript-extract.py` | `fd309b4d19781297ba66ac0c75d9e9a77fd11c0e35a41b4ba01f539b3155df85` | same path, byte-identical |
+| `tests/ingest/test_metadata_contract.py` | `84e6b27a0045a0eb8a21c3a5c24c82c8fd3bcfbd9d2a31cd3f66a5dbd4e0f36b` | `tests/test_ingest_metadata_contract_ports.py`; import path depth only |
+| `tests/ingest/test_web_source_validate.py` | `f156b3546b0dfc6715e49e5c69a5e10c655fa28c6bb70c03711b3afc5df0b238` | `tests/test_ingest_web_source_validate_ports.py`; import path depth only |
+| `tests/ingest/test_youtube_transcript_extract.py` | `fb48463d3397b6790d7447807c3e46abd2ccb2590acad9cf147a2b25fbb0978d` | `tests/test_ingest_youtube_transcript_extract_ports.py`; import path depth, two Python 3.8-compatible multi-manager statements, and one test synchronization repair |
+
+The destination gateway-overlap test additionally repairs a pre-existing source
+race: a worker now appends its observed completion index before signaling the
+dependent worker. The overlap barrier, bounded waits, observed `[2, 1, 0]` order,
+stable URL-priority result and every assertion remain intact. The other 26 port
+test methods retain their original behavioral AST; AST equality is not claimed
+for this one amended method. No bstack original or production extractor changed.
+
+Observed source-repository history records the web helper's creation at
+`e6c375ae7f2e5c7b89be40ed1a7e16b5c4b33197` and the transcript helper's creation at
+`f674baaba9e8584d764818ed32af0f00f19a20b5`, followed by later source-repository commits.
+The current paths and tests were recorded by the restructure commit
+`14e93009493f36613cb4faa4625169b46b17a66b`. Commit metadata is observed
+provenance, not proof of sole authorship; contributor and PR authorship has not
+been exhaustively established.
+
+No vendored third-party code was found on inspection of these five files. This
+is an inspection result, not a guarantee about unknown contributors. The source
+has no tracked root `LICENSE`, `COPYING` or `NOTICE`, and these files have no
+copyright or licence notice. Plugin metadata's MIT string is not treated as a
+permission grant. Owner confirmation was not obtained; neither sole authorship
+nor a confirmed MIT grant is claimed.
+
+The requested local code preparation and transfer are authorized. External
+redistribution remains subject to later exact-tree publication approvals and
+resolution of the origin rights; the destination's root MIT notice does not
+establish those rights. The helpers invoke optional tools/services rather than
+vendoring them. No external extraction, deployment or publication is proved by
+this transfer.
+
+Inventory integration for these five files is handed off as a private draft for
+serialized integration, not applied concurrently to `source-inventory.json`.
+The existing inventory's MIT-import classification must not be used to imply an
+unconfirmed grant.
+
+## Native obligation restoration — Unreleased
+
+These additive restorations keep the candidate at `0.1.0`. Requirement lineage
+is public `Xia-Ataraxia/craft-skills@836eb8778134d68f3ea675cd30ee5f9ae692f9e3`:
+native maintenance and operating requirements, Korean discovery intent, explicit
+vault-registry resolution, and append-only plugin evidence. The requirements were
+re-expressed, not copied as prose or evaluation-corpus examples. No new source
+permission grant is claimed; existing MIT copyright and permission notices and
+the local ingest transfer's unresolved origin-rights and redistribution hold
+remain unchanged.
+
+- `AGENTS.md` restores native-only official-documentation-first checking,
+  installed-version evidence, conflict disclosure and unknown facts; per-change
+  source/version records and affected evaluations when either moves; and the
+  prospective runtime-change order of documentation, evaluations, recipe,
+  version and changelog. It preserves relied-on description triggers, including
+  non-English intent, and the seven native operating steps: exact artifact and
+  effect, read first, preserve unrelated content, least destructive supported
+  selected surface, exact readback, evidence and prerequisites, unknown runtime
+  facts. This adds no shared runtime, dependency or write authority.
+- `skills/obsidian-markdown/SKILL.md` restores Korean note-cleanup discovery in
+  the description only; the existing English scope and body are unchanged.
+- `skills/obsidian-cli/SKILL.md` restores Korean backlinks discovery without
+  changing the existing description scope or body.
+  `skills/obsidian-cli/references/operations.md` adds supported read-only registry
+  lookup, task-selected name-to-root mapping and root cross-checking; missing,
+  stale or ambiguous registration stops before effects, without default changes
+  or fallback surfaces.
+- `skills/obsidian-doctor/references/plugins.yaml` changes only the header:
+  retired or renamed APIs retain version-scoped evidence and retirement is
+  appended, never deletes history. The whole parsed registry data is unchanged.
+
+The new CLI source is <https://help.obsidian.md/cli>, consulted through the
+publisher's raw document
+<https://raw.githubusercontent.com/obsidianmd/obsidian-help/master/en/Extending%20Obsidian/Obsidian%20CLI.md>:
+32,586 bytes, SHA-256
+`884d3f36a30ad2dc08bcdc84c1243e17e255677a2bd4a7a1aa0d8f77939fc012`.
+Lines 137-148 document explicit vault name/id first; lines 1208-1225 document
+`vault info=path` and `vaults verbose`. These are documentation facts, not proof
+that an installed build supports or executed them.
+
+Verification established static description/body preservation and whole-registry
+parsed-data equality; six existing frontmatter checks passed independently.
+Bundle metadata `1.12.7` is not a live CLI version or help response: the current
+help/version probes timed out. No current registry execution, live routing or
+runtime behavior is proved. Earlier version-specific tests remain historical;
+no unchanged suite is rerun for these prose records.
+
+## Knowledge registration and resource corrections — Unreleased
+
+Source baseline: existing local revision
+`25f484a63e7278e1864f08b372eea3d96e809289`. These corrections keep version
+`0.1.0` and record existing packages and code, not new runtime behavior.
+
+- `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` now list the
+  eleven canonical knowledge names in their existing `knowledgePackages` arrays.
+  Native registration, collection identity and all other metadata are unchanged.
+- The existing `references/interface.md` in `skills/ingest`, `skills/audit`,
+  `skills/lint` and `skills/verify` now declares ten existing package-local helper
+  paths and their roles. Their owning changelogs record the details; no helper,
+  callable role, protocol, dispatcher or shared runtime was added.
+
+No code or asset was imported, copied, modified or relicensed by these corrections.
+Existing source attribution and MIT notices remain intact. The local ingest
+transfer's unconfirmed origin rights and public-redistribution hold remain in
+force; this registration/documentation change supplies no new permission grant.
+No installation, native app execution or model/runtime proof is established.
+
 ## Status and limits
 
+The new plugin-first visualization source absorbs inspection/layout/skeleton
+material from `Jonghakseo/pi-extension` at
+`a4a8107885d2e944d03d8ebc7d9b1cdcf8b7521f`, under the complete MIT grant
+`Copyright (c) 2026 Jonghak Seo` retained in `NOTICE` and the owner package.
+`scripts/inspect.mjs` and `references/style.md` / `references/skeleton.md` are
+adapted; the full-scene adapter and guarded native workbench helper are original.
+No standalone app/server/dist, dependency/font bundle or plugin artifact is
+redistributed. Official plugin API/loader facts were inspected at
+`f30b4c5d3dcb66ac76ced8f05d9e95409ee94c79` (source manifest 2.28.1), not
+inferred as an installed version. Source tests do not establish a current
+Obsidian plugin load/render; fresh exact-tree release and privacy revalidation
+remain necessary before later publication or deployment.
+
+- The local release candidate holds twenty packages: the nine native features
+  above and the eleven knowledge packages mapped in `source-inventory.json`.
+  Its documentation adds no source, code or asset. The local ingest transfer's
+  two helpers and three tests keep their unconfirmed origin rights and
+  public-redistribution hold; a local release candidate is not a new grant or a
+  publication approval.
 - This repository is an unpublished candidate at version `0.1.0`. Nothing recorded
   here installs it on a host, publishes it to a marketplace, or retires, replaces,
   or supersedes any other project — both sources above remain their owners' to

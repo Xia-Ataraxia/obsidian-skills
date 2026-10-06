@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Semantic tests for the formats these packages own.
 
-Four distinct subjects, deliberately not mixed:
+Five distinct subjects, deliberately not mixed:
 
 1. **Authored documentation.** Every JSON and YAML example shipped in a package
    is parsed with a real parser and checked against the rules that package
@@ -15,6 +15,9 @@ Four distinct subjects, deliberately not mixed:
 4. **Recorded evidence.** The reports under ``tests/evidence`` and the rows
    ``docs/verification-matrix.md`` publishes from them are checked against each
    other, so a result cannot be published at a level the report never recorded.
+5. **The shared field contract.** ``scripts/sync_contracts.py`` and the real
+   ``install.sh`` are executed as subprocesses over a synthetic checkout in a
+   temporary directory, from a working directory outside any checkout.
 
 The checkers below are test infrastructure, not a product. They are kept honest
 by the malformed fixtures in ``fixtures/neutral-vault/fixture.json``: a checker
@@ -35,7 +38,9 @@ from __future__ import annotations
 import ast
 import datetime
 import json
+import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -1408,6 +1413,226 @@ class EvidenceReportConsistencyTest(unittest.TestCase):
                 self.assertNotIsInstance(check["exitCode"], bool)
                 self.assertIsInstance(check["exitCode"], int)
                 self.assertTrue(check["observed"].strip())
+
+
+# --------------------------------------------------------------------------- #
+# the shared field contract
+# --------------------------------------------------------------------------- #
+INSTALLER = REPO / "install.sh"
+CONTRACT_SOURCE = REPO / "docs" / "contracts.md"
+CONTRACT_COPY = Path("references") / "contract.md"
+CONTRACT_HEADER = b"<!-- generated from docs/contracts.md; do not edit -->\n"
+CHECKOUT_FILES = (
+    "install.sh",
+    "scripts/install_packages.py",
+    "scripts/sync_contracts.py",
+    "docs/contracts.md",
+)
+MARKDOWN_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
+
+
+def knowledge_names() -> list:
+    match = re.search(r"^KNOWLEDGE_SKILLS='([^']*)'", INSTALLER.read_text("utf-8"), re.M)
+    if match is None:
+        raise AssertionError("install.sh no longer declares KNOWLEDGE_SKILLS")
+    return match.group(1).split()
+
+
+def present_knowledge_packages() -> list:
+    return [n for n in knowledge_names() if (SKILLS_DIR / n / "SKILL.md").is_file()]
+
+
+def tree_digest(root: Path) -> dict:
+    """Every file under ``root`` with its bytes, so a stray write is visible."""
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file() and not path.is_symlink()
+    }
+
+
+class SharedContractTest(unittest.TestCase):
+    """One authored contract, one generated copy per knowledge package."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp(prefix="contract-test-")).resolve()
+        self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        self.checkout = self.tmp / "checkout"
+        self.outside = self.tmp / "outside"
+        self.outside.mkdir()
+        for relative in CHECKOUT_FILES:
+            target = self.checkout / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(REPO / relative, target)
+        for name in ("ingest", "query"):
+            self.make_package(name)
+        self.source = (self.checkout / "docs" / "contracts.md").read_bytes()
+
+    def make_package(self, name):
+        package = self.checkout / "skills" / name
+        package.mkdir(parents=True)
+        (package / "SKILL.md").write_text(
+            f"---\nname: {name}\ndescription: Synthetic knowledge package.\n---\n\n"
+            f"# {name}\n\nFields follow the [shared contract](references/contract.md).\n",
+            encoding="utf-8",
+        )
+
+    def copy_of(self, name) -> Path:
+        return self.checkout / "skills" / name / CONTRACT_COPY
+
+    def sync(self, *args):
+        return subprocess.run(
+            [sys.executable, str(self.checkout / "scripts" / "sync_contracts.py"), *args],
+            cwd=self.outside, capture_output=True, text=True, timeout=60,
+        )
+
+    def install_single(self, installer: Path, name: str):
+        """Copy one package into a consumer project, run from outside any checkout."""
+        consumer = self.tmp / f"consumer-{name}"
+        home = self.tmp / f"home-{name}"
+        scratch = self.tmp / f"scratch-{name}"
+        for directory in (consumer, home, scratch):
+            directory.mkdir()
+        result = subprocess.run(
+            [str(installer), "copy", "--runtime", "agent-skills", "--skill", name,
+             "--scope", "project", "--project-root", str(consumer), "--apply"],
+            cwd=consumer, capture_output=True, text=True, timeout=120,
+            env={"PATH": os.environ.get("PATH", "/usr/bin:/bin"), "HOME": str(home),
+                 "TMPDIR": str(scratch)},
+        )
+        return result, consumer / ".agents" / "skills" / name
+
+    def assert_standalone(self, installed: Path, source: bytes):
+        self.assertEqual((installed / CONTRACT_COPY).read_bytes(), source)
+        links = 0
+        for path in sorted(installed.rglob("*.md")):
+            for target in MARKDOWN_LINK_RE.findall(path.read_text("utf-8")):
+                if target.startswith(("http://", "https://", "mailto:", "#")):
+                    continue
+                resolved = (path.parent / target.split("#", 1)[0]).resolve()
+                self.assertIn(installed.resolve(), resolved.parents, f"{target} leaves the package")
+                self.assertTrue(resolved.is_file(), f"{target} is not in the installed copy")
+                links += 1
+        self.assertGreater(links, 0, "the package never references its contract")
+
+    # --- the real tree ---
+
+    def test_the_source_starts_with_the_generated_copy_header(self):
+        self.assertTrue(CONTRACT_SOURCE.read_bytes().startswith(CONTRACT_HEADER))
+
+    def test_installer_generator_and_audit_declare_the_same_knowledge_packages(self):
+        scripts = str(REPO / "scripts")
+        self.addCleanup(lambda: scripts in sys.path and sys.path.remove(scripts))
+        sys.path.insert(0, scripts)
+        import audit_inventory
+        import sync_contracts
+
+        self.assertEqual(len(knowledge_names()), 11)
+        self.assertEqual(tuple(knowledge_names()), sync_contracts.KNOWLEDGE_PACKAGES)
+        self.assertEqual(tuple(knowledge_names()), audit_inventory.KNOWLEDGE_PACKAGES)
+        self.assertEqual(CONTRACT_HEADER, sync_contracts.HEADER)
+
+    def test_every_present_knowledge_package_carries_the_byte_identical_copy(self):
+        source = CONTRACT_SOURCE.read_bytes()
+        for name in present_knowledge_packages():
+            with self.subTest(package=name):
+                self.assertEqual((SKILLS_DIR / name / CONTRACT_COPY).read_bytes(), source)
+
+    def test_every_present_knowledge_package_installs_standalone(self):
+        source = CONTRACT_SOURCE.read_bytes()
+        for name in present_knowledge_packages():
+            with self.subTest(package=name):
+                result, installed = self.install_single(INSTALLER, name)
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assert_standalone(installed, source)
+
+    # --- the generator, on a synthetic checkout ---
+
+    def test_a_named_package_is_the_only_copy_written(self):
+        before = tree_digest(self.checkout)
+        result = self.sync("ingest")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        after = tree_digest(self.checkout)
+        written = "skills/ingest/references/contract.md"
+        self.assertEqual(after.pop(written), self.source)
+        self.assertEqual(after, before, "only the requested copy may appear")
+        self.assertFalse(self.copy_of("query").exists())
+
+    def test_the_all_package_form_writes_every_present_package_and_is_idempotent(self):
+        self.assertEqual(self.sync().returncode, 0)
+        for name in ("ingest", "query"):
+            with self.subTest(package=name):
+                self.assertEqual(self.copy_of(name).read_bytes(), self.source)
+        settled = tree_digest(self.checkout)
+        again = self.sync()
+        self.assertEqual(again.returncode, 0, again.stderr)
+        self.assertNotIn("written", again.stdout)
+        self.assertEqual(tree_digest(self.checkout), settled)
+
+    def test_check_reports_a_hand_edited_copy_and_writes_nothing(self):
+        self.assertEqual(self.sync("ingest").returncode, 0)
+        self.assertEqual(self.sync("--check", "ingest").returncode, 0)
+        edited = self.source + b"hand edit\n"
+        self.copy_of("ingest").write_bytes(edited)
+        result = self.sync("--check")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("differs skills/ingest/references/contract.md", result.stderr)
+        self.assertIn("missing skills/query/references/contract.md", result.stderr)
+        self.assertEqual(self.copy_of("ingest").read_bytes(), edited)
+        self.assertFalse(self.copy_of("query").exists())
+        self.assertEqual(self.sync("ingest").returncode, 0)
+        self.assertEqual(self.copy_of("ingest").read_bytes(), self.source)
+
+    def test_a_name_that_is_not_a_knowledge_package_is_a_usage_error(self):
+        before = tree_digest(self.checkout)
+        for name in ("obsidian-markdown", "../ingest", "ingest/", "", "INGEST"):
+            with self.subTest(name=name):
+                result = self.sync("ingest", name)
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertEqual(tree_digest(self.checkout), before)
+
+    def test_an_absent_package_refuses_the_whole_request(self):
+        before = tree_digest(self.checkout)
+        result = self.sync("ingest", "capture")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("skills/capture", result.stderr)
+        self.assertEqual(tree_digest(self.checkout), before)
+
+    def test_a_copy_that_is_a_symlink_out_of_the_package_is_refused(self):
+        victim = self.outside / "victim.md"
+        victim.write_bytes(b"not a contract\n")
+        self.copy_of("ingest").parent.mkdir()
+        self.copy_of("ingest").symlink_to(victim)
+        result = self.sync("ingest", "query")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertEqual(victim.read_bytes(), b"not a contract\n")
+        self.assertFalse(self.copy_of("query").exists())
+
+    def test_a_source_without_the_header_is_refused(self):
+        (self.checkout / "docs" / "contracts.md").write_bytes(b"# Shared field contract\n")
+        result = self.sync("ingest")
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertFalse(self.copy_of("ingest").exists())
+
+    # --- the installer, on a synthetic checkout ---
+
+    def test_a_single_package_install_carries_the_contract_and_no_escaping_link(self):
+        self.assertEqual(self.sync("ingest").returncode, 0)
+        result, installed = self.install_single(self.checkout / "install.sh", "ingest")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertNotIn(self.checkout, installed.resolve().parents)
+        self.assert_standalone(installed, self.source)
+        self.assertEqual(
+            sorted(p.name for p in installed.parent.iterdir()), ["ingest"],
+            "a single-package install brings no other package",
+        )
+
+    def test_a_package_without_its_generated_copy_fails_the_standalone_check(self):
+        """Negative control: an install that lacks the copy must not pass."""
+        result, installed = self.install_single(self.checkout / "install.sh", "query")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        with self.assertRaises((AssertionError, OSError)):
+            self.assert_standalone(installed, self.source)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 <p align="center">
 
 > **증거 범위:** Hermes는 당시 공개 main `c22ce26bae518e7973f078cac972ea88707b8e79`에서 네이티브 설치했고 설치 후 바이트를 비교했습니다. 로컬 clone의 checkout은 원격 tap/install 명령을 고정하지 않습니다. 실제 사용자 프로필 다섯 곳의 45개 설치와 소비자 업데이트는 운영자 보고이며, 신규 작업 응답은 CLI/Sync 두 패키지만 검증했습니다. `v0.1.0` 거부는 `skills-guard-v6`의 가짜 난스 문자열 두 곳에 대한 `credential_exposure` 오탐입니다. 실제 비밀은 없으며 보안 검사는 우회하지 않았습니다.
-  <img src="assets/brand/hero.svg" alt="Obsidian Skills — Obsidian 볼트를 위한 독립된 Agent Skill 아홉 개" width="880">
+  <img src="assets/brand/hero.svg" alt="Obsidian Skills: Obsidian 볼트를 위한 독립된 Agent Skill 스무 개, 네이티브 아홉 개와 지식 열한 개" width="880">
 </p>
 
 <p align="center">
@@ -10,7 +10,9 @@
 
 # Obsidian Skills
 
-Obsidian 볼트 작업을 위한 독립된 Agent Skill 아홉 개: Markdown, Bases, Canvas, Mermaid, 시각 형식 선택, 공식 CLI, Web Clipper, 볼트 진단, 헤드리스 Sync.
+독립된 Agent Skill 스무 개로 이루어진 `secondbrain-skills` 모음입니다. 네이티브 패키지 아홉 개는 Obsidian 자체를 다룹니다: Markdown, Bases, Canvas, Mermaid, 시각 형식 선택, 공식 CLI, Web Clipper, 볼트 진단, 헤드리스 Sync. 지식 패키지 열한 개는 노트를 다룹니다: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
+
+> **로컬 릴리스 후보.** 이 체크아웃은 배포된 아홉 개에 지식 패키지 열한 개를 더합니다. 버전 `0.1.0`의 로컬 후보이며 배포가 아닙니다. 공개 고정 커밋과 아래 증거는 네이티브 패키지 아홉 개에만 해당합니다. 여기의 어떤 것도 새 권리 부여나 배포 승인이 아닙니다. 확인한 것과 확인하지 않은 것은 [로컬 릴리스 후보](#로컬-릴리스-후보-스무-개-패키지)에 있습니다.
 
 모든 패키지는 자체 참조 문서와 스크립트를 가진 독립 `SKILL.md`입니다. 루트 스킬도, 디스패처도, 공용 런타임도, 호환 별칭도 없습니다. 에이전트는 그 작업에 필요한 패키지 하나만 불러오고 나머지는 건드리지 않습니다.
 
@@ -46,7 +48,25 @@ Obsidian 볼트 작업을 위한 독립된 Agent Skill 아홉 개: Markdown, Bas
 | `obsidian-doctor` | 민감정보를 제거한 증거로 플러그인·Templater 실패를 진단하는 읽기 전용 분류 스크립트. | *"새 노트에서 Templater가 안 돌아 — 증거를 분류해줘."* |
 | `obsidian-sync` | Obsidian Sync용 헤드리스 `ob` 클라이언트(npm `obsidian-headless`): 페어링, 방향 선택, 단발/연속 실행, 사고 수습. | *"서버에 pull-only 헤드리스 동기화를 되돌릴 수 있게 세팅해줘."* |
 
-체크아웃에 어떤 패키지가 들어 있는지는 `./install.sh skills`로 확인합니다.
+## 지식 패키지 열한 개
+
+로컬 릴리스 후보에만 있습니다. 어느 것도 공개 고정 커밋에 없고, 어떤 런타임도 로드한 적이 없습니다.
+
+| 패키지 | 소유 범위 |
+| --- | --- |
+| `capture` | 명시적으로 고른 탭, URL, 파일, 대화, 세션 구간을 Inbox 후보로 저장합니다. |
+| `inbox` | Inbox 후보를 나열·미리보기·집계하고, 고른 범위를 `ingest`로 넘깁니다. |
+| `ingest` | 고른 원본 증거를 Raw에 보존하고 원본에 근거한 Wiki 노트로 정리합니다. 직접 ingest에는 `capture`가 필요 없습니다. |
+| `query` | 기존 노트에서 검증된 인용, 상속된 출처, 정확한 Obsidian 딥링크로 답합니다. |
+| `verify` | 고른 주장을 검증된 증거와 대조하고 승인에 묶인 기록을 준비합니다. |
+| `audit` | 범위를 정해 품질 위험을 표본 점검하고 포괄 범위와 한계를 밝힙니다. |
+| `lint` | 정해진 범위의 구조, 인용, 프로퍼티, 링크, 파생 색인 어긋남을 검사합니다. |
+| `status` | 지정한 루트에서 읽기 전용 개수, 적체, 스냅숏 경과를 보고합니다. |
+| `reindex` | 감사한 컬렉션 하나의 검색 파생물을 격리된 이름의 색인에서 갱신합니다. |
+| `refresh-context` | 제안된 파생 컨텍스트 스냅숏을 정확한 원본 해시에 묶고, 승인된 경로만 적용합니다. |
+| `onboard` | 검토한 후보로 독립된 개인 볼트나 지식 볼트를 초기화하거나, 추가 설정 변경을 미리 보여줍니다. |
+
+체크아웃에 스무 개 중 어떤 패키지가 들어 있는지는 `./install.sh skills`로 확인합니다.
 
 ## 설치
 
@@ -144,6 +164,18 @@ git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # 수정된 공개 고�
 
 전체 표: [docs/verification-matrix.md](docs/verification-matrix.md). 경로별 상세: [docs/install-matrix.md](docs/install-matrix.md).
 
+### 로컬 릴리스 후보: 스무 개 패키지
+
+아래 검사는 배포된 리비전이 아니라 로컬 후보에서 실행했습니다. 각 항목은 도달한 등급을 밝힙니다.
+
+- **정적 등록.** Claude 플러그인·마켓플레이스 매니페스트가 네이티브 패키지 아홉 개와 지식 패키지 열한 개를 나열합니다. 매니페스트 항목은 선언일 뿐이며, 어떤 런타임이 패키지를 발견하거나 로드했다는 뜻이 아닙니다.
+- **임시 구체화.** 폐기용 프로젝트에 `./install.sh copy --runtime claude --skill all --scope project --apply`를 실행하자 정확히 스무 개의 패키지 디렉터리가 생겼고, 복사된 모든 파일이 체크아웃과 바이트 단위로 같았습니다. 패키지 대상 하나에 심링크를 두자 실행 전체가 종료 코드 1로 거부됐고 폐기용 트리는 바뀌지 않았습니다. 복사는 파일 시스템 사실이지 설치가 아닙니다.
+- **로컬 동작.** 후보를 정확히 내보낸 사본에서 테스트 스위트와 인벤토리 감사가 통과합니다. 지식 시나리오는 임시 볼트에서 스크립트로 실행했습니다: 온보딩, 직접 ingest와 query 딥링크, capture에서 Inbox를 거쳐 ingest까지, 충돌 거부를 포함한 추가 온보딩.
+- **확립되지 않음.** 어떤 런타임도 지식 패키지를 로드한 적이 없으며, 아래 네이티브 증거는 배포된 아홉 패키지에 대한 이전의 별개 기록입니다. 자동 발견, 앱·플러그인 실행, Sync, 배포, 앱에서 딥링크가 열리는 것은 여기서 보여주지 않습니다. 앞으로의 런타임 로드는 자체 증거를 갖는 별도 단계입니다.
+- **권리 보류.** `ingest`에는 비공개 출처에서 옮겨 온 보조 스크립트 두 개와 그 테스트가 들어 있습니다. 원 출처 권리는 확인되지 않았고 공개 재배포는 보류 상태이며, [PROVENANCE.md](PROVENANCE.md)에 기록되어 있습니다.
+
+### 네이티브 패키지 아홉 개에 대한 이전 증거
+
 **통과 — 로컬·격리·중립 픽스처** (보고서: [tests/evidence/native-app.json](tests/evidence/native-app.json))
 
 - 격리된 합성 볼트에 대한 공식 CLI 1.12.7: `create` → `search` → `move` → 새 경로에서 재확인까지 수행되고 이전 경로는 사라졌으며, 없는 원본에서의 이동은 아무것도 만들지 않았습니다. 대상 충돌 시험에서는 원본·대상·무관한 노트의 해시가 보존됐습니다.
@@ -205,7 +237,7 @@ git checkout c22ce26bae518e7973f078cac972ea88707b8e79   # 수정된 공개 고�
 ## 저장소 구성
 
 ```
-skills/obsidian-*/       패키지마다 독립 (SKILL.md, references/, scripts/)
+skills/<name>/           패키지마다 독립 (SKILL.md, references/, scripts/)
 install.sh               라우트 테이블 + 충돌 검사 복사 설치 스크립트
 assets/                  직접 제작한 브랜드·데모 아트와 asset-ledger.json
 docs/                    설치 표, 검증 표, 보안, 전환 절차
@@ -218,6 +250,6 @@ AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 
 MIT — 두 저작권 고지가 모두 담긴 [LICENSE](LICENSE)를 참고하십시오.
 
-`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 다섯 패키지는 여기서 직접 작성한 원본입니다. 각 패키지의 `CHANGELOG.md`에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
+`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 `CHANGELOG.md`에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
 
 `assets/`의 브랜드·데모 아트는 이 저장소를 위해 직접 제작한 벡터 원본이며, 파일별 제작자·출처·권리는 [assets/asset-ledger.json](assets/asset-ledger.json)에 기록되어 있습니다. 벤더 로고, 아이콘 세트, 애플리케이션 스크린샷은 포함하지 않았습니다. "Obsidian"은 이 스킬들이 대상으로 하는 서드파티 애플리케이션의 이름이며, 제휴나 보증 관계를 주장하지 않습니다.
