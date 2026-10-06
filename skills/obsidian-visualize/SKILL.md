@@ -1,9 +1,10 @@
 ---
 name: obsidian-visualize
-description: Chooses the visual form for a piece of knowledge and builds the file that carries it — a JSON Canvas graph of existing notes, or a deterministic .excalidraw.md drawing generated with this package's stdlib script. Use when a request asks for an architecture, data-flow, pipeline, sequence, dependency, or status diagram in a vault, when an Excalidraw drawing must be generated, regenerated, or safely replaced, or when it is unclear whether a Canvas, an Excalidraw drawing, a Mermaid block, or a plain table is the right answer. Not for Mermaid source inside a note, JSON Canvas schema details, note prose and properties, or installing and driving the Excalidraw plugin — use the obsidian-mermaid, obsidian-canvas, obsidian-markdown, or obsidian-cli package.
+description: Chooses the visual form for a piece of knowledge and builds the file that carries it — a JSON Canvas graph of existing notes, or a deterministic .excalidraw.md drawing generated with this package's stdlib script. Use when a request asks for an architecture, data-flow, pipeline, sequence, dependency, or status diagram in a vault, when an Excalidraw drawing must be generated, regenerated, or safely replaced, or when it is unclear whether a Canvas, an Excalidraw drawing, a Mermaid block, or a plain table is the right answer. Also for seeing, inspecting, importing, editing or rendering Excalidraw inside Obsidian, including plugin Mermaid import and 플로우차트·아키텍처도·개념도. Not for Mermaid source inside a note, JSON Canvas schema details, note prose and properties, or installing the Excalidraw plugin — use the obsidian-mermaid, obsidian-canvas, obsidian-markdown, or obsidian-cli package.
 license: MIT
 metadata:
   version: "0.1.0"
+  implementation_version: "0.2.0"
 ---
 
 # Obsidian Visualize
@@ -36,7 +37,7 @@ Four separate claims. Never report a higher one on the strength of a lower one.
 | C — Runtime load | The target app opened the file as a drawing and reports the expected element count | Opening the file in the target Obsidian (`obsidian-cli` owns the command surface) and comparing against `Scene.summary()` |
 | D — Render QA | The drawing is actually legible: no overlaps, no clipping, correct hierarchy | Exporting an image through the installed plugin and looking at it |
 
-A and B need nothing but Python and the filesystem, and this package always reaches them. C needs a target installation; D additionally needs the Excalidraw plugin present and a human or vision-capable reviewer looking at the export. This package cannot install a plugin, cannot enable one, and cannot render anything itself: there is no rasteriser here, and an SVG or PNG assembled from the same numbers would only restate the JSON, not prove the plugin parses it.
+A and B on the generator/import path need nothing but Python and the filesystem. C needs a target installation; D additionally needs the Excalidraw plugin present and a human or vision-capable reviewer looking at the export. This package cannot install or enable a plugin and carries no rasteriser: its native helper asks an already-enabled plugin to export the reloaded drawing. An SVG or PNG assembled from the same numbers, or rendered in a standalone Excalidraw app, does not prove the Obsidian plugin parses it.
 
 When C or D cannot be reached, name the level reached and list the rest as unverified. "Validated and written" is a complete, honest result at level B. "Rendered correctly" is a lie at level B.
 
@@ -82,6 +83,31 @@ Store ^b7TqL1wRxa
 - The plugin can also store the scene as `compressed-json`. That is codec output. Never author or hand-edit it; this package refuses both to write it and to diff against it.
 
 Element essentials the generator already handles: a **bound label** needs `containerId` on the text *and* a mirrored `{"type":"text","id":…}` entry in the container's `boundElements`; an **arrow** needs `startBinding`/`endBinding` of `{elementId, focus, gap}` mirrored as `{"type":"arrow","id":…}` on both endpoints, with `points` relative to the arrow's own origin and the first point exactly `[0, 0]`; **frames** and **groups** relate elements through `frameId` and `groupIds`. Missing either half of a two-way reference renders wrong or breaks on reload, which is what level A checks.
+
+## Plugin-first import and editing
+
+When the request is to see or change Excalidraw **inside Obsidian**, use
+[`references/plugin-workflow.md`](references/plugin-workflow.md). It covers
+new `.excalidraw.md` creation and exact opening, an inspected full-scene import,
+selected-id native edits, Mermaid addition, independent plugin readback and
+native export QA. Existing plugin drawings, their text indexes, frontmatter,
+prose and assets are not replaced with a fresh standalone scene.
+
+The package-local tools are [`scripts/import_scene.py`](scripts/import_scene.py)
+(new-file-only full-scene adapter),
+[`scripts/inspect.mjs`](scripts/inspect.mjs) (read-only inspection/layout lint),
+and [`scripts/plugin-workbench.js`](scripts/plugin-workbench.js) (native
+ExcalidrawAutomate snapshot, selected update, Mermaid addition and PNG export).
+Read [`references/skeleton.md`](references/skeleton.md) for upstream shorthand
+adaptation boundaries and [`references/style.md`](references/style.md) for
+palette/spacing/layout recipes. Their lineage and capability mapping are in
+[`PROVENANCE.md`](PROVENANCE.md) and [`source-map.json`](source-map.json).
+
+Resolve exact artifact and authorized effect; inspect current bytes and live
+preimages; preserve everything outside the selected ids/fields; use the selected
+supported native surface; reload the exact persisted result; report actual
+evidence and prerequisites; leave unresolved version/runtime facts unknown.
+No default destination, standalone app lifecycle or plugin installation is added.
 
 ## The generator API
 
@@ -153,13 +179,14 @@ The writer then verifies the digest still matches, writes atomically (temp file 
 
 ## Live plugin edits (exception path)
 
-Two cases need the plugin's automation API instead of file generation: an interactive edit inside a drawing the user has open right now, and embedding a file that must go through the plugin's own file store. Everything else — including a several-hundred-element diagram — is a file this package generates.
+Use the plugin's automation API for an authorized selected edit of a plugin-managed drawing, Mermaid insertion into that drawing, or embedding through the plugin's own file store. Fresh geometry still uses deterministic file generation; element count is not a reason to switch surfaces. Native workbench updates preserve the existing document instead of regenerating it.
 
 [`references/workbench.md`](references/workbench.md) covers plugin and API admission, the build-and-persist calls, the caller-owned token handshake the CLI's synchronous `eval` requires, and the reload-then-render order that separates "the live scene looks right" from "the file on disk holds it".
 
 ## Requirements
 
 - Python 3.9+ for the generator. Standard library only, by design.
+- Node.js for optional read-only `inspect.mjs` (author checks used 24.21.0). No npm dependency or build is required. `plugin-workbench.js` runs in the admitted Obsidian JavaScript context using its native EA API and Web Crypto; it has no server or browser dependency.
 - Level C needs a target Obsidian installation; `obsidian-cli` owns the command surface for opening a file and reading back what loaded.
 - Level D additionally needs the Excalidraw plugin already installed and enabled in that vault. Its absence is a normal outcome to report, not a failure to work around.
 - Primary sources: the [Excalidraw plugin repository](https://github.com/zsviczian/obsidian-excalidraw-plugin) and its published [ExcalidrawAutomate API surface](https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/master/docs/API/ExcalidrawAutomate.d.ts) for the drawing format and API, and the [JSON Canvas 1.0 spec](https://jsoncanvas.org/spec/1.0/) for the Canvas branch.
@@ -177,4 +204,4 @@ Two cases need the plugin's automation API instead of file generation: an intera
 
 ## Attribution
 
-`scripts/excalidraw_scene.py` and both documents in this package are original work under the MIT [LICENSE](LICENSE) shipped beside them; no upstream notice applies, because no upstream-derived file is included. The Excalidraw file layout and API names it targets are facts about the third-party plugin cited above, which this package neither vendors nor redistributes. See [CHANGELOG.md](CHANGELOG.md) for the requirement sources that were read, and for what was deliberately not copied.
+The deterministic generator, full-scene adapter, native workbench helper and plugin workflow are original work under [LICENSE](LICENSE). Inspection/layout lint and the skeleton/style resources are adapted from Jonghak Seo's MIT-licensed pi-extension at the pin in [PROVENANCE.md](PROVENANCE.md), with its full grant retained in [NOTICE](NOTICE). No standalone app, font, binary or Obsidian plugin is redistributed. See [CHANGELOG.md](CHANGELOG.md) for source facts, versions, modifications and unrun runtime checks.

@@ -25,7 +25,7 @@ no dispatcher, and no shared runtime.
 | F02 | bases | `skills/obsidian-bases` | `obsidian-skills` `skills/obsidian-bases/` (MIT) | imported, then extended |
 | F03 | canvas | `skills/obsidian-canvas` | `obsidian-skills` `skills/json-canvas/` (MIT) | imported, renamed, then extended |
 | F04 | mermaid | `skills/obsidian-mermaid` | authored here from public Mermaid and Obsidian documentation | original |
-| F05 | visualize | `skills/obsidian-visualize` | authored here from the requirement that a drawing is a file, not a live plugin object | original |
+| F05 | visualize | `skills/obsidian-visualize` | original deterministic plugin drawing workflow, extended with MIT pi-extension inspection/layout source | original and adapted |
 | F06 | cli | `skills/obsidian-cli` | `obsidian-skills` `skills/obsidian-cli/` (MIT) | imported, then substantially extended |
 | F07 | clipper | `skills/obsidian-clipper` | authored here from the official Web Clipper documentation, with schema, enumerations, and import-validation facts checked against the MIT-licensed `obsidianmd/obsidian-clipper` source at `6d56d618b00bd970aa738d6a7a61edee27783e81`; nothing vendored | original |
 | F08 | doctor | `skills/obsidian-doctor` | authored here from the requirement that plugin diagnosis be a bounded, evidence-gated pipeline | original |
@@ -88,6 +88,14 @@ present; the package was written here.
   third-party material are claimed, granted, or implied.
 
 ## What the inventory covers
+
+The authenticated native inventory below is preserved. The plugin-first F05
+addition is an additive owner-local source map in
+`skills/obsidian-visualize/source-map.json`, with exact revision, complete package
+tree/digests, retained MIT notice, exclusions and verification paths. It is not
+represented as newly authenticated native rows or as part of an earlier release
+seal. Package `PROVENANCE.md` and `CHANGELOG.md` record the source-only
+implementation revision 0.2.0; collection metadata remains 0.1.0.
 
 Complete, digest-pinned, and audited:
 
@@ -268,6 +276,19 @@ force; this registration/documentation change supplies no new permission grant.
 No installation, native app execution or model/runtime proof is established.
 
 ## Status and limits
+
+The new plugin-first visualization source absorbs inspection/layout/skeleton
+material from `Jonghakseo/pi-extension` at
+`a4a8107885d2e944d03d8ebc7d9b1cdcf8b7521f`, under the complete MIT grant
+`Copyright (c) 2026 Jonghak Seo` retained in `NOTICE` and the owner package.
+`scripts/inspect.mjs` and `references/style.md` / `references/skeleton.md` are
+adapted; the full-scene adapter and guarded native workbench helper are original.
+No standalone app/server/dist, dependency/font bundle or plugin artifact is
+redistributed. Official plugin API/loader facts were inspected at
+`f30b4c5d3dcb66ac76ced8f05d9e95409ee94c79` (source manifest 2.28.1), not
+inferred as an installed version. Source tests do not establish a current
+Obsidian plugin load/render; fresh exact-tree release and privacy revalidation
+remain necessary before later publication or deployment.
 
 - The local release candidate holds twenty packages: the nine native features
   above and the eleven knowledge packages mapped in `source-inventory.json`.

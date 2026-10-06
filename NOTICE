@@ -6,10 +6,13 @@ derived from MIT-licensed upstream work; the rest is authored here. This file
 records which is which, file by file, so the notice travels with the copies that
 require it.
 
-The machine-readable version of the same record — with the SHA-256 digest of
+The machine-readable version of the original native record — with the SHA-256 digest of
 every source file, the responsibility units inside it, and the feature that owns
 each adopted behaviour — is `source-inventory.json`, checked by
 `scripts/audit_inventory.py`. Narrative lineage is in `PROVENANCE.md`.
+The additive plugin-first visualization lineage is mapped separately in
+`skills/obsidian-visualize/source-map.json`; the authenticated native records
+are not rewritten by this addition.
 
 
 1. MIT-licensed upstream: obsidian-skills
@@ -85,7 +88,6 @@ covered by this repository's `LICENSE`, and no part of section 1's notice applie
 to them:
 
     skills/obsidian-mermaid/
-    skills/obsidian-visualize/
     skills/obsidian-clipper/
     skills/obsidian-doctor/
     skills/obsidian-sync/
@@ -93,6 +95,9 @@ to them:
 Each of these also ships `skills/<package>/LICENSE` — this repository's MIT
 licence, not a third-party notice — so an independently installed package still
 carries its own terms and attribution.
+
+The original parts of `skills/obsidian-visualize/` also retain that MIT LICENSE;
+its newly adapted parts additionally carry the notice in section 6 below.
 
 The repository-level files (`install.sh`, `scripts/`, `tests/`, `docs/`,
 `AGENTS.md`, `README.md`, `README.ko.md`, the plugin and marketplace manifests,
@@ -176,3 +181,43 @@ repository is an unpublished candidate, and nothing here installs it on a host,
 publishes it to a marketplace, or retires, replaces, or supersedes any other
 project — including either source named above, both of which remain their owners'
 to maintain. See `docs/cutover.md` for what a change of ownership would require.
+
+
+6. MIT-licensed source absorption: pi-extension
+----------------------------------------------
+
+Source: https://github.com/Jonghakseo/pi-extension
+Revision: a4a8107885d2e944d03d8ebc7d9b1cdcf8b7521f
+Upstream package: packages/skill-excalidraw/skills/excalidraw
+
+    skills/obsidian-visualize/scripts/inspect.mjs       <- scripts/excal.mjs (inspection/lint portion, adapted)
+    skills/obsidian-visualize/references/style.md       <- references/style.md (adapted)
+    skills/obsidian-visualize/references/skeleton.md    <- references/skeleton.md (adapted)
+
+Original source hashes/bytes, complete tree exclusions and the owning F05
+mapping are in skills/obsidian-visualize/source-map.json. Modifications are
+recorded in the package CHANGELOG and PROVENANCE. No standalone app, font,
+binary or Obsidian plugin is copied. The following upstream grant is also
+retained verbatim in skills/obsidian-visualize/NOTICE for independent installs:
+
+MIT License
+
+Copyright (c) 2026 Jonghak Seo
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

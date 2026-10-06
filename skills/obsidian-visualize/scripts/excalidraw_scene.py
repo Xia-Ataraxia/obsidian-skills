@@ -1246,7 +1246,7 @@ def _create_exclusive(temp_path, path, payload):
         os.fsync(stream.fileno())
 
 
-def _write_atomic(path, payload, replace):
+def _write_atomic(path, payload, replace, expected_sha256=None):
     directory = os.path.dirname(os.path.abspath(path))
     os.makedirs(directory, exist_ok=True)
     handle, temp_path = tempfile.mkstemp(prefix=".excalidraw-scene-", suffix=".tmp", dir=directory)
@@ -1256,6 +1256,11 @@ def _write_atomic(path, payload, replace):
             stream.flush()
             os.fsync(stream.fileno())
         if replace:
+            if os.path.islink(path):
+                raise SceneWriteError(f"{path} became a symlink during write preparation")
+            with open(path, "rb") as stream:
+                if _sha256(stream.read()) != expected_sha256:
+                    raise SceneWriteError(f"{path} changed during write preparation")
             os.replace(temp_path, path)
         else:
             _create_exclusive(temp_path, path, payload)
@@ -1311,7 +1316,8 @@ def _write_drawing(
 
     payload = document.encode("utf-8")
     intended_digest = _sha256(payload)
-    _write_atomic(path, payload, replace=exists)
+    _write_atomic(path, payload, replace=exists,
+                  expected_sha256=expected_sha256.strip().lower() if exists else None)
 
     stored_text, stored_digest, stored_scene = read_drawing(path)
     if stored_digest != intended_digest:
@@ -1330,7 +1336,8 @@ def _write_drawing(
     if after_ids != _element_ids(scene):
         raise SceneWriteError(f"readback of {path} lost or renamed element ids")
     for element in stored_scene.get("elements", []):
-        if element.get("type") == "text" and f"^{element['id']}" not in stored_text:
+        if (element.get("type") == "text" and not element.get("isDeleted")
+                and f"^{element['id']}" not in stored_text):
             raise SceneWriteError(
                 f"text element {element['id']} is missing from the {TEXT_INDEX_HEADING} index"
             )
