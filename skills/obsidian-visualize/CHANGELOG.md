@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.2`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 ## 0.2.0 — Unreleased source implementation
 
 - 2026-10-07 — The collection release identity is now `0.2.1`, so `metadata.version` moves to `0.2.1`; `metadata.implementation_version` stays `0.2.0`. No behavior, reference or script change in this package.

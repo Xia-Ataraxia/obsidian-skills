@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.2 — 2026-10-07
+
+- `ingest` absorbs the bstack `book` unit into its Book branch: book-note triggers (Yes24/Aladin URL, ISBN or title), acquisition order, per-field provenance labels, work/edition identity, human-reading preservation and highlight-to-chapter mapping. `fetch_yes24.py` and `fetch_aladin_toc.py` are copied byte-identically from bstack; see PROVENANCE.md.
+- Bumped the collection release identity to `0.2.2` in every manifest, `install.sh` and each package `metadata.version`. Plugin identity `obsidian-skills@obsidian-skills` is unchanged. The recommended `PKG_PIN` moves to the release merge in a follow-up pin commit.
+- No host install or fresh-load of `0.2.2` is claimed here.
+
 ## 0.2.1 — 2026-10-07
 
 - Fixed four packages that Hermes Agent v0.21.5 would not install. Installing `0.2.0` with `hermes skills tap add Xia-Ataraxia/secondbrain-skills` and `hermes skills install Xia-Ataraxia/secondbrain-skills/<name> --yes` installed 16 of 20 packages; Hermes `skills_guard` gave `obsidian-markdown`, `obsidian-bases`, `obsidian-clipper` and `reindex` a CAUTION verdict, which blocks a community-source install. Every finding was a false positive on harmless text, but each blocked distribution.

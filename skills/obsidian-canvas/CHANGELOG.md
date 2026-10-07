@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.2`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 ## 0.1.0 — Unreleased
 
 - 2026-09-29 — Established `obsidian-canvas` as the independent owner of the JSON Canvas format in this repository. The package covers the format, its examples, and its operational boundary with no callable alias, dispatcher, or upstream-discovery wrapper, and no shared runtime with neighboring packages.

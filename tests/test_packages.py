@@ -5,7 +5,7 @@ Scope boundary: every assertion in this module is about the bytes checked into
 this repository. Nothing here loads a skill into a runtime, reaches a network,
 reads a profile, or proves that Obsidian, a plugin, or a marketplace accepted
 anything. A passing run means the packages are internally consistent and agree
-with the declared release identity -- not that a runtime installed them. 0.2.1
+with the declared release identity -- not that a runtime installed them. 0.2.2
 is a public prerelease. Its two verified native installs and fresh-loads are
 historical: Claude Code in an isolated project scope, at the immutable v0.1.0
 tag, and Hermes Agent across five generic operator profiles, at the corrected
@@ -423,7 +423,7 @@ class PackageIdentityTest(unittest.TestCase):
         # see an upgrade; the immutable historical tag keeps its own version.
         # Installer and manifests must not disagree about either.
         pkg_tag_version = re.search(r"^PKG_TAG_VERSION=(\S+)", installer, re.M).group(1)
-        self.assertEqual(pkg_version, "0.2.1")
+        self.assertEqual(pkg_version, "0.2.2")
         self.assertEqual(pkg_tag_version, "0.1.0")
         self.assertNotEqual(pkg_version, pkg_tag_version)
         self.assertEqual(pkg_status, "prerelease")
