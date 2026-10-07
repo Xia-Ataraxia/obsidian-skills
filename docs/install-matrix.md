@@ -55,16 +55,16 @@ Notes carried by the table itself: the marketplace root is this repository root,
 ```sh
 # claude — 1. register the marketplace, 2. install the plugin
 claude plugin marketplace add <source>
-claude plugin install obsidian-skills@obsidian-skills      # --scope user|project|local, user is the default
+claude plugin install secondbrain-skills@secondbrain-skills      # --scope user|project|local, user is the default
 # in a session: /plugin marketplace add, then /plugin install
 
 # codex — the ChatGPT desktop app Plugins Directory is the install/test surface
 codex plugin marketplace add <source>                      # restart the app afterwards
-codex plugin add obsidian-skills@obsidian-skills
+codex plugin add secondbrain-skills@secondbrain-skills
 
 # gjc — no local-path form is claimed: its help documents only <source>
 gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills
-gjc plugin install obsidian-skills@obsidian-skills --scope user      # or --scope project
+gjc plugin install secondbrain-skills@secondbrain-skills --scope user      # or --scope project
 
 # grok — marketplace route, then install from the TUI Marketplace tab
 grok plugin marketplace add <source>

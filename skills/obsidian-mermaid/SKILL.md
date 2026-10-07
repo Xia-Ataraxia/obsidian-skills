@@ -3,7 +3,7 @@ name: obsidian-mermaid
 description: Authors and repairs Mermaid diagram blocks that must render in Obsidian's bundled Mermaid build. Use when a note needs a flowchart, sequence, class, state, ER, gantt, journey, pie, mindmap, timeline, sankey, kanban, treemap, architecture, or xychart diagram, when a mermaid code block shows a parse error, raw text, or an empty box in Reading view or Live Preview, when a diagram that works in mermaid.live fails inside the vault, or when a beta prefix needs a version-gated fallback. Not for Canvas or Excalidraw drawings, note prose and links, or Mermaid outside Obsidian — use the obsidian-canvas, obsidian-visualize, or obsidian-markdown package.
 license: MIT
 metadata:
-  version: "0.2.2"
+  version: "0.3.0"
 ---
 
 # Obsidian Mermaid

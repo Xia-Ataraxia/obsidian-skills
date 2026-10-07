@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.3.0`: `metadata.version` follows the collection release identity under the renamed plugin identity `secondbrain-skills@secondbrain-skills`. No behavior, reference or script change in this package.
 ## 0.2.2 — 2026-10-07
 
 - 2026-10-07 — Collection release `0.2.2`: `metadata.version` follows the collection release identity. Ships the Book branch that absorbed the bstack `book` unit (entry below).

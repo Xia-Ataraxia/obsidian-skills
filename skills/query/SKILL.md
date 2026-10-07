@@ -3,7 +3,7 @@ name: query
 description: Answers knowledge questions from existing vault notes with checked quotations, inherited sources, and exact Obsidian deeplinks. Use when asked to explain what the notes say, synthesize evidence, find support for a claim, save an answer, or propose a knowledge reinforcement after finding a gap or conflict. Not for obtaining new sources, corpus indexing, claim verification, or app command diagnosis; compose ingest, reindex, verify, or obsidian-cli respectively when that separate task is requested.
 license: MIT
 metadata:
-  version: "0.2.2"
+  version: "0.3.0"
 ---
 
 # Query

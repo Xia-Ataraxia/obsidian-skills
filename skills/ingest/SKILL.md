@@ -2,7 +2,7 @@
 name: ingest
 description: Preserves and compiles explicitly selected source evidence into Raw and source-grounded Wiki knowledge. Use for ingest this URL, compile this file, ingest pasted text, create or update a book note from a Yes24/Aladin URL, ISBN or title (책 노트, 독서 노트, 목차 넣어줘), process selected book chapters, analyze a paper, or append an attributed Persona stance. Direct ingest does not require capture. Not for automatic source collection, knowledge queries, corpus indexing, creating personal profiles, or editing undesignated research questions.
 metadata:
-  version: "0.2.2"
+  version: "0.3.0"
 ---
 
 # Ingest

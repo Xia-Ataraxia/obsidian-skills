@@ -12,12 +12,9 @@ Today the manifests name the collection only as descriptive metadata:
 - The Codex plugin manifest carries it in the description and a keyword.
 - The `.agents` marketplace carries it in the display name.
 
-Every machine identity is still `obsidian-skills`: `PKG_NAME` in `install.sh` and the `name` field of each plugin and marketplace manifest. These fields move together, because the tests bind every manifest name to `PKG_NAME`.
+Every machine identity is `secondbrain-skills` since 0.3.0: `PKG_NAME` in `install.sh` and the `name` field of each plugin and marketplace manifest. These fields move together, because the tests bind every manifest name to `PKG_NAME`.
 
-The hosted repository is now `Xia-Ataraxia/secondbrain-skills`. Its source URL is separate from the existing plugin identity:
-
-- Aligning the machine identity of the local candidate with the collection name is a source change in this repository, made when the release metadata is finalized.
-- The hosted repository rename changes source URLs only; the current plugin and marketplace identities remain `obsidian-skills`.
+The hosted repository is `Xia-Ataraxia/secondbrain-skills`. The native plugin identity is `secondbrain-skills@secondbrain-skills`; the former `obsidian-skills@obsidian-skills` identity (0.1.0–0.2.2) is retired, so uninstall it before installing the new identity.
 
 ## Packages
 

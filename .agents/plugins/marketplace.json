@@ -1,11 +1,11 @@
 {
-  "name": "obsidian-skills",
+  "name": "secondbrain-skills",
   "interface": {
     "displayName": "Obsidian Skills (secondbrain-skills)"
   },
   "plugins": [
     {
-      "name": "obsidian-skills",
+      "name": "secondbrain-skills",
       "source": {
         "source": "local",
         "path": "./"
