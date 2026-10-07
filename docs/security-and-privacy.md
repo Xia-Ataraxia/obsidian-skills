@@ -4,7 +4,7 @@
 
 Resolve the exact vault, relative target, applicable live vault policy, and authorized effect. A skill teaches a format or procedure; it does not grant access. A vault without a policy file can still have explicit task-bound authorization; do not invent conventions or require an optional policy tool. Missing authority or an unresolved policy conflict means read-only investigation. Never infer permission from a folder name, a CLI's presence, or a previously successful unrelated task.
 
-Personal context belongs to the consumer. These packages do not require a personal knowledge system or an ontology service. Optional OMS composition has three distinct states: absent (normal), present but not selected (do not load/use), and explicitly selected (apply only the selected task-bound policy). Do not import unrelated vault conventions.
+Personal context belongs to the consumer. These packages do not require a personal knowledge system or an ontology service. Do not import unrelated vault conventions.
 
 ## Data handling
 

@@ -95,7 +95,7 @@ addition is an additive owner-local source map in
 tree/digests, retained MIT notice, exclusions and verification paths. It is not
 represented as newly authenticated native rows or as part of an earlier release
 seal. Package `PROVENANCE.md` and `CHANGELOG.md` record the source-only
-implementation revision 0.2.0; collection metadata remains 0.1.0.
+implementation revision 0.2.0; collection metadata became 0.2.0 on 2026-10-07.
 
 Complete, digest-pinned, and audited:
 
@@ -141,6 +141,29 @@ vendored here, so none of them imposes a notice obligation and none of them
 endorses this repository. Each package cites its own list with exact URLs, and
 usually exact revisions, in its `CHANGELOG.md` and attribution section; `NOTICE`
 section 2.1 carries the consolidated list.
+
+## Knowledge operation set — design inspiration, nothing copied
+
+The eleven knowledge packages (`capture`, `inbox`, `ingest`, `query`, `verify`,
+`audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`) follow the
+operation set and LLM-wiki workflow of Yohan Koo (구요한)'s
+[cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki), read at commit
+`863ca43778e639d96a31f71fb388ee000336d0ff` (2026-09-21). That repository ships
+eleven commands of the same names (its `capture-tabs` corresponds to `capture`)
+and itself credits Andrej Karpathy's LLM Wiki pattern.
+
+- Relationship: design inspiration only. The operation names and the shape of
+  the workflow were adopted; every file, procedure, script and reference in these
+  packages was written here.
+- Copy check: an 8-gram text-overlap comparison of each knowledge package against
+  that revision found no shared 8-grams in ten packages and three shared 8-grams
+  in `ingest`. No file or passage was copied.
+- Rights: the upstream repository publishes no licence. Nothing from it is
+  redistributed here, and this repository's MIT licence grants nothing over it.
+- No endorsement by, or affiliation with, the upstream author is claimed.
+
+The two `ingest` helpers transferred from bstack, recorded below, are a separate
+lineage with their own unresolved rights.
 
 ## Verification mapping
 
@@ -275,6 +298,17 @@ transfer's unconfirmed origin rights and public-redistribution hold remain in
 force; this registration/documentation change supplies no new permission grant.
 No installation, native app execution or model/runtime proof is established.
 
+## Collection release 0.2.0 — 2026-10-07
+
+The collection release identity moved from `0.1.0` to `0.2.0` in every manifest,
+in `install.sh` and in each package `metadata.version` that carries it, so native
+plugin hosts see the knowledge packages and fixes added since `0.1.0` as an
+upgrade. Plugin identity `obsidian-skills@obsidian-skills` is unchanged. Only
+version metadata, manifest prose, inventory target digests of the changed
+`SKILL.md` files and documentation changed; no code or asset was imported,
+copied or relicensed. The immutable `v0.1.0` tag and the historical Claude Code
+and Hermes results stay bound to their original revisions.
+
 ## Status and limits
 
 The new plugin-first visualization source absorbs inspection/layout/skeleton
@@ -296,7 +330,7 @@ remain necessary before later publication or deployment.
   two helpers and three tests keep their unconfirmed origin rights and
   public-redistribution hold; a local release candidate is not a new grant or a
   publication approval.
-- This repository is an unpublished candidate at version `0.1.0`. Nothing recorded
+- This repository is a public prerelease at version `0.2.0`. Nothing recorded
   here installs it on a host, publishes it to a marketplace, or retires, replaces,
   or supersedes any other project — both sources above remain their owners' to
   maintain. `docs/cutover.md` states what a change of ownership would require.

@@ -3,7 +3,7 @@ name: audit
 description: Samples an explicitly bounded knowledge scope for quality risks, states coverage and limits, compares a prior report when supplied, and saves a report only with exact approval. Use for vault health sampling, periodic knowledge review, or verify follow-up prioritization. Not for exhaustive claim verification, bulk Wiki repair, or quality scoring.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Audit

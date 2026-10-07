@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — 2026-09-29
 
 - Imported and modified the full official CLI skill from `kepano/obsidian-skills@3ccff5338ea700537839b21900aa5358a0402c98`, `skills/obsidian-cli/SKILL.md`. Retained its syntax, targeting conventions, command examples, and plugin/theme workflow.

@@ -1,7 +1,7 @@
 {
   "name": "obsidian-skills",
-  "version": "0.1.0",
-  "description": "Nine self-contained Agent Skills for Obsidian vault work: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.1.0 is a public prerelease. It is the native half of the secondbrain-skills collection; its eleven knowledge packages are listed here as well.",
+  "version": "0.2.0",
+  "description": "Twenty self-contained Agent Skills, the secondbrain-skills collection: nine native Obsidian packages (Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync) and eleven knowledge packages (capture, inbox, ingest, query, verify, audit, lint, status, reindex, refresh-context, and onboard). Version 0.2.0 is a public prerelease.",
   "author": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"
@@ -22,8 +22,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Obsidian Skills",
-    "shortDescription": "Nine Obsidian Agent Skills: Markdown, Bases, Canvas, Mermaid, visualize, CLI, Clipper, doctor, sync.",
-    "longDescription": "obsidian-skills packages nine independent Agent Skills for working inside an Obsidian vault. Each one is a portable SKILL.md package under skills/ with its own references, and each owns exactly its named feature: obsidian-markdown (wikilinks, embeds, callouts, properties), obsidian-bases (Bases database views), obsidian-canvas (JSON Canvas documents), obsidian-mermaid (Mermaid diagrams), obsidian-visualize (choosing the right visual form for a note), obsidian-cli (the official Obsidian CLI), obsidian-clipper (the Obsidian Web Clipper), obsidian-doctor (vault and plugin diagnosis), and obsidian-sync (vault sync). This plugin is a distribution container only: there is no router skill, no dispatcher, and no shared runtime, so the host loads whichever package matches the task. Version 0.1.0 is a public prerelease and is installed from a repository or local marketplace rather than the public plugin directory. Native install and fresh-load have been verified on Claude Code in an isolated project scope only; every other runtime install, including this one, is unverified.",
+    "shortDescription": "Twenty Obsidian Agent Skills: nine native (Markdown, Bases, Canvas, Mermaid, visualize, CLI, Clipper, doctor, sync) and eleven knowledge packages.",
+    "longDescription": "obsidian-skills packages twenty independent Agent Skills, the secondbrain-skills collection: nine native packages for working inside an Obsidian vault and eleven knowledge packages for working with its notes. Each one is a portable SKILL.md package under skills/ with its own references, and each owns exactly its named feature: obsidian-markdown (wikilinks, embeds, callouts, properties), obsidian-bases (Bases database views), obsidian-canvas (JSON Canvas documents), obsidian-mermaid (Mermaid diagrams), obsidian-visualize (choosing the right visual form for a note), obsidian-cli (the official Obsidian CLI), obsidian-clipper (the Obsidian Web Clipper), obsidian-doctor (vault and plugin diagnosis), and obsidian-sync (vault sync). The knowledge packages are capture, inbox, ingest, query, verify, audit, lint, status, reindex, refresh-context and onboard. This plugin is a distribution container only: there is no router skill, no dispatcher, and no shared runtime, so the host loads whichever package matches the task. Version 0.2.0 is a public prerelease and is installed from a repository or local marketplace rather than the public plugin directory. Native install and fresh-load have been verified on Claude Code in an isolated project scope only; every other runtime install, including this one, is unverified.",
     "developerName": "Xia-Ataraxia",
     "category": "Productivity",
     "capabilities": [

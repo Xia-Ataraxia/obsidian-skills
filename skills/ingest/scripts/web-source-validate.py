@@ -3,7 +3,7 @@
 
 The script is intentionally dependency-free so it can run inside Hermes/bstack
 without package setup. It reports extraction, URL-identity, and optional coverage
-signals; it does not validate a vault note or native OMS admission.
+signals; it does not validate a vault note or its admission.
 """
 
 from __future__ import annotations

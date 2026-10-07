@@ -5,10 +5,11 @@ Scope boundary: every assertion in this module is about the bytes checked into
 this repository. Nothing here loads a skill into a runtime, reaches a network,
 reads a profile, or proves that Obsidian, a plugin, or a marketplace accepted
 anything. A passing run means the packages are internally consistent and agree
-with the declared release identity -- not that a runtime installed them. 0.1.0
-is a public prerelease with two verified native installs and fresh-loads: Claude
-Code in an isolated project scope, at the immutable tag, and Hermes Agent across
-five generic operator profiles, at the corrected pin and operator-reported. No
+with the declared release identity -- not that a runtime installed them. 0.2.0
+is a public prerelease. Its two verified native installs and fresh-loads are
+historical: Claude Code in an isolated project scope, at the immutable v0.1.0
+tag, and Hermes Agent across five generic operator profiles, at the corrected
+c22ce26 revision and operator-reported. No
 assertion here observed either one; Codex, GJC and Grok remain unverified.
 
 Run:  python3 -m unittest discover -s tests -t . -v
@@ -418,9 +419,13 @@ class PackageIdentityTest(unittest.TestCase):
                 self.assertEqual(len(entries), 1, "one plugin identity per marketplace")
                 self.assertEqual(entries[0]["name"], pkg_name)
 
-        # The published tag is immutable, so the version stays 0.1.0 and only the
-        # status moves. Installer and manifest must not disagree about which it is.
-        self.assertEqual(pkg_version, "0.1.0")
+        # The release identity moves with the shipped tree so that installed hosts
+        # see an upgrade; the immutable historical tag keeps its own version.
+        # Installer and manifests must not disagree about either.
+        pkg_tag_version = re.search(r"^PKG_TAG_VERSION=(\S+)", installer, re.M).group(1)
+        self.assertEqual(pkg_version, "0.2.0")
+        self.assertEqual(pkg_tag_version, "0.1.0")
+        self.assertNotEqual(pkg_version, pkg_tag_version)
         self.assertEqual(pkg_status, "prerelease")
         self.assertEqual(claude_plugin["metadata"]["releaseStatus"], pkg_status)
         self.assertEqual(claude_market["version"], pkg_version)
@@ -537,20 +542,32 @@ class RecordedEvidenceProvenanceTest(unittest.TestCase):
                 )
 
     def test_the_installer_and_the_report_agree_on_the_two_revisions(self):
-        """Which commit is the tag, and which is the correction, is one fact."""
+        """Each recorded result stays bound to the revision it was observed at.
+
+        The tag, the historical Hermes install and the current recommended source
+        are three separate facts. The recommended pin moves with each release;
+        the recorded runs never move with it.
+        """
         pin = self.installer_value("PKG_PIN")
+        hermes_pin = self.installer_value("PKG_HERMES_PIN")
         tag_pin = self.installer_value("PKG_TAG_PIN")
-        for label, commit in (("PKG_PIN", pin), ("PKG_TAG_PIN", tag_pin)):
+        for label, commit in (
+            ("PKG_PIN", pin),
+            ("PKG_HERMES_PIN", hermes_pin),
+            ("PKG_TAG_PIN", tag_pin),
+        ):
             with self.subTest(pin=label):
                 self.assertRegex(commit, COMMIT_RE)
-        self.assertNotEqual(pin, tag_pin, "the correction has to be its own revision")
+        self.assertNotEqual(pin, tag_pin, "the tag is never the recommended source")
+        self.assertNotEqual(hermes_pin, tag_pin, "the correction has to be its own revision")
 
         self.assertEqual(self.report["publication"]["commit"], tag_pin)
         self.assertEqual(self.report["nativeCanary"]["commit"], tag_pin)
-        self.assertEqual(self.report["hermesNative"]["commit"], pin)
+        self.assertEqual(self.report["hermesNative"]["commit"], hermes_pin)
         tagged = self.report["taggedRelease"]
         self.assertEqual(tagged["commit"], tag_pin)
-        self.assertEqual(tagged["correctedAt"], pin)
+        self.assertEqual(tagged["correctedAt"], hermes_pin)
+
 
     def test_the_tagged_release_is_recorded_as_unusable_and_never_retagged(self):
         tagged = self.report["taggedRelease"]

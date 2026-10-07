@@ -23,7 +23,7 @@ copied package. A directory copy is a filesystem fact, not an install. The two
 native installs and fresh-loads that have been verified -- Claude Code, isolated
 project scope only, from a clone of the immutable 0.1.0 prerelease tag, and
 Hermes Agent, all nine packages into each of five generic operator profiles at
-the corrected public pin -- were performed by hand outside this suite, the
+the historical corrected revision PKG_HERMES_PIN -- were performed by hand outside this suite, the
 second of them by an operator. Codex, GJC and Grok installs are unverified, and
 nothing here executes a runtime CLI to change that.
 

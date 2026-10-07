@@ -3,7 +3,7 @@ name: obsidian-visualize
 description: Chooses the visual form for a piece of knowledge and builds the file that carries it — a JSON Canvas graph of existing notes, or a deterministic .excalidraw.md drawing generated with this package's stdlib script. Use when a request asks for an architecture, data-flow, pipeline, sequence, dependency, or status diagram in a vault, when an Excalidraw drawing must be generated, regenerated, or safely replaced, or when it is unclear whether a Canvas, an Excalidraw drawing, a Mermaid block, or a plain table is the right answer. Also for seeing, inspecting, importing, editing or rendering Excalidraw inside Obsidian, including plugin Mermaid import and 플로우차트·아키텍처도·개념도. Not for Mermaid source inside a note, JSON Canvas schema details, note prose and properties, or installing the Excalidraw plugin — use the obsidian-mermaid, obsidian-canvas, obsidian-markdown, or obsidian-cli package.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
   implementation_version: "0.2.0"
 ---
 

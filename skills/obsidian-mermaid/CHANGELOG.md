@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased
 
 - Mermaid guidance written for generic renderers keeps producing blocks that pass in a live editor and then fail, or quietly look wrong, inside a vault whose app carries a pinned Mermaid build → this package makes the bundled renderer the acceptance surface: an evidence ladder that separates authoring checks, parse validation, materialized readback, and render QA in the target app; a family-selection table; the syntax and escaping rules that actually break blocks; exact fence and nesting rules; a safe exact-edit and readback procedure for notes; and a fallback policy that forbids shipping a smaller diagram that says less.

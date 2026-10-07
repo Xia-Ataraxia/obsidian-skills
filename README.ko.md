@@ -12,11 +12,11 @@
 
 독립된 Agent Skill 스무 개로 이루어진 `secondbrain-skills` 모음입니다. 네이티브 패키지 아홉 개는 Obsidian 자체를 다룹니다: Markdown, Bases, Canvas, Mermaid, 시각 형식 선택, 공식 CLI, Web Clipper, 볼트 진단, 헤드리스 Sync. 지식 패키지 열한 개는 노트를 다룹니다: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
 
-> **현재 배포된 소스.** qmd 파서 수정을 포함한 스무 패키지는 <https://github.com/Xia-Ataraxia/secondbrain-skills>의 `2c6ed8458ba2736066054c2d6288e93db6e3c20d`에 있습니다. 아래의 옛 고정 커밋과 런타임 결과는 과거 증거이며 현재 소스 검증이 아닙니다. 과거 `v0.1.0` 태그는 그대로 두며 현재 모음의 릴리스 식별자는 `0.1.0`입니다.
+> **현재 배포된 소스.** qmd 파서 수정을 포함한 스무 패키지는 <https://github.com/Xia-Ataraxia/secondbrain-skills>의 `2c6ed8458ba2736066054c2d6288e93db6e3c20d`에 있습니다. 아래의 옛 고정 커밋과 런타임 결과는 과거 증거이며 현재 소스 검증이 아닙니다. 과거 `v0.1.0` 태그는 그대로 두며 현재 모음의 릴리스 식별자는 `0.2.0`입니다. 모든 플러그인 매니페스트가 이 버전을 담고 있어 `0.1.0`을 설치한 호스트도 업그레이드를 인식합니다. 커밋은 자기 해시를 담을 수 없으므로, 권장 소스 고정 커밋은 각 릴리스가 병합된 뒤 별도의 문서 전용 커밋으로 그 병합 커밋으로 옮깁니다.
 
 모든 패키지는 자체 참조 문서와 스크립트를 가진 독립 `SKILL.md`입니다. 루트 스킬도, 디스패처도, 공용 런타임도, 호환 별칭도 없습니다. 에이전트는 그 작업에 필요한 패키지 하나만 불러오고 나머지는 건드리지 않습니다.
 
-> **상태 — 0.1.0 공개 프리릴리스, 그리고 이를 대체하는 수정 고정 커밋.**
+> **이력 — 0.1.0 공개 프리릴리스, 그리고 이를 대체하는 수정 고정 커밋. 현재 릴리스는 0.2.0입니다(위 참고).**
 > <https://github.com/Xia-Ataraxia/obsidian-skills>에 배포했습니다. 태그 `v0.1.0`(프리릴리스)은 불변 커밋 `0e658b5a09ac4c789392ac634dcff8a195fa3116`에 있으며, 불변이고 **다시 태깅하지 않습니다**. **설치는 수정 커밋 `c22ce26bae518e7973f078cac972ea88707b8e79`**(검증된 설치 소스 리비전)**에서 하고, 태그에서 하지 마십시오.** `v0.1.0` 트리에는 `obsidian-visualize`의 옛 eval 예제가 하드코딩된 플레이스홀더 실행 식별자와 함께 남아 있고 — 실제 비밀이 없는 가짜 문자열 두 곳에서 skills-guard-v6의 credential_exposure 오탐이 발생했으며 실행 의미 분석 결과가 아닙니다 — 실제 Hermes 설치는 그 패키지를 **위험(dangerous)** 으로 표시하고, CLI가 종료 코드 **0**을 반환했는데도 **`Not installed`** 상태로 남겼습니다. 두 커밋 사이에서 달라지는 것은 `obsidian-visualize`뿐이며 나머지 여덟 패키지 트리는 바이트 단위로 동일합니다. 배포 이후 검증한 것: 두 공개 문서가 저장소 호스트에서 렌더되고 원본 SVG 두 개가 대체 텍스트와 함께 로드됐습니다. **이제 네이티브 경로 두 개를 실행했습니다** — Claude Code는 **격리된 소비자 프로젝트 범위 한정**으로 `0e658b5a…`를 분리(detached) 복제한 소스에서 실행했고 그곳에서도 아홉 중 세 패키지만 다뤘습니다. Hermes는 `c22ce26ba…`에서 **일반 운영자 프로필 다섯 곳**에 아홉 패키지를 모두 등록했습니다 — 스킬 가드(`skills-guard-v6`) 기준 **45/45 SAFE**, 강제·우회 플래그 없음. 설치된 각 패키지 트리는 숨김 항목을 제외한 재귀 비교에서 고정 커밋과 바이트 단위로 일치했고, 탭 한정 식별자와 소스 한정 식별자가 모두 해석됐으며, 읽기 전용 신규 세션 다섯 개(`hermes chat --skills obsidian-cli,obsidian-sync --toolsets skills`)가 데스크톱 앱·공식 CLI의 Sync 표면과 헤드리스 `ob` 클라이언트를 정확히 구분했고 앱·볼트·네트워크·계정 작업은 하나도 수행하지 않았습니다. 격리된 앱 프로필에서는 Templater 2.19.3과 Excalidraw 2.27.3이 실제 플러그인 출력을 내놓았습니다. Web Clipper 1.7.1은 폐기용 브라우저 프로필에 설치했고 — 처음의 페이지 타겟 없음 문제는 복구했습니다 — 팝업이 실제 페이지를 노트 미리보기로 추출했습니다. 미검증인 것은 볼트로의 전달뿐입니다: 대상이 *Last used*로 남아 있어 *Add to Obsidian*을 누르지 않았습니다. 아직 미검증: 실행하지 않은 네이티브 경로 세 개(Codex·GJC·Grok), 네이티브 경로 자체가 없는 Cursor·벤더 중립 Agent Skills의 런타임 발견, Hermes에 등록만 되고 호출되지 않은 일곱 패키지의 작업 실행, `hermes skills trust` 이후의 프로젝트 범위 로드, 보호된 볼트·운영 볼트에 대한 쓰기, 전체 소유권 이전, 기존 소유자 은퇴, 실제 계정 Sync. 그 두 경로를 제외하면 경로 확인은 여전히 설치 검증이 아니며, 등록은 호출이 아닙니다. 로컬 소스를 문서화한 런타임(Claude Code, Codex, Grok)은 네이티브 경로를 `c22ce26ba…`로 고정한 복제본으로 지정할 수 있고, 그 외에는 Agent Skills 디렉터리 가져오기(`./install.sh copy`)를 사용합니다.
 
 ---
@@ -251,5 +251,7 @@ AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 MIT — 두 저작권 고지가 모두 담긴 [LICENSE](LICENSE)를 참고하십시오.
 
 `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 `CHANGELOG.md`에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
+
+지식 패키지 열한 개의 작업 구성과 LLM 위키 워크플로는 구요한(Yohan Koo)의 [cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki)에서 착안했습니다. 그 저장소 역시 Andrej Karpathy의 LLM Wiki 패턴을 출처로 밝힙니다. 설계상의 영감일 뿐 파일이나 문장은 복사하지 않았으며, 그 저장소는 라이선스를 공개하지 않으므로 여기서 재배포하는 것은 없습니다. 보증이나 제휴 관계를 주장하지 않습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오.
 
 `assets/`의 브랜드·데모 아트는 이 저장소를 위해 직접 제작한 벡터 원본이며, 파일별 제작자·출처·권리는 [assets/asset-ledger.json](assets/asset-ledger.json)에 기록되어 있습니다. 벤더 로고, 아이콘 세트, 애플리케이션 스크린샷은 포함하지 않았습니다. "Obsidian"은 이 스킬들이 대상으로 하는 서드파티 애플리케이션의 이름이며, 제휴나 보증 관계를 주장하지 않습니다.
