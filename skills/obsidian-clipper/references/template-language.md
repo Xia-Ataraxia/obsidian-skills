@@ -139,7 +139,7 @@ Knap's catalog is wider than the list the Web Clipper help page documents — he
 {% if status == "published" %}Live{% elseif status == "draft" %}Draft{% else %}Unknown{% endif %}
 ```
 
-Comparison: `==`, `!=`, `>`, `<`, `>=`, `<=`, `contains`. Logical: `and`/`&&`, `or`/`||`, `not`/`!`. Parentheses group: `{% if (premium or featured) and published %}`.
+Comparison: `==`, `!=`, `>`, `<`, `>=`, `<=`, `contains`. Logical: `and`/`&&`, `or`/`||`, `not`/`` ! ``. Parentheses group: `{% if (premium or featured) and published %}`.
 
 Falsy values are `false`, `null`, `undefined`, `""`, `0`, and the empty array. Everything else is truthy. A missing selector or absent schema key is therefore falsy, which is exactly what makes optional blocks work.
 

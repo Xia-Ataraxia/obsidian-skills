@@ -89,16 +89,27 @@ def bounded(value: str) -> str:
 
 
 def invoke(command: List[str], timeout: int) -> Tuple[int, str, str]:
+    # qmd writes UTF-8 regardless of the caller's locale, so its output is decoded
+    # as UTF-8 here rather than with the locale codec. Stdout carries the exact
+    # member paths that are audited, so it must decode exactly; stderr is only a
+    # bounded readback, so undecodable bytes there are replaced. Newlines are
+    # normalized as text mode did.
     try:
-        result = subprocess.run(
-            command, capture_output=True, text=True, timeout=timeout,
-            env=dict(os.environ, PYTHONIOENCODING="utf-8"),
-        )
+        result = subprocess.run(command, capture_output=True, timeout=timeout)
     except subprocess.TimeoutExpired as exc:
         raise Refused("hung_command", "qmd exceeded the bounded timeout") from exc
     except OSError as exc:
         raise Refused("qmd_unavailable", "qmd could not be executed") from exc
-    return result.returncode, result.stdout, result.stderr
+    try:
+        stdout = result.stdout.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise Refused("qmd_output_undecodable", "qmd stdout is not valid UTF-8") from exc
+    stderr = result.stderr.decode("utf-8", errors="replace")
+    return result.returncode, universal_newlines(stdout), universal_newlines(stderr)
+
+
+def universal_newlines(value: str) -> str:
+    return value.replace("\r\n", "\n").replace("\r", "\n")
 
 
 def command(qmd: str, index: str, *parts: str) -> List[str]:

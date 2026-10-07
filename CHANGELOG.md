@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.1 — 2026-10-07
+
+- Fixed four packages that Hermes Agent v0.21.5 would not install. Installing `0.2.0` with `hermes skills tap add Xia-Ataraxia/secondbrain-skills` and `hermes skills install Xia-Ataraxia/secondbrain-skills/<name> --yes` installed 16 of 20 packages; Hermes `skills_guard` gave `obsidian-markdown`, `obsidian-bases`, `obsidian-clipper` and `reindex` a CAUTION verdict, which blocks a community-source install. Every finding was a false positive on harmless text, but each blocked distribution.
+- `obsidian-markdown`, `obsidian-bases`, `obsidian-clipper`: an exclamation mark written as a one-backtick code span matched the guard's HIGH `inline_shell_exec` rule. The three lines now name the mark, show `![[Note Name]]`, or use a padded double-backtick span. Meanings, rendered text and routing descriptions are unchanged.
+- `reindex`: copying the process environment to set `PYTHONIOENCODING` for qmd matched the guard's HIGH `python_os_environ` rule. qmd is a Node CLI, so the variable never affected it. The helper now sets no environment, decodes qmd stdout as strict UTF-8 whatever the caller's locale (a non-UTF-8 locale used to crash on non-ASCII member paths), refuses undecodable stdout as `qmd_output_undecodable`, and decodes stderr readbacks with replacement.
+- Added a regression test that scans every shipped file under `skills/` with these two guard rules and reports `file:line`, with negative controls.
+- Bumped the collection release identity to `0.2.1` in every manifest, `install.sh` and each package `metadata.version`. Plugin identity `obsidian-skills@obsidian-skills` is unchanged. The recommended `PKG_PIN` moves to the release merge commit in a docs-only follow-up.
+- No host install or fresh-load of `0.2.1` is claimed here. The four guard verdicts were rerun locally with the Hermes v0.21.5 `scan_skill` against this tree.
+
 ## 0.2.0 — 2026-10-07
 
 - Bumped the collection release identity from `0.1.0` to `0.2.0` in `.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json`, `.codex-plugin/plugin.json`, `install.sh` and every package `metadata.version` that carries the collection version. Since `0.1.0` the collection gained the eleven knowledge packages, the `reindex` qmd display-parser fix and the repository rename to `secondbrain-skills`, but every manifest still said `0.1.0`, so a host that installed `0.1.0` saw no upgrade. A minor bump makes native plugin upgrades see the change. Plugin identity `obsidian-skills@obsidian-skills` is unchanged.

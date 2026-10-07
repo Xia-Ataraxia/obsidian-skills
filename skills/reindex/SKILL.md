@@ -3,7 +3,7 @@ name: reindex
 description: Refreshes BM25 and embedding derivations only for one audited qmd collection in an isolated named index, requiring Paper Analyses and refusing Inbox, personal, public, company, or memory roots. Use when the owner requests a search-index refresh or scoped index-status check. Not for creating collections, editing qmd configuration, choosing models, querying notes, or changing source files.
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Reindex
@@ -68,7 +68,9 @@ Read [the shared contract](references/contract.md) for evidence semantics.
   final status command completed successfully.
 - Result status `unavailable`: no qmd executable was found before invocation.
 - Error status `refused`: invalid input, unsafe paths, failed preflight,
-  membership mismatch, nonzero qmd exit, or bounded command timeout.
+  membership mismatch, nonzero qmd exit, bounded command timeout, or qmd stdout
+  that is not valid UTF-8 (`qmd_output_undecodable`; member paths are never
+  guessed from undecodable bytes).
 - Error status `unavailable`: the selected executable could not be launched.
 
 The report includes exact argument arrays and bounded stdout/stderr readbacks.

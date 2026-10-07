@@ -1,6 +1,6 @@
 # Embeds Reference
 
-An embed is a wikilink prefixed with `!`: the target's content is rendered inline instead of being linked. Everything that applies to link targeting applies to embeds -- see *Link targets that are not Markdown notes* and *Destination readback* in this package's `SKILL.md`.
+An embed is a wikilink prefixed with an exclamation mark, as in `![[Note Name]]`: the target's content is rendered inline instead of being linked. Everything that applies to link targeting applies to embeds -- see *Link targets that are not Markdown notes* and *Destination readback* in this package's `SKILL.md`.
 
 ## Link or Embed
 

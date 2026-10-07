@@ -52,7 +52,7 @@ class ReindexTest(unittest.TestCase):
             "with open(os.environ['QMD_TEST_LOG'], 'a', encoding='utf-8') as f:\n    f.write(json.dumps(args) + '\\n')\n"
             "if args[-1:] == ['status']:\n    extra = '\\n  personal (qmd://personal/)' if os.environ.get('QMD_TEST_MULTI') == '1' else ''\n    print('Collections\\n  knowledge (qmd://knowledge/)' + extra + os.environ['QMD_TEST_PADDING'] + os.environ['QMD_TEST_TRAILING'] + '\\nDocuments\\n  Total: 6 files indexed\\n  Vectors: 9 embedded')\n"
             "elif args[-3:] == ['collection', 'show', 'knowledge']:\n    print('Path: ' + os.environ['QMD_TEST_VAULT']); print('Pattern: ' + os.environ['QMD_TEST_PATTERN'])\n"
-            "elif args[-1:] == ['update']:\n    open(os.environ['QMD_TEST_MARKER'], 'w', encoding='utf-8').write('updated'); print('All collections updated')\nelif args[-2:] == ['ls', 'qmd://knowledge/']: print('\\n'.join(json.loads(os.environ['QMD_TEST_FILES'])))\n"
+            "elif args[-1:] == ['update']:\n    open(os.environ['QMD_TEST_MARKER'], 'w', encoding='utf-8').write('updated'); print('All collections updated')\nelif args[-2:] == ['ls', 'qmd://knowledge/']:\n    listing = os.environ.get('QMD_TEST_RAW_LS')\n    sys.stdout.buffer.write(bytes.fromhex(listing) if listing else ('\\n'.join(json.loads(os.environ['QMD_TEST_FILES'])) + '\\n').encode('utf-8'))\n"
             "elif args[-1:] == ['embed']:\n    if os.environ.get('QMD_TEST_EMBED_FAIL') == '1': sys.exit(7)\n    print('Embeddings complete')\nelse: sys.exit(2)\n",
             encoding="utf-8",
         )
@@ -309,6 +309,59 @@ class ReindexTest(unittest.TestCase):
         with self.assertRaises(REINDEX.Refused) as raised:
             REINDEX.run(self.vault, self.scope, str(self.qmd), timeout=1)
         self.assertEqual(raised.exception.code, "hung_command")
+
+    def cli_scope(self):
+        scope = self.base / "scope.json"
+        scope.write_text(json.dumps(self.scope), encoding="utf-8")
+        return scope
+
+    def test_non_ascii_member_paths_decode_as_utf8_under_an_ascii_locale(self):
+        # Given: qmd emits UTF-8 regardless of locale, and the helper runs under a
+        # locale whose codec is ASCII. Decoding with the locale codec would fail.
+        member = "40. Paper Analyses/논문 노트.md"
+        (self.vault / member).write_text("# Synthetic paper\n", encoding="utf-8")
+        self.listed_files = ["40. Paper Analyses/paper.md", member]
+        environment = dict(self.environment(), LC_ALL="C", LANG="C",
+                           PYTHONCOERCECLOCALE="0", PYTHONUTF8="0",
+                           PYTHONIOENCODING="utf-8", PYTHONDONTWRITEBYTECODE="1")
+        probe = subprocess.run(
+            [sys.executable, "-c",
+             "import locale, sys; print(sys.getfilesystemencoding(), locale.getpreferredencoding(False))"],
+            capture_output=True, text=True, timeout=10, env=environment,
+        ).stdout.split()
+        if probe[0].lower().replace("-", "") != "utf8":
+            self.skipTest("this host cannot name non-ASCII files under an ASCII locale")
+        self.assertNotIn(probe[1].lower().replace("-", ""), ("utf8",), "locale must not be UTF-8")
+        # When
+        result = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), "--vault", str(self.vault),
+             "--scope", str(self.cli_scope()), "--qmd", str(self.qmd)],
+            capture_output=True, timeout=30, env=environment,
+        )
+        # Then
+        self.assertEqual(result.returncode, 0, result.stderr.decode("utf-8", "replace"))
+        report = json.loads(result.stdout.decode("utf-8"))
+        self.assertEqual(report["status"], "reindexed")
+        self.assertEqual(report["matched_files"], sorted(self.listed_files))
+
+    def test_undecodable_qmd_listing_is_refused_with_possible_effects(self):
+        # Given: the membership listing is not valid UTF-8 after update ran.
+        environment = dict(self.environment(), QMD_TEST_RAW_LS="34302e20ff2e6d640a",
+                           PYTHONDONTWRITEBYTECODE="1")
+        # When
+        result = subprocess.run(
+            [sys.executable, "-B", str(SCRIPT), "--vault", str(self.vault),
+             "--scope", str(self.cli_scope()), "--qmd", str(self.qmd)],
+            capture_output=True, text=True, timeout=30, env=environment,
+        )
+        # Then: a structured refusal, never a guessed path or a success.
+        self.assertEqual(result.returncode, 1, result.stderr)
+        envelope = json.loads(result.stdout)
+        self.assertEqual(envelope["status"], "refused")
+        self.assertEqual(envelope["code"], "qmd_output_undecodable")
+        self.assertEqual(envelope["mutation_state"], "possible_unconfirmed")
+        self.assertEqual(self.marker.read_text(encoding="utf-8"), "updated")
+        self.assertNotIn("embed", [call[-1] for call in self.invocations()])
 
     def test_script_parses_with_python38_grammar(self):
         tree = ast.parse(SCRIPT.read_text(encoding="utf-8"), feature_version=(3, 8))
