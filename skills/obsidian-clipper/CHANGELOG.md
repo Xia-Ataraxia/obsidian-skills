@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased
 
 - Added the independent Web Clipper owner with local template-language and workflow references, including schema, selectors, variables, filters, logic, capture analysis, recipes, and optional Bases composition.

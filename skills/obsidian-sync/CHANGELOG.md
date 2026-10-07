@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased
 
 - This repository had no owner for headless Obsidian Sync, and the guidance that existed for it stopped at a command catalog → `obsidian-sync` becomes the self-contained owner of the `ob` client: binary identity and a fail-closed version gate, two-sided identity resolution before any command, a staged `pull-only` workflow whose acceptance is a baseline comparison rather than an exit code, conflict preservation, partial-network triage, secret handling, and an explicit composition boundary that never converts transport access into content authority.

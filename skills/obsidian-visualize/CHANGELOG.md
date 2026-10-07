@@ -2,6 +2,7 @@
 
 ## 0.2.0 — Unreleased source implementation
 
+- 2026-10-07 — The collection release identity is now `0.2.0`, so `metadata.version` moves to `0.2.0` and now equals `metadata.implementation_version`. No behavior, reference or script change; no new runtime observation.
 - 2026-10-06 — Observed the native workflow in an isolated Obsidian 1.12.7, Electron 39.8.3 and Excalidraw 2.28.1 installation. Native drawing load, selected-color persistence, independently loaded image bytes and inspected plugin PNG/app views were observed. Strict serialization preservation first failed because native saving adds metadata and shortens attachment links.
 
   The selected content-preservation contract now admits only equivalent native normalization, retaining element identities, custom fields, image bytes and the exact resolved attachment target. Content changes and redirected links still fail. The helper subscribes to the exact file modification before committing, flushes the native scene update, and requests a native forced save before independently reloading it.

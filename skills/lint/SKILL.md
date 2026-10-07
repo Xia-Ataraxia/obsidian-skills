@@ -3,7 +3,7 @@ name: lint
 description: Checks an explicitly bounded vault scope for note structure, citations, policy-supplied properties, derived-index drift, broken or orphan links, Persona boundaries, and approved cross-vault targets. Use for vault lint, note health, link checks, or a derived-index repair. Not for claim verification, sampled quality audit, template authoring, or unrestricted whole-vault correction.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Lint

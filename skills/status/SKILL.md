@@ -3,7 +3,7 @@ name: status
 description: Reports read-only knowledge-vault counts, declared property presence, Inbox backlog, Paper Analysis hub/file counts, and derived-snapshot age from explicitly named responsibility roots. Use for a management snapshot or backlog check. Not for judging purpose fulfillment, knowledge quality, search freshness, process health, or making any vault change.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Status

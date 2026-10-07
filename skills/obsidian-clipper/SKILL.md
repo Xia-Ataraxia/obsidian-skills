@@ -3,7 +3,7 @@ name: obsidian-clipper
 description: Authors, validates, and repairs Obsidian Web Clipper template JSON — schema fields, behaviors, triggers, typed properties, variables, selectors, filters, and template logic. Use when the user wants a Web Clipper template for a site or a content type, needs a clipping template imported, fixed, or diagnosed, asks why a clipped note is empty or missing a field, or asks how Clipper variables, selectors, filters, or logic behave. Not for Obsidian Markdown syntax, `.base` file internals, `.canvas` graph structure, or vault CLI operations — use the obsidian-markdown, obsidian-bases, obsidian-canvas, or obsidian-cli package.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Obsidian Web Clipper

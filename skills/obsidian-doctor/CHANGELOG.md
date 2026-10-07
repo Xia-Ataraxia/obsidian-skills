@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased
 
 - Plugin and Templater failures were being "fixed" by changing state until the symptom disappeared — reloading, re-enabling, resetting settings, reinstalling, rewriting the whole template — which destroys both the user's configuration and the evidence that would have explained the failure → this package makes diagnosis read-only and separates it from repair: [`SKILL.md`](SKILL.md) fixes the evidence channels and what each one does and does not prove, makes app and plugin versions exact-string facts or unknown, and states a change boundary in which findings and proposals come from here and every application belongs to the vault owner.

@@ -61,15 +61,22 @@ COPIER="${REPO_DIR}/scripts/install_packages.py"
 PYTHON=''
 
 PKG_NAME=obsidian-skills
-PKG_VERSION=0.1.0
+PKG_VERSION=0.2.0
 PKG_STATUS=prerelease
-# The current twenty-package public source, including the qmd parser fix.
-# Historical Hermes results below remain bound to their original revision;
-# a local checkout is this source only at this commit, unmodified.
+# The recommended public source revision: the newest merged main commit whose
+# package tree is current. A commit cannot name its own hash, so after a release
+# merges this pin is moved to that merge commit by a separate docs-only commit;
+# until then it names the previous merged source. A local checkout is this
+# source only at this commit, unmodified.
 PKG_PIN=2c6ed8458ba2736066054c2d6288e93db6e3c20d
-# The immutable v0.1.0 tag. It is kept where it is and is never moved onto the
-# correction above, so it stays the revision the historical Claude Code canary
+# Historical: public main when the operator ran the nine-package Hermes install
+# (2026-10-01). That install is evidence about this revision only; it is never
+# moved forward with PKG_PIN.
+PKG_HERMES_PIN=c22ce26bae518e7973f078cac972ea88707b8e79
+# The immutable v0.1.0 tag. It is kept where it is and is never moved onto a
+# later revision, so it stays the revision the historical Claude Code canary
 # was taken at -- and it is not a revision to install from. See tag_warning().
+PKG_TAG_VERSION=0.1.0
 PKG_TAG_PIN=0e658b5a09ac4c789392ac634dcff8a195fa3116
 PKG_ORG=Xia-Ataraxia
 PKG_SLUG="${PKG_ORG}/secondbrain-skills"
@@ -106,7 +113,7 @@ usage_err() {
 # different trees for anyone who already fetched it. So the tag and the revision
 # to install from are now two different commits, and the tag is the older one.
 tag_warning() {
-  say "  WARNING: the immutable v${PKG_VERSION} tag is not the revision to install from."
+  say "  WARNING: the immutable v${PKG_TAG_VERSION} tag is not the revision to install from."
   say "  It resolves to ${PKG_TAG_PIN}, which predates"
   say '  the obsidian-visualize eval-nonce correction and therefore still ships that'
   say '  handshake with quoted placeholder nonce strings. skills-guard-v6 reported'
@@ -500,7 +507,7 @@ cmd_native() {
   blank
   if [ "$R_ID" = claude ]; then
     say '  Verified separately, by running the commands above by hand against a clone'
-    say "  checked out at the immutable v${PKG_VERSION} tag ${PKG_TAG_PIN}:"
+    say "  checked out at the immutable v${PKG_TAG_VERSION} tag ${PKG_TAG_PIN}:"
     say "  ${R_LABEL} installed this package by native plugin identity and fresh-loaded"
     say '  it, in an isolated project scope only. A user-profile or production install'
     say '  is still unverified, and a checkout at another revision was not the one'
@@ -509,7 +516,7 @@ cmd_native() {
     say '  pin. It is not evidence about the revision this script guides you to.'
   elif [ "$R_ID" = hermes ]; then
     say '  Verified separately: the operator used the native remote-source commands'
-    say "  while public main was c22ce26bae518e7973f078cac972ea88707b8e79; installed bytes matched that revision."
+    say "  while public main was ${PKG_HERMES_PIN}; installed bytes matched that revision."
     say "  ${R_LABEL} installed all nine packages by native registry identity into each"
     say '  of five generic operator profiles -- 45 of 45 install units reported SAFE'
     say '  under skills-guard-v6, with no force flag -- and every installed package matched'

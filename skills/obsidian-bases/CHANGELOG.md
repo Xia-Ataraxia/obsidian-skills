@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased
 
 Not published, not installed anywhere, and not exercised against a running Obsidian app by this entry's author. What follows records the imported material, the modifications made to it, the evidence behind every addition, and what remains unverified.

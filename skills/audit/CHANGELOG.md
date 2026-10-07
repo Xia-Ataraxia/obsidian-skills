@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
+
 ## 0.1.0 — Unreleased resource documentation correction
 
 - Source baseline: existing local revision `25f484a63e7278e1864f08b372eea3d96e809289`. Added existing internal imports to `references/interface.md`, using package-root-relative paths: `scripts/audit_core.py` handles scope and sample validation, findings, report assembly and prior-report comparison; `scripts/audit_io.py` handles path and JSON validation, proposal and approval bindings, and report publication with readback.

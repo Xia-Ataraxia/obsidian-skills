@@ -3,7 +3,7 @@ name: reindex
 description: Refreshes BM25 and embedding derivations only for one audited qmd collection in an isolated named index, requiring Paper Analyses and refusing Inbox, personal, public, company, or memory roots. Use when the owner requests a search-index refresh or scoped index-status check. Not for creating collections, editing qmd configuration, choosing models, querying notes, or changing source files.
 license: MIT
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Reindex

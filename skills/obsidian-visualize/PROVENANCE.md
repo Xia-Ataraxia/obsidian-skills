@@ -1,7 +1,8 @@
 # Plugin-first source integration
 
-Implementation revision: **0.2.0**. The collection's release identity remains
-0.1.0: existing tests bind package metadata.version to the collection manifests.
+Implementation revision: **0.2.0**. Since 2026-10-07 the collection's release
+identity is also 0.2.0; tests bind package metadata.version to the collection
+manifests.
 
 ## Imported source and rights
 

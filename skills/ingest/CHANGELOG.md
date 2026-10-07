@@ -1,5 +1,6 @@
 # Changelog
 
+- 2026-10-07 — v0.2.0: Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 - 2026-10-03 — v0.1.0: Direct ingest, explicit range and approval planning, preserved Raw evidence, Book/Paper branches, source-grounded analyses and designated Persona timeline appends. Original authored logic; selected upstream extractors/tests remain absent pending their redistribution grant.
 - 2026-10-03 — The actual Inbox multi-member handoff exposed a missing consumer boundary: add explicit digest-bound member mapping, common-purpose reuse, aggregate preflight and in-memory same-source excerpt preservation; keep single-source calls and the pending extractor grant separate.
 - 2026-10-03 — Independent gate reproductions exposed unbound Raw-first compilation and capture content-digest rejection. Persist the first compiled_target under exact update approval, and accept strict SHA-256 identities separately from acquisition locators; preserve body bytes and distinct selected spans.

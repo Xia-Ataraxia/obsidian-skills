@@ -2,7 +2,7 @@
 name: ingest
 description: Preserves and compiles explicitly selected source evidence into Raw and source-grounded Wiki knowledge. Use for ingest this URL, compile this file, ingest pasted text, process selected book chapters, analyze a paper, or append an attributed Persona stance. Direct ingest does not require capture. Not for automatic source collection, knowledge queries, corpus indexing, creating personal profiles, or editing undesignated research questions.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Ingest
