@@ -1,6 +1,6 @@
 ---
 name: ingest
-description: Preserves and compiles explicitly selected source evidence into Raw and source-grounded Wiki knowledge. Use for ingest this URL, compile this file, ingest pasted text, process selected book chapters, analyze a paper, or append an attributed Persona stance. Direct ingest does not require capture. Not for automatic source collection, knowledge queries, corpus indexing, creating personal profiles, or editing undesignated research questions.
+description: Preserves and compiles explicitly selected source evidence into Raw and source-grounded Wiki knowledge. Use for ingest this URL, compile this file, ingest pasted text, create or update a book note from a Yes24/Aladin URL, ISBN or title (책 노트, 독서 노트, 목차 넣어줘), process selected book chapters, analyze a paper, or append an attributed Persona stance. Direct ingest does not require capture. Not for automatic source collection, knowledge queries, corpus indexing, creating personal profiles, or editing undesignated research questions.
 metadata:
   version: "0.2.1"
 ---
@@ -39,7 +39,7 @@ Read only the branch in this table:
 | Repository, pinned revision, selected tool | [repositories](references/repositories.md) |
 | Mail, thread, attachment | [mail](references/mail.md) |
 | Messenger, web AI conversation, selected session | [conversations](references/conversations.md) |
-| Book, TOC, selected chapters | [books](references/books.md) |
+| Book note, bibliography, TOC, selected chapters | [books](references/books.md) |
 | Paper, methodology, citation, hub/atoms/Concept | [papers](references/papers.md) |
 
 ## Compile selected evidence
@@ -71,6 +71,7 @@ It creates Raw/hub/analysis artifacts and performs approved additive appends; it
 
 The local candidate includes a [web source validator](scripts/web-source-validate.py) and a [YouTube transcript extractor](scripts/youtube-transcript-extract.py) transferred from bstack.
 Read the article or video reference before invoking them; neither grants vault writes or proves whole-source completeness.
+The Book branch adds two bibliographic fetchers transferred from bstack, [Yes24 metadata](scripts/fetch_yes24.py) and [Aladin TOC images](scripts/fetch_aladin_toc.py); read the books reference before invoking them.
 Their local transfer is authorized, but origin redistribution rights are unconfirmed. The source repository's provenance record identifies the five transferred files and their exact revision; no blanket package licence is asserted here.
 For live app-managed mutations compose `obsidian-cli` by identity and use its actual approved surface rather than treating this filesystem helper as an app adapter.
 Compose capture/inbox for requested candidate selection, query for requested retrieval or answers, and reindex for a separately requested index change.
@@ -88,4 +89,5 @@ The local helper uses Python 3.8 or later and the standard library.
 URL reads support UTF-8 static HTML/plain text/Markdown and have a bounded network timeout.
 Unsupported documents need an actually performed conversion with original attachment retention; login and JavaScript pages need a separately authorized acquisition tool or supplied export.
 The web validator uses only the standard library. The transcript extractor optionally invokes `defuddle` and `yt-dlp` and contacts the public Defuddle gateway and YouTube oEmbed for the designated video.
+The book fetchers run through `uv` with their declared dependencies and contact the public Yes24 or Aladin storefront for the selected book only.
 Those acquisitions require the actual selected source and authorization; no install, login or network acquisition happens merely by loading the skill. Missing dependencies and unexercised external extraction remain unavailable or unverified, not a pass.
