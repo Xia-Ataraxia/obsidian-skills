@@ -3,7 +3,7 @@ name: refresh-context
 description: Re-reads explicitly named Me, policy, and user-instruction sources, binds proposed derived snapshots to exact source and snapshot hashes, and applies only fully or partially approved snapshot paths. Use when derived agent context must be refreshed after source changes. Not for editing Me or policy, inventing personal context, automatic reloads, public context publication, or requiring a counterpart vault.
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Refresh Context

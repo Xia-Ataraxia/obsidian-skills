@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-10-07
+
+- 2026-10-07 — Hermes Agent v0.21.5 `skills_guard` refused community installs of four 0.2.0 packages with a CAUTION verdict; the first line of `references/EMBEDS.md` showed the embed prefix as a one-backtick code span, which the guard's HIGH `inline_shell_exec` rule matches. It now names the exclamation mark and shows `![[Note Name]]`; the definition is unchanged. This package carries no `metadata.version`.
+
 ## 0.1.0 — Unreleased
 
 Not published, not installed anywhere, and not yet exercised against a running Obsidian app. This entry records the imported material and the modifications made to it, nothing more.

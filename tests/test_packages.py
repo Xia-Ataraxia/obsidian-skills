@@ -5,7 +5,7 @@ Scope boundary: every assertion in this module is about the bytes checked into
 this repository. Nothing here loads a skill into a runtime, reaches a network,
 reads a profile, or proves that Obsidian, a plugin, or a marketplace accepted
 anything. A passing run means the packages are internally consistent and agree
-with the declared release identity -- not that a runtime installed them. 0.2.0
+with the declared release identity -- not that a runtime installed them. 0.2.1
 is a public prerelease. Its two verified native installs and fresh-loads are
 historical: Claude Code in an isolated project scope, at the immutable v0.1.0
 tag, and Hermes Agent across five generic operator profiles, at the corrected
@@ -423,7 +423,7 @@ class PackageIdentityTest(unittest.TestCase):
         # see an upgrade; the immutable historical tag keeps its own version.
         # Installer and manifests must not disagree about either.
         pkg_tag_version = re.search(r"^PKG_TAG_VERSION=(\S+)", installer, re.M).group(1)
-        self.assertEqual(pkg_version, "0.2.0")
+        self.assertEqual(pkg_version, "0.2.1")
         self.assertEqual(pkg_tag_version, "0.1.0")
         self.assertNotEqual(pkg_version, pkg_tag_version)
         self.assertEqual(pkg_status, "prerelease")
@@ -742,6 +742,71 @@ class PublicTreePrivacyTest(unittest.TestCase):
     def test_the_scan_never_leaves_the_repository_tree(self):
         for path in self.files:
             self.assertTrue(str(path).startswith(str(REPO) + os.sep))
+
+
+# Two HIGH-severity rules of the Hermes Agent skills guard (tools/skills_guard.py,
+# observed in Hermes v0.21.5). A HIGH finding gives a package a "caution" verdict,
+# and Hermes refuses to install a community-source package with that verdict, so
+# one match blocks the whole package from `hermes skills install`. Both rules
+# matched harmless 0.2.0 text (an exclamation mark shown as inline code, and an
+# environment copy for a subprocess) and blocked four packages. The expressions
+# below are the guard's own, so a match here is a match there.
+HERMES_INLINE_SHELL_EXEC_RE = re.compile(r"!`[^`\s][^`\n]*`")
+HERMES_PYTHON_OS_ENVIRON_RE = re.compile(r"^[^#\n]*os\.environ\b(?!\s*\.get\s*\()", re.M)
+
+
+def hermes_blocking_findings(rel: str, text: str) -> list:
+    """``file:line rule`` for each Hermes HIGH rule match in one shipped file."""
+    rules = [("inline_shell_exec", HERMES_INLINE_SHELL_EXEC_RE)]
+    if rel.endswith(".py"):
+        rules.append(("python_os_environ", HERMES_PYTHON_OS_ENVIRON_RE))
+    found = []
+    for name, pattern in rules:
+        for match in pattern.finditer(text):
+            line = text.count("\n", 0, match.start()) + 1
+            found.append(f"{rel}:{line} {name}: {match.group(0).strip()[:80]}")
+    return found
+
+
+class HermesSkillsGuardTest(unittest.TestCase):
+    """No shipped package may trip a Hermes skills-guard rule that blocks install."""
+
+    def test_no_package_file_matches_a_hermes_install_blocking_rule(self):
+        scanned = 0
+        findings = []
+        for path in package_files(SKILLS_DIR):
+            try:
+                text = path.read_text("utf-8")
+            except (UnicodeDecodeError, OSError):
+                continue
+            scanned += 1
+            findings += hermes_blocking_findings(path.relative_to(REPO).as_posix(), text)
+        self.assertGreater(scanned, 100, "scan collected implausibly few files")
+        self.assertEqual(findings, [], "\n" + "\n".join(findings))
+
+    def test_the_rules_flag_the_shapes_that_blocked_0_2_0(self):
+        """Negative control: rules that flag nothing would pass vacuously."""
+        bang = "!"
+        tick = "`"
+        blocked = {
+            "a.md": "prefixed with " + tick + bang + tick + ": the target -- see `SKILL.md`",
+            "b.md": "`=`, " + tick + bang + tick + ", `%`",
+            "c.py": "env=dict(os." + "environ, LANG='C'),",
+            "d.py": "x = os." + "environ['HOME']",
+        }
+        for rel, text in blocked.items():
+            with self.subTest(sample=rel):
+                self.assertNotEqual(hermes_blocking_findings(rel, text), [])
+
+    def test_the_rules_accept_the_0_2_1_rewordings(self):
+        for rel, text in {
+            "a.md": "prefixed with an exclamation mark, as in `![[Note Name]]`: the target",
+            "b.md": "`=`, `` ! ``, `%`, `!=`",
+            "c.py": "# os." + "environ is never copied\nvalue = os." + "environ.get('X')",
+            "d.md": "os." + "environ in prose is not Python",
+        }.items():
+            with self.subTest(sample=rel):
+                self.assertEqual(hermes_blocking_findings(rel, text), [])
 
 
 if __name__ == "__main__":

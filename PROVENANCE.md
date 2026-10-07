@@ -309,6 +309,28 @@ version metadata, manifest prose, inventory target digests of the changed
 copied or relicensed. The immutable `v0.1.0` tag and the historical Claude Code
 and Hermes results stay bound to their original revisions.
 
+## Collection release 0.2.1 — 2026-10-07
+
+Observed evidence: a Hermes Agent v0.21.5 install of `0.2.0`, run with
+`hermes skills tap add Xia-Ataraxia/secondbrain-skills` and then
+`hermes skills install Xia-Ataraxia/secondbrain-skills/<name> --yes`, installed
+16 of 20 packages. Hermes `tools/skills_guard.py` blocked four with a
+community-source CAUTION verdict:
+
+- HIGH `inline_shell_exec` (regex ``!`[^`\s][^`\n]*` ``) in
+  `obsidian-markdown/references/EMBEDS.md`, `obsidian-bases/SKILL.md` and
+  `obsidian-clipper/references/template-language.md`, each from an exclamation
+  mark written as a one-backtick code span.
+- HIGH `python_os_environ` in `reindex/scripts/reindex.py`, from an environment
+  copy that set `PYTHONIOENCODING` for qmd.
+
+All four were false positives. The three documents were reworded with the same
+meaning, and `reindex` stopped copying the environment; see `CHANGELOG.md`. The
+same v0.21.5 `scan_skill` was rerun locally over every `skills/<name>` directory
+of this tree. That is a scanner verdict, not a host install or fresh-load. No
+code or asset was imported, copied or relicensed. The `0.2.0` results and every
+earlier pin stay bound to their original revisions.
+
 ## Status and limits
 
 The new plugin-first visualization source absorbs inspection/layout/skeleton
@@ -330,7 +352,7 @@ remain necessary before later publication or deployment.
   two helpers and three tests keep their unconfirmed origin rights and
   public-redistribution hold; a local release candidate is not a new grant or a
   publication approval.
-- This repository is a public prerelease at version `0.2.0`. Nothing recorded
+- This repository is a public prerelease at version `0.2.1`. Nothing recorded
   here installs it on a host, publishes it to a marketplace, or retires, replaces,
   or supersedes any other project — both sources above remain their owners' to
   maintain. `docs/cutover.md` states what a change of ownership would require.

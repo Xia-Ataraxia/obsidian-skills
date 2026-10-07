@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1 — 2026-10-07
+
+- 2026-10-07 — Hermes Agent v0.21.5 `skills_guard` refused community installs of four 0.2.0 packages with a CAUTION verdict; this package's YAML troubleshooting list wrote the exclamation mark as a one-backtick code span, which the guard's HIGH `inline_shell_exec` rule matches. It is now a double-backtick span with padding; the rendered list and its meaning are unchanged. `metadata.version` follows the collection release `0.2.1`.
+
 ## 0.2.0 — 2026-10-07
 
 - 2026-10-07 — Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.

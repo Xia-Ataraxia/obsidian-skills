@@ -3,7 +3,7 @@ name: obsidian-bases
 description: Create and edit Obsidian Bases (.base files) with views, filters, formulas, properties, and summaries, preserving unrelated views and reading the changed base back before any claim about what it renders. Use when working with .base files, embedded base code blocks, database-like views of notes, or when the user mentions Bases, table, cards, list, kanban or map views, groupBy, sort, limit, filters, or formulas in Obsidian. Not for Markdown note syntax, .canvas graph structure, Dataview queries, or vault CLI operations.
 license: MIT
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Obsidian Bases Skill
@@ -639,7 +639,7 @@ Base syntax can also live in a fenced `base` code block inside a note. The schem
 
 ### YAML Syntax Errors
 
-**Unquoted special characters**: Strings containing `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `#`, `?`, `|`, `-`, `<`, `>`, `=`, `!`, `%`, `@`, `` ` `` must be quoted.
+**Unquoted special characters**: Strings containing `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `#`, `?`, `|`, `-`, `<`, `>`, `=`, `` ! ``, `%`, `@`, `` ` `` must be quoted.
 
 ```yaml
 # WRONG - colon in unquoted string

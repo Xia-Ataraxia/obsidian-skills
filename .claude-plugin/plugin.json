@@ -1,8 +1,8 @@
 {
   "name": "obsidian-skills",
   "displayName": "Obsidian Skills",
-  "version": "0.2.0",
-  "description": "Twenty self-contained Agent Skills, the secondbrain-skills collection: nine native Obsidian packages (Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync) and eleven knowledge packages (capture, inbox, ingest, query, verify, audit, lint, status, reindex, refresh-context, and onboard). Version 0.2.0 is a public prerelease: native install and fresh-load are verified on Claude Code in an isolated project scope only, at an earlier revision, and every other runtime install is unverified.",
+  "version": "0.2.1",
+  "description": "Twenty self-contained Agent Skills, the secondbrain-skills collection: nine native Obsidian packages (Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync) and eleven knowledge packages (capture, inbox, ingest, query, verify, audit, lint, status, reindex, refresh-context, and onboard). Version 0.2.1 is a public prerelease: native install and fresh-load are verified on Claude Code in an isolated project scope only, at an earlier revision, and every other runtime install is unverified.",
   "author": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"
