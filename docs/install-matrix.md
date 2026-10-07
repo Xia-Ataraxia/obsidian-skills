@@ -2,7 +2,7 @@
 
 > **Evidence boundary:** Hermes native installs resolved public main at `c22ce26bae518e7973f078cac972ea88707b8e79`; installed bytes were compared afterwards. A local clone checkout does not pin remote tap/install commands. The operator reports 45 installations in five existing local user profiles and a downstream consumer update; fresh task responses cover only CLI/Sync. The immutable `v0.1.0` refusal was two `skills-guard-v6` `credential_exposure` false positives on fake nonce strings, not real credentials or a semantic execution verdict. No scanner bypass was used.
 
-Current source: `Xia-Ataraxia/secondbrain-skills` at `2b1c7e3af129a1536425cdf1d9748abda8768fe6` is the 0.2.1 release merge commit: twenty packages, the qmd parser fix and the Hermes skills_guard install fixes. Older pins and results below retain their historical provenance. Repository naming does not change the existing `obsidian-skills@obsidian-skills` plugin identity.
+Current source: `Xia-Ataraxia/secondbrain-skills` at `365673b4ad51a2fd8635c3e37c50872cd4a198af` is the 0.2.2 release merge commit: twenty packages, the qmd parser fix, the Hermes skills_guard install fixes and the ingest Book branch. Older pins and results below retain their historical provenance. Repository naming does not change the existing `obsidian-skills@obsidian-skills` plugin identity.
 
 Every route below comes from one place: the route table in `install.sh` (`route_load`) and the native command block (`cmd_native`). Each row carries a `confirmed by` field naming the evidence it rests on — the runtime's published documentation plus its observed CLI help. A runtime outside the table has no route at all; the installer refuses it instead of guessing.
 
