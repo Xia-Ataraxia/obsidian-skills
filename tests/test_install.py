@@ -167,7 +167,7 @@ class InstallerHarness(unittest.TestCase):
     maxDiff = None
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="obsidian-skills-test-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="secondbrain-skills-test-"))
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
         self.home = self.tmp / "home"
         self.tmpdir = self.tmp / "tmpdir"
@@ -1147,7 +1147,7 @@ class CopierAnchoringTest(unittest.TestCase):
         cls.copier = load_copier()
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="obsidian-skills-copier-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="secondbrain-skills-copier-"))
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
         self.anchor = self.tmp / "anchor"
         self.anchor.mkdir()
@@ -1444,7 +1444,7 @@ class CopierEntryPointTest(unittest.TestCase):
         cls.copier = load_copier()
 
     def setUp(self):
-        self.tmp = Path(tempfile.mkdtemp(prefix="obsidian-skills-copier-main-"))
+        self.tmp = Path(tempfile.mkdtemp(prefix="secondbrain-skills-copier-main-"))
         self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
         self.repo = self.tmp / "checkout"
         self.source = self.repo / "skills"
@@ -1471,7 +1471,7 @@ class CopierEntryPointTest(unittest.TestCase):
             "--label", "Cursor",
             "--kind", "skill-directory",
             "--prog", "install.sh",
-            "--package", "obsidian-skills",
+            "--package", "secondbrain-skills",
             "--mode", "apply",
             "pkg",
         ]

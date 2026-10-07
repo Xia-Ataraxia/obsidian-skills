@@ -1,6 +1,6 @@
 {
   "schema": "obsidian-skills/asset-ledger@1",
-  "package": "obsidian-skills",
+  "package": "secondbrain-skills",
   "package_version": "0.1.0",
   "recorded": "2026-09-29",
   "scope": "Every image file tracked in this repository. An asset that is not listed here is not cleared for publication.",

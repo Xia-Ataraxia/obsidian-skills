@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# install.sh — obsidian-skills installer for Agent Skills runtimes.
+# install.sh — secondbrain-skills installer for Agent Skills runtimes.
 #
 # What this script does
 #   * resolves the confirmed route for a runtime and prints the commands you run
@@ -60,8 +60,8 @@ SKILLS_SRC="${REPO_DIR}/skills"
 COPIER="${REPO_DIR}/scripts/install_packages.py"
 PYTHON=''
 
-PKG_NAME=obsidian-skills
-PKG_VERSION=0.2.2
+PKG_NAME=secondbrain-skills
+PKG_VERSION=0.3.0
 PKG_STATUS=prerelease
 # The recommended public source revision: the newest merged main commit whose
 # package tree is current. A commit cannot name its own hash, so after a release

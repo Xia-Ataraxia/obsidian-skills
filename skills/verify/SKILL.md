@@ -3,7 +3,7 @@ name: verify
 description: Reviews explicitly selected claims against checked evidence, records disputed or resolved outcomes, and prepares an approval-bound verification record. Use for claim review, contradiction checking, or resolving a disputed page. Not for general knowledge queries, vault-wide quality sampling, or syntax linting.
 license: MIT
 metadata:
-  version: "0.2.2"
+  version: "0.3.0"
 ---
 
 # Verify

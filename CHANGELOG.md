@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 — 2026-10-07
+
+- Breaking: the native plugin and marketplace identity is renamed from `obsidian-skills` to `secondbrain-skills` (`PKG_NAME`, every plugin and marketplace manifest, installer commands, asset ledger). Install with `secondbrain-skills@secondbrain-skills`; uninstall the retired `obsidian-skills@obsidian-skills` identity first. Package names and contents are unchanged.
+- Bumped the collection release identity to `0.3.0` in every manifest, `install.sh` and each package `metadata.version`. The recommended `PKG_PIN` moves to the release merge in a follow-up pin commit.
+- Historical install evidence for 0.1.0 keeps the identity that was actually observed.
+
 ## 0.2.2 — 2026-10-07
 
 - `ingest` absorbs the bstack `book` unit into its Book branch: book-note triggers (Yes24/Aladin URL, ISBN or title), acquisition order, per-field provenance labels, work/edition identity, human-reading preservation and highlight-to-chapter mapping. `fetch_yes24.py` and `fetch_aladin_toc.py` are copied byte-identically from bstack; see PROVENANCE.md.
