@@ -230,6 +230,25 @@ serialized integration, not applied concurrently to `source-inventory.json`.
 The existing inventory's MIT-import classification must not be used to imply an
 unconfirmed grant.
 
+## Local book transfer from bstack
+
+On 2026-10-07 the bstack owner requested that the bstack `book` unit be absorbed
+into this package's Book branch. The two fetchers below were read in full and
+copied from bstack revision `2b38de88a2da8e1feee12586b9d3446384846f3d`; the
+book recipe was re-expressed in `skills/ingest/references/books.md`, not copied
+as prose. bstack retires its `book` unit into its own `archive/` separately.
+
+| source path | source SHA-256 | local destination and delta |
+|---|---|---|
+| `skills/book/scripts/fetch_yes24.py` | `56f95035219dbee20078377b76fbd8cd523b6d77c9305d40e714b9fc433d7ba0` | `skills/ingest/scripts/fetch_yes24.py`, byte-identical |
+| `skills/book/scripts/fetch_aladin_toc.py` | `4fab4dc3188a203d00320e53f3986bb79f3a1a8276aa14e4a87fd86ad1feed17` | `skills/ingest/scripts/fetch_aladin_toc.py`, byte-identical |
+
+Both files declare their PEP 723 dependencies (`requests`; Yes24 also
+`beautifulsoup4` and `markdownify`) and vendor none of them. They have no
+copyright or licence notice; the same origin-rights caveat as the transfer above
+applies. They contact the public Yes24 and Aladin storefronts only when invoked
+for a selected book; no live storefront fetch is proved by this transfer.
+
 ## Native obligation restoration — Unreleased
 
 These additive restorations keep the candidate at `0.1.0`. Requirement lineage

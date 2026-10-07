@@ -1,5 +1,6 @@
 # Changelog
 
+- 2026-10-07 — Absorb the bstack `book` unit into the Book branch at the owner's request: book-note triggers, Yes24/Aladin acquisition order, per-field provenance labels, work/edition identity, human-reading preservation and highlight-to-chapter mapping. Copy `fetch_yes24.py` and `fetch_aladin_toc.py` byte-identically from bstack `2b38de88a2da8e1feee12586b9d3446384846f3d` (see PROVENANCE.md). Version follows the next collection release.
 - 2026-10-07 — v0.2.1: Collection release `0.2.1`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 - 2026-10-07 — v0.2.0: Collection release `0.2.0`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 - 2026-10-03 — v0.1.0: Direct ingest, explicit range and approval planning, preserved Raw evidence, Book/Paper branches, source-grounded analyses and designated Persona timeline appends. Original authored logic; selected upstream extractors/tests remain absent pending their redistribution grant.
