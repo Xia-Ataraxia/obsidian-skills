@@ -12,7 +12,7 @@
 
 독립된 Agent Skill 스무 개로 이루어진 `secondbrain-skills` 모음입니다. 네이티브 패키지 아홉 개는 Obsidian 자체를 다룹니다: Markdown, Bases, Canvas, Mermaid, 시각 형식 선택, 공식 CLI, Web Clipper, 볼트 진단, 헤드리스 Sync. 지식 패키지 열한 개는 노트를 다룹니다: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
 
-> **현재 배포된 소스.** qmd 파서 수정을 포함한 스무 패키지는 <https://github.com/Xia-Ataraxia/secondbrain-skills>의 0.2.0 릴리스 병합 커밋 `f742e31faca79c74ff8b6fcb69ed0b716c6fe888`에 있습니다. 아래의 옛 고정 커밋과 런타임 결과는 과거 증거이며 현재 소스 검증이 아닙니다. 과거 `v0.1.0` 태그는 그대로 두며 현재 모음의 릴리스 식별자는 `0.2.1`입니다. 모든 플러그인 매니페스트가 이 버전을 담고 있어 `0.1.0`을 설치한 호스트도 업그레이드를 인식합니다. 커밋은 자기 해시를 담을 수 없으므로, 권장 소스 고정 커밋은 각 릴리스가 병합된 뒤 별도의 문서 전용 커밋으로 그 병합 커밋으로 옮깁니다.
+> **현재 배포된 소스.** qmd 파서 수정을 포함한 스무 패키지는 <https://github.com/Xia-Ataraxia/secondbrain-skills>의 0.2.1 릴리스 병합 커밋 `2b1c7e3af129a1536425cdf1d9748abda8768fe6`에 있습니다. 아래의 옛 고정 커밋과 런타임 결과는 과거 증거이며 현재 소스 검증이 아닙니다. 과거 `v0.1.0` 태그는 그대로 두며 현재 모음의 릴리스 식별자는 `0.2.1`입니다. 모든 플러그인 매니페스트가 이 버전을 담고 있어 `0.1.0`을 설치한 호스트도 업그레이드를 인식합니다. 커밋은 자기 해시를 담을 수 없으므로, 권장 소스 고정 커밋은 각 릴리스가 병합된 뒤 별도의 문서 전용 커밋으로 그 병합 커밋으로 옮깁니다.
 
 모든 패키지는 자체 참조 문서와 스크립트를 가진 독립 `SKILL.md`입니다. 루트 스킬도, 디스패처도, 공용 런타임도, 호환 별칭도 없습니다. 에이전트는 그 작업에 필요한 패키지 하나만 불러오고 나머지는 건드리지 않습니다.
 
@@ -75,7 +75,7 @@
 ```sh
 git clone https://github.com/Xia-Ataraxia/secondbrain-skills
 cd secondbrain-skills
-git checkout f742e31faca79c74ff8b6fcb69ed0b716c6fe888   # current 0.2.0 release source (twenty packages)
+git checkout 2b1c7e3af129a1536425cdf1d9748abda8768fe6   # current 0.2.1 release source (twenty packages)
 ./install.sh skills      # which of the twenty packages are present here
 ./install.sh routes      # 런타임별 공식 경로, 매니페스트, 스킬 디렉터리
 ```
