@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 — 2026-10-07
+
+- 2026-10-07 — Collection release `0.2.2`: `metadata.version` follows the collection release identity so native plugin hosts see the upgrade. No behavior, reference or script change in this package.
 ## 0.2.1 — 2026-10-07
 
 - 2026-10-07 — Hermes Agent v0.21.5 `skills_guard` refused community installs of four 0.2.0 packages with a CAUTION verdict; the first line of `references/EMBEDS.md` showed the embed prefix as a one-backtick code span, which the guard's HIGH `inline_shell_exec` rule matches. It now names the exclamation mark and shows `![[Note Name]]`; the definition is unchanged. This package carries no `metadata.version`.
