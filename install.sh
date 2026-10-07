@@ -68,7 +68,7 @@ PKG_STATUS=prerelease
 # merges this pin is moved to that merge commit by a separate docs-only commit;
 # until then it names the previous merged source. A local checkout is this
 # source only at this commit, unmodified.
-PKG_PIN=365673b4ad51a2fd8635c3e37c50872cd4a198af
+PKG_PIN=c8c3a63d71a732eb7e5bcc39124fac5313937ddc
 # Historical: public main when the operator ran the nine-package Hermes install
 # (2026-10-01). That install is evidence about this revision only; it is never
 # moved forward with PKG_PIN.
