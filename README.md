@@ -12,7 +12,7 @@
 
 Twenty independent Agent Skills, the `secondbrain-skills` collection. Nine native packages work with Obsidian itself: Markdown, Bases, Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and headless Sync. Eleven knowledge packages work with the notes: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`.
 
-> **Current published source.** All twenty packages, including the qmd parser fix, are public at `2c6ed8458ba2736066054c2d6288e93db6e3c20d` in <https://github.com/Xia-Ataraxia/secondbrain-skills>. The older pins and runtime results below are historical evidence, not verification of this current source. The historical `v0.1.0` tag is unchanged; the current collection release identity is `0.2.0`, carried by every plugin manifest so that a host which installed `0.1.0` sees the upgrade. The recommended source pin is moved to each release's merge commit by a follow-up docs-only commit, because a commit cannot name its own hash.
+> **Current published source.** All twenty packages, including the qmd parser fix, are public in the 0.2.0 release merge commit `f742e31faca79c74ff8b6fcb69ed0b716c6fe888` in <https://github.com/Xia-Ataraxia/secondbrain-skills>. The older pins and runtime results below are historical evidence, not verification of this current source. The historical `v0.1.0` tag is unchanged; the current collection release identity is `0.2.0`, carried by every plugin manifest so that a host which installed `0.1.0` sees the upgrade. The recommended source pin is moved to each release's merge commit by a follow-up docs-only commit, because a commit cannot name its own hash.
 
 Every package is a self-contained `SKILL.md` with its own references and scripts. There is no root skill, no dispatcher, no shared runtime, and no compatibility alias — your agent loads the one package the task needs, and nothing else.
 
@@ -75,7 +75,7 @@ Run `./install.sh skills` to see which of the twenty are present in your checkou
 ```sh
 git clone https://github.com/Xia-Ataraxia/secondbrain-skills
 cd secondbrain-skills
-git checkout 2c6ed8458ba2736066054c2d6288e93db6e3c20d   # current twenty-package source, including the qmd parser fix
+git checkout f742e31faca79c74ff8b6fcb69ed0b716c6fe888   # current 0.2.0 release source (twenty packages)
 ./install.sh skills      # which of the twenty packages are present here
 ./install.sh routes      # every runtime's official route, manifest and skill directory
 ```
