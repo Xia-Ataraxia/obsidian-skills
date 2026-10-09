@@ -14,6 +14,7 @@ There is no callable root skill, mandatory shared runtime, compatibility alias, 
 - Keep required references, assets, and scripts inside the owning package. Compose neighboring packages by explicit identity only when the task needs them.
 - The shared approval, purpose, source, and fidelity field contract is authored once in `docs/contracts.md`. `scripts/sync_contracts.py <name>...` generates the byte-identical `skills/<name>/references/contract.md`; never edit a copy. Name only the packages you own, and run the all-package form only when no other writer is active.
 - Preserve MIT notices for upstream-derived files. Record exact source revision, modifications, and asset rights in `PROVENANCE.md`.
+- Credit every person or project a package draws on, copied or only consulted, in the README Acknowledgements section (both languages) in the same change. Do not add a per-package `LICENSE`.
 - Use only synthetic public examples. Never include credentials, private account identifiers, workstation paths, personal notes, internal plans, or raw private logs.
 - Respect the destination vault's live policy and exact task authorization. A format skill never grants write permission. Optional policy tools are unused unless explicitly selected; their absence is normal.
 - Never turn missing app/plugin/network evidence into success. Separate static validation, runtime discovery, materialized readback, and rendered verification.
