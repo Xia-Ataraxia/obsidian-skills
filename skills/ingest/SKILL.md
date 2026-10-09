@@ -7,7 +7,7 @@ metadata:
 
 # Ingest
 
-One request runs to the end. The owner naming a source and asking for ingest approves every standard effect below for that source: create the Raw, create and update Wiki pages and Maps, move the Inbox original into Raw, compose `capture` for the originals Step 1 traces, commit, and reindex. Do not stop for a plan review or a second approval between steps. Stop only when a preservation check fails, the source cannot be obtained, or a paper falls outside the vault's scope.
+One request runs to the end. The owner naming a source and asking for ingest approves every standard effect below for that source: create the Raw, create and update Wiki pages and Maps, move the Inbox original into Raw, fetch the originals Step 1 traces, commit, and reindex. Do not stop for a plan review or a second approval between steps. Stop only when a preservation check fails, the source cannot be obtained, or a paper falls outside the vault's scope.
 
 The destination's live policy, placement and templates, and [frontmatter](references/frontmatter.md) govern every step. Decisions against the reference workflow are recorded in [comparison](references/comparison.md). Blank or `all` input delegates selection to `inbox`; direct ingest does not require `capture`.
 
@@ -43,7 +43,7 @@ Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 - key claims to track, with counterevidence;
 - connections to pages that already exist.
 
-Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book, write its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, acquire it now as its own Raw per Step 0.5 and 2 with the inherited `purpose` (`reused`) and link it through `referenced`, without chasing the originals it cites in turn; when located but not fetchable (login, paywall, offline), compose `capture` for a manifest-only Inbox candidate with the citing passage and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
+Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book, write its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located, fetch it as its own Raw with the inherited `purpose` (`reused`) and link it through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
 
 Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
@@ -87,14 +87,14 @@ Check every item and fix failures before reporting:
 - Raw has verbatim `## Original Content` of the expected length;
 - the Inbox original is gone when the source came from the Inbox;
 - every new wikilink resolves and no duplicate page was created;
-- every secondary claim's original is linked as a Raw or Book Index, captured as an Inbox candidate because it could not be fetched, or recorded as provenance unknown;
+- every secondary claim's original is linked as a Raw or Book Index, or recorded as provenance unknown;
 - every new page has `explored: false`, and high-confidence pages have a Bias Check;
 - every mothership link resolves on disk;
 - every touched page is linked from a Map.
 
 ## Step 7 — Reindex and report
 
-Invoke `reindex` so the new pages are searchable. Report the Raw path, purpose, originals linked, captured or unlocated, pages created, pages updated, Maps touched, the page count against the 10–15 target, coverage gaps and open questions.
+Invoke `reindex` so the new pages are searchable. Report the Raw path, purpose, originals fetched or unlocated, pages created, pages updated, Maps touched, the page count against the 10–15 target, coverage gaps and open questions.
 
 ## Paper mode
 

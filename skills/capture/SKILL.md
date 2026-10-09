@@ -99,8 +99,6 @@ Under `## Agent Capture Notes`, each item grounded in the members and marked as 
 - missing evidence, omissions and follow-up questions;
 - suggested Wiki pages to create or update during `ingest` — its analysis starts from this list.
 
-**Originals traced by ingest.** When `ingest` composes this skill for an original that a secondary claim relies on but that it could not fetch (login, paywall, offline), write a manifest-only candidate: the original's locator and identity in the manifest, `purpose` inherited with `purpose_origin: reused`, and under Agent Capture Notes the citing passage quoted from the Raw that pointed here, with that Raw's link. Do not fetch the full text unless asked; `ingest` acquires it when the candidate is processed and the original becomes reachable, and its Raw keeps this candidate's note name so existing links resolve.
-
 ### Step 5: Route
 
 - `inbox-only` (the default): stop after writing the note and report its path.
