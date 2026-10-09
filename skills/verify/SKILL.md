@@ -3,7 +3,7 @@ name: verify
 description: Reviews one Wiki page, or the claims the owner names on it, against evidence read in this session - checks it is well-formed knowledge, consistent with its sources and other pages, and how strongly it can be confirmed - then reports and, on approval, writes the outcome back. Use for claim review, contradiction checking, confidence calibration, or resolving a disputed page. Not for general knowledge queries, vault-wide quality sampling (audit), or syntax and link linting (lint).
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Verify — Wiki Page Verification
@@ -48,7 +48,7 @@ Scope is the named page. Other pages are read as counterparts; they are not veri
 
 **2.1b The original behind it** (owner addition). For secondary claims, follow `referenced` to the original per [claims](references/claims.md). Check the claim against the original, and check that the secondary author's interpretation is not presented as the original creator's finding. A claim confirmed only against a retelling is reported as such.
 
-**2.2 Cross-page consistency.** Search the page's `related`, then `qmd query "<claim>"`, then `rg -n "<key term>"` across the Wiki folders. Detect four conflict shapes: same concept, **different definition**; **contradicting empirical claims** (numbers, dates, attributions); **contradicting prescriptions**; **same source, divergent interpretations**. Each credible conflict becomes a `> [!warning] Contradiction` callout — the callout `ingest` uses — on the reviewed page, stating both claims with their sources and linking the counterpart; with approval, the counterpart gets the mirror callout. Neither side is removed; deletion is reserved for a claim unsupported at source with no support anywhere, and even then it is a proposal.
+**2.2 Cross-page consistency.** Search the page's `related`, then `qmd query "<claim>"`, then `rg -n "<key term>"` across the Wiki folders. Detect four conflict shapes: same concept, **different definition**; **contradicting empirical claims** (numbers, dates, attributions); **contradicting prescriptions**; **same source, divergent interpretations**. Each credible conflict (per `ingest` Step 3) becomes a `> [!warning] Contradiction` callout — the callout `ingest` uses — on the reviewed page, stating both claims with their sources and linking the counterpart; with approval, the counterpart gets the mirror callout. Neither side is removed; deletion is reserved for a claim unsupported at source with no support anywhere, and even then it is a proposal.
 
 **2.3 Policy consistency.** Placement, naming and the frontmatter reference of the destination's live policy. Report deviations; fixing them is `lint`'s job.
 
@@ -76,7 +76,7 @@ Report first (Output below). The owner approves the proposal in conversation, wh
 
 1. Append a dated `## Verification` entry to the reviewed page: date, verified by (agent / human / both), verdict, claims reviewed with their status and evidence location, Claim Type and Evidence Scope, what remains open. Never rewrite a claim's text unless the owner approved that specific correction.
 2. Apply the approved Contradiction callouts, on the reviewed page and approved counterparts.
-3. Apply the approved `confidence` change, the drafted Bias Check, and missing frontmatter values.
+3. Apply the approved `confidence` change with its reason line under `## Sources`, the drafted Bias Check, and missing frontmatter values.
 4. Set `explored: true` only on the owner's explicit yes in this conversation.
 5. Update `date_modified` on every changed page; preserve human-written passages and unknown keys.
 6. Read each changed page back and report exactly what changed. History is the Git log; there is no `log.md`. Commit per `ingest`'s git provenance when the owner asks.

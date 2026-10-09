@@ -15,6 +15,10 @@ Detect a multi-page book/docs site with at least five chapters. Fetch the comple
 
 This URL acquisition remains the contract for web books. A commercial or offline book has no chapter URLs to test: scaffolding it needs lawfully obtained text and an explicitly approved file/page locator adaptation recorded per chapter. Until both exist, its chapters stay unlocated and unpromotable; nothing here substitutes a guessed URL or page.
 
+### Book cited by a source
+
+Write one Book Index and link it from the citing Raw through `referenced`. Create no chapter stubs: leave the TOC lines unlinked and omit Progress Tracking. When the owner starts reading, run B-2 and B-3.
+
 ### B-2 — Create Book Index (one Raw)
 
 Use `templates/book-index.md` under `10. Raw Sources/03 Books`, named `YYYY-MM-DD-{authorSlug}-{bookSlug}-book-index.md`. The Index `# ` heading is the exact obtained one-line title, never derived from the path. The preface is preserved verbatim in Original Content. TOC has every chapter as `- [ ] [[stub]] — {obtained title}`, followed by ` — {toc_description}` only when the TOC source supplied that one-liner, grouped under `### {Part}` headings when parts are given (unparted chapters may only precede the first Part). Reading Paths holds the source's reading paths verbatim; an absent value and an explicit `null` (reported unavailable) each render a distinct `Not recorded:` line, never inferred paths. Progress Tracking is `| Ch | Title | Status | Read on |` with one `| N | [[stub]] | stub | — |` row per chapter. Ingest Notes record how many chapter locators and TOC descriptions were supplied and the Reading Paths state; these counts state what was obtained, not that it was checked. The Index has no chapterNumber and no status.

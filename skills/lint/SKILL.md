@@ -3,7 +3,7 @@ name: lint
 description: Checks an explicitly bounded vault scope for note structure, citations, missing frontmatter properties, broken or orphan links, Map coverage, Persona boundaries, and cross-vault targets. Use for vault lint, note health, link checks, or a Map coverage repair. Not for claim verification, sampled quality audit, template authoring, or unrestricted whole-vault correction; epistemic sampling belongs to `audit`, per-claim checks to `verify`.
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Lint
@@ -63,7 +63,7 @@ Invoke `principle-collective-description` when judging a Map or hub: does it say
 - **Raw:** `purpose` (upstream `collectionPurpose`), `purpose_origin` with `inferred` and `unknown` counted separately as unconfirmed purposes, `source_locator` where the material has a location, `## Original Content` present and non-empty, and a limitation in `## Ingest Notes` when fidelity is partial. A secondary Raw carries `referenced` when its body reports another creator's work (invoke `principle-respect-des-fonds`).
 - **Attachment location:** embeds pointing outside the vault's attachments location.
 - **Exploration Gate:** `explored` on every Entity, Concept and Guide — missing is a gap, `false` is backlog, not an error.
-- **Wiki:** `confidence` on every Concept; `source` and `related` present; H1, `## Sources` and `## Related` sections.
+- **Wiki:** `confidence` on every Concept, `high`, `medium` or `low` only; `source` and `related` present; H1, `## Sources` and `## Related` sections.
 - **Bias Check:** every `confidence: high` or synthesis-heavy page carries one naming both a counter-argument and a data gap.
 - **`verify` fields:** counted only when the vault uses them; a gap routes to `verify`.
 - **Persona health:** `personaOf` resolves to an existing Entity; the body keeps its simulation-boundary callout; Persona content does not leak into shared Entity or Concept pages; the Entity's `source` holds no Raw the Persona has not absorbed (accumulation backlog). Spot-check one Quote Bank quote per Persona against the cited Raw's `## Original Content`; a mismatch is a fabrication-level finding.
