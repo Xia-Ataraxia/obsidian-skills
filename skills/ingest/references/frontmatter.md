@@ -14,10 +14,11 @@ Based on Properties and 구요한 `/ingest` at commit `863ca43`. One meaning has
 | Persona | persona.md | note | knowledge/persona | absent |
 | Guide | guide.md | guide | knowledge/guide | required: todo/inprogress/done/reviewed/stop |
 | Paper hub (non-Raw) | paper-hub.md | paper | reference/paper | required: todo/inprogress/done/reviewed/stop |
+| Paper atom | paper-atom.md | note | reference/paper-atom | absent |
 
 Common Rules status override: ordinary Raw, including Book Index, has no status; only Book chapter Raw has progressive status (initial `status: stub`). Guide and non-Raw Paper hub retain Properties-required status. No processing queue field.
 
-This table defines schema, not placement. Paper hubs follow live Apatheia Role Placement with per-paper analyses in `40. Paper Analyses`; do not invent Wiki folders, move existing analyses or duplicate hubs.
+This table defines schema, not placement. Paper hubs follow live Apatheia Role Placement with per-paper analyses in `40. Paper Analyses`, atoms beside their hub; do not invent Wiki folders, move existing analyses or duplicate hubs.
 
 ## Meaning → field
 
@@ -38,7 +39,7 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Originals/earlier captures | referenced (wikilink list) | secondary Raw, new full capture | — |
 | Related knowledge | related (wikilink list) | Entity, Concept, Persona, Guide | — |
 | Collection purpose | purpose | Raw, books (inherited) | collectionPurpose, user_intent_interview |
-| Purpose basis | purpose_origin | Raw, books | — |
+| Purpose basis | purpose_origin (stated/reused/inferred/unknown) | Raw, books | — |
 | Retained binary | source_attachment | converted Raw, PDF hub | source-attachment |
 | Read-only mothership connection | mothership (verified deeplink list) | Raw, Entity, Concept | mainVaultRelated; reject mainVaultCmds/source-vault |
 | Knowledge confidence | confidence | Concept | not fidelity |
@@ -47,8 +48,11 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Persona maturity | personaMaturity (preserve existing) | Persona | — |
 | Book identifier | isbn | book Raw/index/chapter | — |
 | Paper identifier | doi | paper Raw/hub | — |
-| Citation key | citekey (provisional: prefix if unregistered) | paper Raw/hub | separate provisional boolean |
+| Citation key | citekey (provisional: prefix if unregistered) | paper Raw/hub/atom | separate provisional boolean |
 | Publication venue | venue | paper Raw/hub | — |
+| Paper type | paperType | atom | — |
+| Analysis axis | analysisStep (integer 2–12, exactly one) | atom | analysisStepName |
+| Parent hub | paperHub (scalar wikilink) | atom | — |
 | Parent book | bookIndex (scalar wikilink) | chapter only | — |
 | Chapter number | chapterNumber (integer) | chapter only | — |
 | Part in original language | chapterPart | chapter only | — |

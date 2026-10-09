@@ -218,4 +218,4 @@ Load [references/operations.md](references/operations.md) when an operation muta
 
 ## Attribution
 
-Imported and modified from the MIT-licensed `obsidian-cli` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills), Copyright (c) 2026 Steph Ango (@kepano). The permission notice is retained in this repository's root `LICENSE`; the pinned source revision and the list of modifications are in [CHANGELOG.md](CHANGELOG.md).
+Imported and modified from the MIT-licensed `obsidian-cli` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills), Copyright (c) 2026 Steph Ango (@kepano). The permission notice is retained in this repository's root `LICENSE`; the pinned source revision and the list of modifications are in Git history.

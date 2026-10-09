@@ -120,7 +120,7 @@ Never click through a security, trust, or permission dialog in the target app to
 - A target Obsidian installation for level D. Its Mermaid build is pinned into the app, is not separately installable, and is not user-selectable; record the app and installer versions the app reports rather than guessing a Mermaid version.
 - Official sources for grammar and behavior: [Mermaid documentation](https://mermaid.js.org/intro/) for syntax and version gates, [Obsidian's advanced formatting help](https://help.obsidian.md/advanced-syntax) for the fence and `internal-link` behavior. Prefer these over blog posts, generators, and other tools' Mermaid support.
 - No plugin, CLI, or network access is required to author a diagram. An external parser is optional and only ever produces level B.
-- When an Obsidian release changes the bundled renderer, re-run the capability probe in [`references/compatibility.md`](references/compatibility.md), correct the affected catalog entries, and append this package's CHANGELOG.
+- When an Obsidian release changes the bundled renderer, re-run the capability probe in [`references/compatibility.md`](references/compatibility.md), and correct the affected catalog entries.
 
 ## Boundaries
 

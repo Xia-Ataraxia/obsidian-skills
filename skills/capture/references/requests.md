@@ -6,7 +6,7 @@ Required request fields are `candidate_path` (exact vault-relative `.md` path), 
 
 Optional fields are `purpose`, `purpose_origin` and `agent_capture_notes`. Missing purpose is empty with origin unknown. Batch purpose is reused, not asked again.
 
-Each selected source has `source_input`, `source_kind`, `source_extraction`, `source_locator`, optional `source_identity`, and `source_obtained_at`, using the shared contract. `mode` is transcript, excerpt or manifest-only. A candidate with multiple selected sources has mixed fidelity; each member preserves its own fidelity. Unknown identity stays empty. Source URLs must be canonical and have no query or embedded credentials; locators and identities cannot contain host paths.
+Each selected source has `source_input`, `source_kind`, `source_extraction`, `source_locator`, optional `source_identity`, optional `role` (one line on what this member was doing in a bundle) and `source_obtained_at`, using the shared contract. `mode` is transcript, excerpt or manifest-only. A candidate with multiple selected sources has mixed fidelity; each member preserves its own fidelity. Unknown identity stays empty. Source URLs must be canonical and have no query or embedded credentials; locators and identities cannot contain host paths.
 
 Transcript and excerpt sources supply exactly one of `content` (an acquired UTF-8 string) or `content_file` (a selected UTF-8 export relative to the declared base). Optional `span` is `{start: 1, end: 4}`, inclusive line numbers, persisted as `selected_span` for ingest. It records the requested range even when the available export is shorter. Missing files, undecodable content or inaccessible ranges generate omissions rather than invented text.
 

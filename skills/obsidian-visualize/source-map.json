@@ -16,7 +16,7 @@
       "bytes": 1068,
       "disposition": "imported-notice",
       "target": "NOTICE",
-      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+      "reason": "Owner-local MIT source absorption; modifications recorded in Git history."
     },
     {
       "path": "packages/skill-excalidraw/README.md",
@@ -120,7 +120,7 @@
       "bytes": 4281,
       "disposition": "adapted",
       "target": "references/skeleton.md",
-      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+      "reason": "Owner-local MIT source absorption; modifications recorded in Git history."
     },
     {
       "path": "packages/skill-excalidraw/skills/excalidraw/references/style.md",
@@ -128,7 +128,7 @@
       "bytes": 3578,
       "disposition": "adapted",
       "target": "references/style.md",
-      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+      "reason": "Owner-local MIT source absorption; modifications recorded in Git history."
     },
     {
       "path": "packages/skill-excalidraw/skills/excalidraw/references/sync-protocol.md",
@@ -144,7 +144,7 @@
       "bytes": 15122,
       "disposition": "adapted",
       "target": "scripts/inspect.mjs",
-      "reason": "Owner-local MIT source absorption; modifications recorded in CHANGELOG.md."
+      "reason": "Owner-local MIT source absorption; modifications recorded in Git history."
     },
     {
       "path": "packages/skill-excalidraw/skills/excalidraw/scripts/lib.mjs",
@@ -164,8 +164,6 @@
     }
   ],
   "verification": [
-    "tests/test_visualize_plugin.py",
-    "tests/fixtures/visualize-workbench.cjs",
     "references/plugin-workflow.md"
   ],
   "nativeInventory": "Existing authenticated native inventory remains unchanged; this is the additive owner-local source map."

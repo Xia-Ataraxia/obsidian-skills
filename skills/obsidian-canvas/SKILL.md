@@ -259,4 +259,4 @@ See [references/EXAMPLES.md](references/EXAMPLES.md) for full canvas examples in
 
 ## Attribution
 
-The format documentation and examples in this package are derived from the `json-canvas` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98`, MIT License, Copyright (c) 2026 Steph Ango (@kepano). See [CHANGELOG.md](CHANGELOG.md) for the recorded revision and modifications.
+The format documentation and examples in this package are derived from the `json-canvas` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98`, MIT License, Copyright (c) 2026 Steph Ango (@kepano). See Git history for the recorded revision and modifications.

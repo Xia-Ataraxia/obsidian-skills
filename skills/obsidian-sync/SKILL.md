@@ -309,4 +309,4 @@ Out of scope: Obsidian Publish, GUI settings, third-party CLIs with similar name
 
 ## Attribution
 
-Original work for this repository, written against the installed `obsidian-headless` 0.0.14 command help, its bundled README, and its observable behavior. No text was carried over from any third-party skill; the consulted source tree published no license notice, so it was used only to scope which failure modes an operator needs covered. Released under its bundled [LICENSE](LICENSE). See [CHANGELOG.md](CHANGELOG.md) for what was verified and what was not.
+Original work for this repository, written against the installed `obsidian-headless` 0.0.14 command help, its bundled README, and its observable behavior. No text was carried over from any third-party skill; the consulted source tree published no license notice, so it was used only to scope which failure modes an operator needs covered. Released under its bundled [LICENSE](LICENSE). See Git history for what was verified and what was not.

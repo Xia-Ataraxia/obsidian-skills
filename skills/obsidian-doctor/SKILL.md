@@ -295,4 +295,4 @@ Load [references/pipeline.md](references/pipeline.md) for the ordered procedure 
 
 ## Attribution
 
-All files in this package are original work covered by the repository's MIT `LICENSE`. No upstream MIT-licensed file is included, so no upstream notice applies. Templater and Obsidian behavioural facts are cited to the publisher pages listed in [references/plugins.yaml](references/plugins.yaml) and echoed in each finding's `docs` array. The requirement evidence reviewed while authoring, and this package's limitations, are recorded in [CHANGELOG.md](CHANGELOG.md).
+All files in this package are original work covered by the repository's MIT `LICENSE`. No upstream MIT-licensed file is included, so no upstream notice applies. Templater and Obsidian behavioural facts are cited to the publisher pages listed in [references/plugins.yaml](references/plugins.yaml) and echoed in each finding's `docs` array. The requirement evidence reviewed while authoring, and this package's limitations, are recorded in Git history.

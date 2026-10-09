@@ -1,9 +1,37 @@
-# Existing session spans
+# Agent sessions and topic bundles
 
-Read only the owner-selected existing runtime session and span through an available read-only runtime interface or a selected export. Record the stable session identifier, requested range and what was actually available. Do not create a new whole-session archive, periodic export, event producer or automatic Inbox report.
+## Unit: the topic, not the session
 
-A runtime report, conversation transcript and machine ledger are different records. The destination's actual agent-session and ingest-receipt templates must be inspected when requested, not copied into this package. Report Attempt/Why/Result/Change sections do not prove that a transcript was acquired; an operational receipt's run state does not prove capture fidelity.
+One session is usually thin: a few owner turns that matter, surrounded by tool output. The owner also tends to give several agents related but different jobs on the same subject. So the capture unit is the topic. One candidate holds every selected session that worked on it, and ingest later reads the bundle as one source.
 
-If the runtime, export or span is inaccessible, capture a manifest-only candidate with explicit omissions. A truncated available span is partial. Never fill missing original messages from a previous summary or report. Any reconstruction or interpretation is labelled Agent Capture Notes and never fed to ingest as original text.
+This differs from a multi-platform research bundle, where one question goes to several models and the answers are compared. Here each member had its own task. Record that task; do not line the members up as rival answers to one question.
 
-For a UTF-8 export, the local helper reads inclusive line spans. A line range is not a turn range unless the exporter declares that correspondence. Preserve that distinction in the locator and notes. Live runtime querying requires an actually available tool; the helper does not manufacture a runtime adapter.
+## Building a bundle
+
+1. The owner names the topic and the sessions, or a bounded way to find them ("today's sessions about the inbox redesign"). Read through an available read-only runtime interface or a selected export. Never sweep every session, schedule exports or archive whole sessions.
+2. Give each session one `sources` member with its stable session identifier as `source_identity`, the agent or runtime and range in `source_locator`, and `role`: the task that session was given, in one line.
+3. Choose the mode per member by density:
+   - `excerpt` — the default for a working session: the owner's own turns verbatim (questions, decisions, corrections, concerns) and the agent's conclusions, with tool output left out and named as an omission;
+   - `transcript` — a short session, or one whose reasoning is itself the point;
+   - `manifest-only` — a session that could not be read.
+4. Write the candidate at `{topic-slug}` in the agent lane. A later session on the same topic is a new candidate that names the earlier one in its notes; an existing candidate is never rewritten.
+
+## Agent Capture Notes
+
+Fixed items, each grounded in the members above and labelled as the agent's reading:
+
+- the topic in one paragraph;
+- a manifest table: session, agent, role, mode;
+- what the sessions share — said once, with the members that said it;
+- where they differ: different task, different result, or a real disagreement;
+- the owner's concerns and decisions, with the member each came from;
+- what is missing or unresolved;
+- Wiki pages ingest should create or update.
+
+The last item is the handoff: ingest starts its analysis from that list.
+
+## Limits
+
+A runtime report, a transcript and a machine ledger are different records. A report's Attempt/Why/Result sections do not prove a transcript was acquired. A truncated span is partial. Never fill missing messages from a summary; reconstruction is Agent Capture Notes, never original text.
+
+For a UTF-8 export the helper reads inclusive line spans. A line range is not a turn range unless the exporter says so. Live runtime querying needs an actually available tool; the helper does not manufacture one.

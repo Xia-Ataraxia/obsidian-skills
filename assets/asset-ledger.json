@@ -116,7 +116,7 @@
   "verification": {
     "command": "shasum -a 256 assets/brand/logo.svg assets/brand/hero.svg assets/demo/workflow.svg",
     "note": "Digests were recorded when this ledger was written and re-confirmed against this checkout. Re-run the command and update this file whenever an asset changes; a mismatch means the ledger is stale, not that the asset is cleared.",
-    "status": "verified by tests/test_assets.py: actual hashes, byte counts, complete SVG coverage, rights records, safe SVG structure and bilingual image references",
+    "status": "last verified at 0.3.0: actual hashes, byte counts, complete SVG coverage, rights records, safe SVG structure and bilingual image references",
     "rendering": {
       "local": "Both READMEs were rendered locally (markdown-it and Chromium): hero.svg and workflow.svg loaded with their alt text and nothing overflowed horizontally at 1200 px.",
       "public_host": "not executed — rendering on a public repository host is separate evidence and has not been produced"

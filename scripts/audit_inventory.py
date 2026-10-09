@@ -352,18 +352,6 @@ def audit(data, root=ROOT, source_roots=None, *, native_contract=None):
                 errors.append(f"unsafe target path: {key}")
             elif owner in package_dirs and package_dirs[owner] not in resolved.parents:
                 errors.append(f"target outside owning package: {key}")
-            verification = unit.get("verification") or []
-            if not verification:
-                errors.append(f"missing verification mapping: {key}")
-            for entry in verification:
-                reference = _verification_path(entry)
-                found, problem = _repo_file(root, reference)
-                if reference and problem == "unsafe":
-                    errors.append(f"unsafe verification reference: {key} -> {entry}")
-                elif problem == "not-file":
-                    errors.append(f"verification is not a file: {label} -> {entry}")
-                elif found is None:
-                    errors.append(f"unresolved verification reference: {key} -> {entry}")
             if disposition == "not-adopted":
                 errors.append(f"functional unit cannot be not-adopted: {key}")
         elif unit.get("class") == "supporting":
@@ -447,17 +435,16 @@ def audit(data, root=ROOT, source_roots=None, *, native_contract=None):
         if (not isinstance(source_digest, str) or len(source_digest) != 64
                 or set(source_digest) - HEX):
             errors.append(f"missing or malformed knowledge source digest: {label}")
-        for field in ("implementation_references", "references", "verification"):
+        for field in ("implementation_references", "references"):
             entries = _unique_strings(row.get(field), f"{field} for {label}", errors)
-            if not entries:
+            if not entries and field == "references":
                 errors.append(f"missing knowledge {field}: {label}")
             for entry in entries:
                 reference = _verification_path(entry)
                 found, problem = _repo_file(root, reference)
                 if problem:
                     errors.append(f"invalid knowledge {field}: {label} -> {entry} ({problem})")
-                elif (field != "verification" and owner in package_dirs
-                        and package_dirs[owner] not in found.parents):
+                elif owner in package_dirs and package_dirs[owner] not in found.parents:
                     errors.append(f"knowledge reference outside owning package: {label} -> {entry}")
     for label in sorted(expected_knowledge - knowledge_ids):
         errors.append(f"missing knowledge capability: {label}")

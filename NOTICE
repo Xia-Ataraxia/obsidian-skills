@@ -55,7 +55,7 @@ this repository's root `LICENSE` beside this repository's own copyright line:
 
 Each line is `this repository` <- `upstream path at 3ccff533`. Every one of
 these files was imported and then modified; the modifications are listed in the
-owning package's `CHANGELOG.md`. Each of these four packages also carries a copy
+owning package's Git history. Each of these four packages also carries a copy
 of the MIT text in `skills/<package>/LICENSE` so the notice stays with the
 package when a single package is installed on its own.
 
@@ -113,7 +113,7 @@ code. Those readings yielded facts — a keyword, a field name, an enumeration, 
 version gate — not expression. No file from any project below is vendored,
 reproduced, or redistributed here, so none of them imposes a notice obligation on
 this repository and none of them endorses it. Exact URLs, and where applicable
-exact revisions, are recorded in each package's `CHANGELOG.md` and attribution
+exact revisions, are recorded in each package's Git history and attribution
 section.
 
     Obsidian Help and Obsidian developer documentation   all nine packages
@@ -152,7 +152,7 @@ repository can honour or pass on. Accordingly:
   source is copied into or redistributed by this repository.
 - Every behaviour adopted from it was re-expressed from the underlying
   requirement and grounded in public vendor documentation, which each package
-  cites in its own `CHANGELOG.md`.
+  cites in its own Git history.
 - `source-inventory.json` records all 37 inventoried files of that source with
   their digests and marks every one of them `evidence-only`, which
   `scripts/audit_inventory.py` enforces: a unit may not be marked `imported`
@@ -196,7 +196,7 @@ Upstream package: packages/skill-excalidraw/skills/excalidraw
 
 Original source hashes/bytes, complete tree exclusions and the owning F05
 mapping are in skills/obsidian-visualize/source-map.json. Modifications are
-recorded in the package CHANGELOG and PROVENANCE. No standalone app, font,
+recorded in the package Git history and PROVENANCE. No standalone app, font,
 binary or Obsidian plugin is copied. The following upstream grant is also
 retained verbatim in skills/obsidian-visualize/NOTICE for independent installs:
 

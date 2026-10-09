@@ -13,7 +13,7 @@ A field is a record of something that happened or was decided. Writing a field d
 | query, verify, audit, lint, status, reindex, refresh-context, onboard | task requests/results, including verify_io/audit_io | Approval fields below remain mandatory when applicable; removing Raw metadata never removes task-request approval. |
 | all eleven knowledge consumers | narrative evidence/limitations | Fidelity distinctions below remain meaningful; ingest writes them in body `## Ingest Notes`, not Raw fields. |
 
-The Approval and Fidelity tables describe task records and reports, not required Raw frontmatter. Ingest's package-local frontmatter reference owns its templates. Original evidence remains separate from interpretation. Raw source deletion still requires separate concrete-effect approval and immediate preservation checks.
+The Approval and Fidelity tables describe task records and reports, not required Raw frontmatter. Ingest's package-local frontmatter reference owns its templates. Original evidence remains separate from interpretation. Raw source deletion still requires separate concrete-effect approval and immediate preservation checks; the Inbox-to-Raw move below is the one documented exception.
 
 ## Approval
 
@@ -29,8 +29,9 @@ Approval is an explicit statement by the vault owner about one concrete effect. 
 
 Rules:
 
-- `delete` and `send` are always approved separately. Neither is implied by any other effect, and neither is a default step of any package.
-- Eligibility is not approval. A path that a package may write, an output list, an allowlist or a template's destination list makes an item eligible; it never approves changing that item. Changing an item that already exists needs `update` approval naming that exact item, with its `approval_preimage`, the proposed diff and how to restore it. When the item no longer matches its `approval_preimage`, the approval no longer applies.
+- A request that names a package and a source approves that package's documented standard effects for that source, and nothing wider. For `ingest` these are: create the Raw, create and update Wiki and Map pages, move the Inbox original into Raw, commit locally and reindex. `approval_basis` records the request.
+- Beyond those standard effects, `delete` and `send` are always approved separately. Neither is implied by any other effect. The single standing exception is the second half of ingest's Inbox-to-Raw move: the Inbox original is removed only after the Raw's verbatim original content has been read back and checked against it.
+- Eligibility is not approval. A path that a package may write, an output list, an allowlist or a template's destination list makes an item eligible; it never approves changing that item. Outside a package's documented standard effects, changing an item that already exists needs `update` approval naming that exact item, with its `approval_preimage`, the proposed diff and how to restore it. When the item no longer matches its `approval_preimage`, the approval no longer applies.
 - An approved change to an existing item changes only the approved keys or lines. Unknown keys and every other byte, name and link are preserved; an existing item is never replaced by, or merged from, a freshly generated copy.
 - `partially-approved` requires `approval_scope` to name exactly the approved items. The rest keep `not-requested`.
 - A rejection is recorded and respected. The same request is not repeated in the same task.
@@ -44,12 +45,12 @@ Purpose says why the material is being handled, in the owner's words. It decides
 | Field | Value | Meaning |
 | --- | --- | --- |
 | `purpose` | one or two sentences | Why this material is handled now. |
-| `purpose_origin` | `stated`, `reused`, `unknown` | `stated`: the owner gave it for this item. `reused`: the owner gave it for a batch or an earlier step of the same task. `unknown`: nobody gave one. |
+| `purpose_origin` | `stated`, `reused`, `inferred`, `unknown` | `stated`: the owner gave it for this item. `reused`: the owner gave it for a batch or an earlier step of the same task. `inferred`: the owner asked for it to be decided, and the inference and its reason were shown to them. `unknown`: nobody gave one. |
 
 Rules:
 
 - A purpose the owner has already stated is not asked for again. Reuse it and record `reused`.
-- `unknown` is a legitimate value. Never invent a purpose, a quantity target or a quota to fill the field.
+- `unknown` is a legitimate value. Never invent a purpose to fill the field; infer one only when the owner delegates the decision. A package's documented page target is a target, not a reason to write empty pages.
 - The presence of a `purpose` field does not show that the purpose was met.
 
 ## Source
