@@ -48,8 +48,7 @@ present; the package was written here.
   `.claude-plugin/plugin.json` independently declares `"license": "MIT"`.
 - Rights exercised: copy and modify, with the notice retained. `Copyright (c) 2026
   Steph Ango (@kepano)` appears in this repository's root `LICENSE`, in `NOTICE`
-  with the full permission text, and in the `references/LICENSE` file of each of the four
-  packages that contain derived files.
+  with the full permission text, and in the README attribution.
 - Files imported: nine, listed one by one in `NOTICE` section 1.1 and digest-pinned
   in `source-inventory.json` as `mit-import`.
 - Read but not imported: its `README.md` and two plugin manifests, consulted for
