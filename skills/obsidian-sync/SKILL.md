@@ -3,7 +3,7 @@ name: obsidian-sync
 description: Operates the headless `ob` client (npm package `obsidian-headless`) for Obsidian Sync from a terminal with no desktop app - pairing one exact local vault path to one exact remote vault, choosing `pull-only`/`bidirectional`/`mirror-remote`, running one-shot or `--continuous` sync under a supervisor, and containing sync incidents. Use when the user asks to set up, inspect, or repair headless sync on a server, VPS, or replica machine, says notes disappeared or were reverted after a sync, hits `The connected remote vault no longer exists`, `Failed to validate password`, `No sync configuration found`, `Encryption version not supported`, or `Another sync instance is already running`, finds `(Conflicted copy ...)` files, or needs a sync daemon started, stopped, restarted, or supervised. Not for GUI Sync settings, not for the official `obsidian` desktop CLI, and not for Obsidian Publish.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.5.0"
 ---
 
 # Obsidian Headless Sync

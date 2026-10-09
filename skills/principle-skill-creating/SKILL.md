@@ -3,7 +3,7 @@ name: principle-skill-creating
 description: Apply when creating, editing, reviewing or trimming an Agent Skill package - deciding what belongs in SKILL.md versus templates, scripts, agents or references, whether a helper script or test should exist, and what to delete. Use for 스킬 만들기, 스킬 고쳐줘, 스크립트로 강제하지 마, 템플릿으로 빼자, skill authoring and skill review.
 license: MIT
 metadata:
-  version: "0.3.1"
+  version: "0.5.0"
 ---
 
 # Skill creating

@@ -61,7 +61,7 @@ COPIER="${REPO_DIR}/scripts/install_packages.py"
 PYTHON=''
 
 PKG_NAME=secondbrain-skills
-PKG_VERSION=0.3.0
+PKG_VERSION=0.5.0
 PKG_STATUS=prerelease
 # The recommended public source revision: the newest merged main commit whose
 # package tree is current. A commit cannot name its own hash, so after a release
