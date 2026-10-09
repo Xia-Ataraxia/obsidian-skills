@@ -73,6 +73,8 @@ def obtain(root: Path, source: Dict[str, Json]) -> Dict[str, Json]:
             raise Refused("invalid " + key)
         result[key] = source[key]
     result["source_locator"] = locator(source.get("source_locator"))
+    # What this member was doing in the bundle; a label, never original text.
+    result["role"] = text(source.get("role", ""), "role", empty=True)
     identity = text(source.get("source_identity", ""), "source_identity", empty=True)
     if identity:
         # Digests are identities, not locations.
@@ -168,7 +170,7 @@ def capture(root: Path, request: Dict[str, Json]) -> Dict[str, Json]:
     obtained = [obtain(root, source) for source in sources]
     purpose = text(request.get("purpose", ""), "purpose", empty=True)
     origin = request.get("purpose_origin", "unknown")
-    if origin not in ("stated", "reused", "unknown") or (origin != "unknown" and not purpose.strip()):
+    if origin not in ("stated", "reused", "inferred", "unknown") or (origin != "unknown" and not purpose.strip()):
         raise Refused("invalid purpose_origin")
     if origin == "unknown" and purpose:
         raise Refused("unknown purpose must be empty")
@@ -193,7 +195,8 @@ def capture(root: Path, request: Dict[str, Json]) -> Dict[str, Json]:
     header = "\n".join(key + ": " + json.dumps(value, ensure_ascii=False) for key, value in fields.items())
     sections = []
     for index, source in enumerate(obtained, 1):
-        sections.append("### Source " + str(index) + "\n\n" + str(source["original_content"]))
+        role = str(source["role"]).replace("\n", " ")
+        sections.append("### Source " + str(index) + (" — " + role if role else "") + "\n\n" + str(source["original_content"]))
     body = "---\n" + header + "\n---\n\n# " + title.replace("\n", " ") + "\n\n## Original Content\n\n"
     body += "\n\n".join(sections) + "\n\n## Agent Capture Notes\n\n" + notes + "\n"
     if destination.exists():

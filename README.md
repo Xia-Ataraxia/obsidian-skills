@@ -138,7 +138,6 @@ First use after any install: ask your agent for the task in plain language and n
 | `obsidian-visualize` rendered scenes | Excalidraw plugin in the vault | 2.27.3 in the same isolated vault: a five-element scene rendered in the actual plugin view |
 | `obsidian-clipper` | Obsidian Web Clipper browser extension | 1.7.1 in a disposable browser profile: settings rendered, the shipped template imported, and a live page extracted in the popup; delivery into a vault is unverified |
 | `obsidian-sync` | npm `obsidian-headless` (`ob`) and an Obsidian Sync account | existing 0.0.14: help and local unpaired-directory refusal only |
-| Running the candidate test suite | `pip install -r requirements-dev.txt` (PyYAML) | Python 3.14.7 / PyYAML 6.0.3; local suite passed |
 
 The installer front end is POSIX `sh`; `copy` requires Python 3.8+ and anchored filesystem operations. Atomic publication supports macOS/Linux, refusing unsupported platforms. Tested here on macOS arm64 with Python 3.14.7; Linux and Python 3.8 runtime behavior remain unverified.
 
@@ -245,7 +244,7 @@ skills/<name>/           one self-contained package each (SKILL.md, references/,
 install.sh               route table, collision-checked copy installer
 assets/                  original brand and demo art + asset-ledger.json
 docs/                    install matrix, verification matrix, security, cutover
-tests/                   isolated candidate test suite (see requirements-dev.txt)
+tests/evidence/          recorded release evidence (JSON reports)
 scripts/audit_inventory.py   responsibility-unit audit
 AGENTS.md                repository contract for contributors and agents
 ```
@@ -254,7 +253,7 @@ AGENTS.md                repository contract for contributors and agents
 
 MIT — see [LICENSE](LICENSE), which carries both copyright notices.
 
-Material in `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, and `obsidian-cli` is imported from [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98` (MIT, Copyright © 2026 Steph Ango), then modified. The other five native packages and the eleven knowledge packages are authored here, except for two `ingest` helpers and their tests, which were transferred from a private source with origin rights still unconfirmed; see [PROVENANCE.md](PROVENANCE.md). Each package's `CHANGELOG.md` records the exact source revision, the files taken, and every modification made to them.
+Material in `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, and `obsidian-cli` is imported from [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98` (MIT, Copyright © 2026 Steph Ango), then modified. The other five native packages and the eleven knowledge packages are authored here, except for two `ingest` helpers and their tests, which were transferred from a private source with origin rights still unconfirmed; see [PROVENANCE.md](PROVENANCE.md). Each package's Git history records the exact source revision, the files taken, and every modification made to them.
 
 The eleven knowledge packages take their operation set and LLM-wiki workflow from Yohan Koo (구요한)'s [cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki), which itself credits Andrej Karpathy's LLM Wiki pattern. This is design inspiration only: no files or text were copied, and because that repository publishes no license, nothing from it is redistributed here. No endorsement is claimed. See [PROVENANCE.md](PROVENANCE.md).
 

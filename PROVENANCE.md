@@ -11,8 +11,8 @@ Three records work together and must agree:
 | `NOTICE` | the third-party notices, verbatim, plus the file-by-file import map |
 | this file | the readable lineage: which source, which revision, which rights, which relationship |
 
-Per-change detail lives in each package's `CHANGELOG.md`; skill bodies may summarize attribution. `scripts/audit_inventory.py` enforces the agreement between the
-inventory and the tree; `tests/test_inventory.py` covers the audit itself.
+Per-change detail lives in each package's Git history; skill bodies may summarize attribution. `scripts/audit_inventory.py` enforces the agreement between the
+inventory and the tree.
 
 ## The nine features
 
@@ -72,7 +72,7 @@ present; the package was written here.
   example, asset, or corpus prompt/response from that source is copied into or
   redistributed by this repository.** Every behaviour adopted from it was
   re-expressed from the underlying requirement and grounded in public vendor
-  documentation, cited per package in that package's `CHANGELOG.md`.
+  documentation, cited per package in that package's Git history.
   Source paths, stable unit identifiers, and digests are retained for inventory
   and attribution, not as a redistributed evaluation corpus.
 - What was taken: the *requirements*. That source is a single thick Obsidian
@@ -94,7 +94,7 @@ addition is an additive owner-local source map in
 `skills/obsidian-visualize/source-map.json`, with exact revision, complete package
 tree/digests, retained MIT notice, exclusions and verification paths. It is not
 represented as newly authenticated native rows or as part of an earlier release
-seal. Package `PROVENANCE.md` and `CHANGELOG.md` record the source-only
+seal. Package `PROVENANCE.md` and Git history record the source-only
 implementation revision 0.2.0; collection metadata became 0.2.0 on 2026-10-07.
 
 Complete, digest-pinned, and audited:
@@ -139,7 +139,7 @@ Several packages ground a format, command, or schema fact in a public third-part
 project. Those readings produced facts, not text: no file from any of them is
 vendored here, so none of them imposes a notice obligation and none of them
 endorses this repository. Each package cites its own list with exact URLs, and
-usually exact revisions, in its `CHANGELOG.md` and attribution section; `NOTICE`
+usually exact revisions, in its Git history and attribution section; `NOTICE`
 section 2.1 carries the consolidated list.
 
 ## Knowledge operation set — design inspiration, nothing copied
@@ -167,15 +167,7 @@ lineage with their own unresolved rights.
 
 ## Verification mapping
 
-Every functional unit names the target file that now carries the behaviour and at
-least two verification references, each of which must resolve to a real path:
-
-- a package section — the owning `SKILL.md` or reference file, usually its
-  `Verification` checklist;
-- a repository test — `tests/test_packages.py`, `tests/test_contracts.py`,
-  `tests/test_install.py`, `tests/test_visualize.py`, `tests/test_doctor.py`, or
-  `tests/test_inventory.py`;
-- or the cross-package matrix in `docs/verification-matrix.md`.
+Every functional unit names the target file that now carries the behaviour.
 
 `python3 scripts/audit_inventory.py` checks the mapping, the single-owner rule,
 the owner-to-package match, the rights consistency, and the presence of the
@@ -264,7 +256,7 @@ remain unchanged.
   installed-version evidence, conflict disclosure and unknown facts; per-change
   source/version records and affected evaluations when either moves; and the
   prospective runtime-change order of documentation, evaluations, recipe,
-  version and changelog. It preserves relied-on description triggers, including
+  version. It preserves relied-on description triggers, including
   non-English intent, and the seven native operating steps: exact artifact and
   effect, read first, preserve unrelated content, least destructive supported
   selected surface, exact readback, evidence and prerequisites, unknown runtime
@@ -297,6 +289,19 @@ help/version probes timed out. No current registry execution, live routing or
 runtime behavior is proved. Earlier version-specific tests remain historical;
 no unchanged suite is rerun for these prose records.
 
+## Ingest and capture workflow adoption — Unreleased
+
+Source read: [cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki) at
+`863ca43778e639d96a31f71fb388ee000336d0ff` — its `/ingest`, paper-ingest and
+`/capture-tabs` command documents and the twelve-step analysis scheme. That
+repository still carries no license, so the relationship stays design inspiration:
+the single-run ingest, the page target, update-or-create, Map updates, the
+twelve-axis paper pipeline and topic bundles were adopted as procedures and
+rewritten here. No file, template, script or passage was copied; its verifier
+script is replaced by a checklist. `skills/ingest/references/comparison.md`
+records each decision. The `references/interface.md` named for `skills/ingest`
+in the section below no longer exists.
+
 ## Knowledge registration and resource corrections — Unreleased
 
 Source baseline: existing local revision
@@ -308,7 +313,7 @@ Source baseline: existing local revision
   Native registration, collection identity and all other metadata are unchanged.
 - The existing `references/interface.md` in `skills/ingest`, `skills/audit`,
   `skills/lint` and `skills/verify` now declares ten existing package-local helper
-  paths and their roles. Their owning changelogs record the details; no helper,
+  paths and their roles. Git history records the details; no helper,
   callable role, protocol, dispatcher or shared runtime was added.
 
 No code or asset was imported, copied, modified or relicensed by these corrections.
@@ -344,7 +349,7 @@ community-source CAUTION verdict:
   copy that set `PYTHONIOENCODING` for qmd.
 
 All four were false positives. The three documents were reworded with the same
-meaning, and `reindex` stopped copying the environment; see `CHANGELOG.md`. The
+meaning, and `reindex` stopped copying the environment; see Git history. The
 same v0.21.5 `scan_skill` was rerun locally over every `skills/<name>` directory
 of this tree. That is a scanner verdict, not a host install or fresh-load. No
 code or asset was imported, copied or relicensed. The `0.2.0` results and every
@@ -378,7 +383,7 @@ remain necessary before later publication or deployment.
 - Provenance records authorship and rights. It is not runtime evidence: what has
   and has not been exercised against a running Obsidian app, CLI, plugin, or sync
   service is recorded in `docs/verification-matrix.md` and in each package's
-  `CHANGELOG.md`, and unverified claims stay marked unverified there.
+  Git history, and unverified claims stay marked unverified there.
 - Only synthetic, public examples appear in shipped files. No credential, account
   identifier, workstation path, private note, or internal planning document is
   reproduced in this repository, including in this record.

@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""List Inbox candidates, emit one inbox/handoff@1 batch, delete only after 5-C.
+"""List Inbox candidates and emit one inbox/handoff@1 batch.
 
 Python >=3.8, stdlib only. Location is the processing state: there is no queue
-status. list/preview/handoff never write; delete unlinks only separately approved
-originals whose ingest session state proves the Raw preserved them (5-C).
+status. Nothing here writes: ingest moves a candidate into Raw and removes it.
 """
 
 import argparse
-import base64
 import hashlib
 import json
 import os
@@ -138,7 +136,7 @@ def handoff(root, scope, request):
     """One purpose-bearing batch; groups join proven identity/locator, never titles."""
     candidates = selected(root, scope, request)
     purpose, origin = request.get("purpose", ""), request.get("purpose_origin", "unknown")
-    if not isinstance(purpose, str) or origin not in ("stated", "reused", "unknown"):
+    if not isinstance(purpose, str) or origin not in ("stated", "reused", "inferred", "unknown"):
         raise Refused("invalid common purpose")
     if (origin == "unknown") == bool(purpose.strip()) or (origin == "unknown" and purpose):
         raise Refused("purpose must be empty exactly when its origin is unknown")
@@ -168,68 +166,6 @@ def handoff(root, scope, request):
             "mutations_performed": []}
 
 
-def decode(value):
-    """Inverse of ingest's session-state encoding ({"bytes_base64": ...} leaves)."""
-    if isinstance(value, dict):
-        if set(value) == {"bytes_base64"}:
-            return base64.b64decode(value["bytes_base64"], validate=True)
-        return {k: decode(v) for k, v in value.items()}
-    if isinstance(value, list):
-        return [decode(v) for v in value]
-    return value
-
-
-def read_or_none(path):
-    return path.read_bytes() if path.is_file() else None
-
-
-def predicate_5c(root, scope, name, session):
-    """5-C: fresh original, exact Original Content span, independent Raw postimage."""
-    approved = session["inputs"].get(name)
-    captures = [c for c in session["captures"] if c.get("input") == name]
-    if not isinstance(approved, bytes) or not captures:
-        raise Refused("no ingest capture of this Inbox original: " + name)
-    if read_or_none(within(root, scope, name)) != approved:
-        raise Refused("stale original: current bytes differ from approved Inbox input: " + name)
-    for capture in captures:
-        start, end = capture["extent"]
-        expected = next((r["after"] for r in session["changes"] if r["path"] == capture["path"]), None)
-        if not isinstance(expected, bytes) or expected[start:end] != capture["selected"]:
-            raise Refused("session expected postimage does not hold the selected span: " + capture["path"])
-        raw = read_or_none(path_in(root, capture["path"]))
-        if raw is None or raw[start:end] != capture["selected"]:
-            raise Refused("Raw Original Content span mismatch: " + capture["path"])
-        if raw != expected:
-            raise Refused("Raw postimage mismatch: " + capture["path"])
-
-
-def delete(root, scope, request, session):
-    """Unlink separately approved originals; preflight all, recheck 5-C before each unlink."""
-    names = request.get("approval_scope")
-    preimages = request.get("approval_preimage")
-    if (request.get("approval_state") not in ("approved", "partially-approved")
-            or request.get("approval_effect") != ["delete"]
-            or not isinstance(request.get("approval_basis"), str) or not request["approval_basis"].strip()
-            or not isinstance(names, list) or not names or not isinstance(preimages, dict)
-            or set(preimages) != set(names)):
-        raise Refused("deletion needs a separate exact-path delete approval")
-    if session.get("vault") != str(root):
-        raise Refused("ingest session belongs to another vault")
-    for name in names:
-        if preimages[name] != sha(session["inputs"].get(name, b"")):
-            raise Refused("delete approval is not bound to the ingested input bytes: " + name)
-        predicate_5c(root, scope, name, session)
-    removed = []
-    try:
-        for name in names:
-            predicate_5c(root, scope, name, session)
-            within(root, scope, name).unlink()
-            removed.append(name)
-    except (Refused, OSError) as exc:
-        raise Refused("partial deletion; removed_paths=" + json.dumps(removed) + "; " + str(exc)) from exc
-    return {"deleted_paths": removed, "mutations_performed": removed}
-
-
 def load(path, root, what):
     if path is None or path.is_symlink() or not path.is_file():
         raise Refused(what + " must be a regular JSON file")
@@ -243,12 +179,11 @@ def load(path, root, what):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("list", "preview", "handoff", "delete"))
+    parser.add_argument("command", choices=("list", "preview", "handoff"))
     parser.add_argument("--vault", type=Path, required=True)
     parser.add_argument("--scope", required=True, help="vault-relative Inbox, e.g. '00. Inbox'")
     parser.add_argument("--candidate")
     parser.add_argument("--request", type=Path)
-    parser.add_argument("--ingest-state", type=Path, help="delete: ingest session state of the run that wrote the Raw")
     args = parser.parse_args(argv)
     try:
         root = args.vault.resolve(strict=True)
@@ -258,11 +193,8 @@ def main(argv=None):
             result = listing(root, scope)
         elif args.command == "preview":
             result = read_candidate(root, scope, args.candidate or "")
-        elif args.command == "handoff":
-            result = handoff(root, scope, load(args.request, root, "request"))
         else:
-            session = decode(load(args.ingest_state, root, "ingest state"))
-            result = delete(root, scope, load(args.request, root, "request"), session)
+            result = handoff(root, scope, load(args.request, root, "request"))
     except (Refused, OSError, UnicodeError, ValueError, TypeError, KeyError, AttributeError) as exc:
         print(json.dumps({"refused": str(exc)}))
         return 1

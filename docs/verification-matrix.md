@@ -187,11 +187,7 @@ Not established: a runtime load of any knowledge package, automatic discovery, a
 | Original assets | `tests/test_assets.py` checks every SVG against its rights ledger, exact hashes/bytes, safe XML and bilingual image references. |
 | Native metadata | `claude plugin validate . --strict` and validation of `.claude-plugin/plugin.json` passed; actual invocations and observed results are in [native-manifests.json](../tests/evidence/native-manifests.json). The other native JSON manifests parsed only. Loading is verified for Claude Code, in the canary above, and for Hermes, which reads no manifest from this repository and registers one unit per skill; it remains unverified for Codex, GJC, Grok, Cursor and vendor-neutral Agent Skills. |
 
-The integrated suite is run with `python3 -m unittest discover -s tests -t . -v`.
-Supply `OBSIDIAN_SKILLS_CRAFT_SOURCE` and `OBSIDIAN_SKILLS_UPSTREAM_SOURCE` pointing
-at the exact read-only source checkouts to exercise the otherwise opt-in real-digest
-test. No formatter is configured; syntax, semantic tests and whitespace checks
-are separate from formatting.
+The `tests/test_*.py` rows above record what ran for the 0.3.0 release; the suite was removed afterwards. The remaining checks are `claude plugin validate . --strict`, `python3 scripts/sync_contracts.py --check` and `python3 scripts/audit_inventory.py`.
 
 Browser selector checks are recorded in [clipper-selectors.json](../tests/evidence/clipper-selectors.json):
 synthetic selectors returned expected values and class-name drift returned no match.

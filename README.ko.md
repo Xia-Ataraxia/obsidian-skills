@@ -138,7 +138,6 @@ git checkout c8c3a63d71a732eb7e5bcc39124fac5313937ddc   # current 0.3.0 release 
 | `obsidian-visualize` 장면 렌더링 | 볼트에 설치된 Excalidraw 플러그인 | 같은 격리 볼트의 2.27.3: 요소 다섯 개 장면을 실제 플러그인 뷰에서 렌더 확인 |
 | `obsidian-clipper` | Obsidian Web Clipper 브라우저 확장 | 폐기용 브라우저 프로필의 1.7.1: 설정 화면 렌더, 동봉 템플릿 가져오기, 실제 페이지 추출까지 확인; 볼트로의 전달은 미검증 |
 | `obsidian-sync` | npm `obsidian-headless`(`ob`)와 Obsidian Sync 계정 | 기존 0.0.14: 도움말 및 미연결 로컬 디렉터리 거부만 확인 |
-| 후보 테스트 스위트 실행 | `pip install -r requirements-dev.txt` (PyYAML) | Python 3.14.7 / PyYAML 6.0.3; 로컬 스위트 통과 |
 
 설치 프런트엔드는 POSIX `sh`이며 `copy`는 Python 3.8 이상과 디렉터리 핸들 기반 파일 연산이 필요합니다. 원자적 게시는 macOS/Linux를 지원하며 다른 플랫폼에서는 거부합니다. macOS arm64와 Python 3.14.7에서 시험했고 Linux 및 Python 3.8 런타임 동작은 미검증입니다.
 
@@ -245,7 +244,7 @@ skills/<name>/           패키지마다 독립 (SKILL.md, references/, scripts/
 install.sh               라우트 테이블 + 충돌 검사 복사 설치 스크립트
 assets/                  직접 제작한 브랜드·데모 아트와 asset-ledger.json
 docs/                    설치 표, 검증 표, 보안, 전환 절차
-tests/                   격리 후보 테스트 스위트 (requirements-dev.txt 참고)
+tests/evidence/          릴리스 검증 기록 (JSON 보고서)
 scripts/audit_inventory.py   책임 단위 감사
 AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 ```
@@ -254,7 +253,7 @@ AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 
 MIT — 두 저작권 고지가 모두 담긴 [LICENSE](LICENSE)를 참고하십시오.
 
-`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 `CHANGELOG.md`에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
+`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 Git history에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
 
 지식 패키지 열한 개의 작업 구성과 LLM 위키 워크플로는 구요한(Yohan Koo)의 [cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki)에서 착안했습니다. 그 저장소 역시 Andrej Karpathy의 LLM Wiki 패턴을 출처로 밝힙니다. 설계상의 영감일 뿐 파일이나 문장은 복사하지 않았으며, 그 저장소는 라이선스를 공개하지 않으므로 여기서 재배포하는 것은 없습니다. 보증이나 제휴 관계를 주장하지 않습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오.
 

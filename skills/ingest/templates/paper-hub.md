@@ -27,17 +27,39 @@ source: []
 - Full/current: [[{{current_raw}}]] — {{actual_coverage}}
 - Excerpt/earlier: [[{{earlier_raw}}]] — {{actual_coverage}}
 
+## Citation (S01)
+
+{{full_reference_and_doi}}
+
 ## Overview
 
-{{supported_contribution}}
-
-## Methodology
-
-{{design_evidence_and_limits}}
+{{purpose_type_strategy_and_supported_contribution}}
 
 ## Coverage Map
 
-{{obtained_analyzed_and_unreviewed_ranges}}
+| Original section | Atoms | Omitted or unreviewed |
+| --- | --- | --- |
+| {{section}} | {{atom_links}} | {{stated_omission}} |
+
+## Step Map
+
+| Axis | State (done / stub / gap) | Atoms |
+| --- | --- | --- |
+| S02 Purpose and general rationale | {{state}} | {{atom_links}} |
+| S03 Fit and specific rationale | {{state}} | {{atom_links}} |
+| S04 {{type_variant}} | {{state}} | {{atom_links}} |
+| S05 {{type_variant}} | {{state}} | {{atom_links}} |
+| S06 {{type_variant}} | {{state}} | {{atom_links}} |
+| S07 {{type_variant}} | {{state}} | {{atom_links}} |
+| S08 {{type_variant}} | {{state}} | {{atom_links}} |
+| S09 {{type_variant}} | {{state}} | {{atom_links}} |
+| S10 Conclusions | {{state}} | {{atom_links}} |
+| S11 Cautions | {{state}} | {{atom_links}} |
+| S12 Discussion and writing value | {{state}} | {{atom_links}} |
+
+## Atom Catalog
+
+- [[{{atom}}]] — {{the_one_question_it_answers}}
 
 ## Ingest Notes
 

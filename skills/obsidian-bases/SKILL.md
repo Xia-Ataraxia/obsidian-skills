@@ -730,4 +730,4 @@ Passing this list proves the document is well formed. It does not prove the file
 
 ## Attribution
 
-The format documentation and examples in this package are derived from the `obsidian-bases` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98`, MIT License, Copyright (c) 2026 Steph Ango (@kepano). That material has been modified here. See [CHANGELOG.md](CHANGELOG.md) for the recorded revision, the modifications, and the evidence behind the additions.
+The format documentation and examples in this package are derived from the `obsidian-bases` skill in [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) at commit `3ccff5338ea700537839b21900aa5358a0402c98`, MIT License, Copyright (c) 2026 Steph Ango (@kepano). That material has been modified here. See Git history for the recorded revision, the modifications, and the evidence behind the additions.

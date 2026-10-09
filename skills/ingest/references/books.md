@@ -7,7 +7,7 @@ Unread or unobtained chapters remain not-obtained/not-compiled and get no fabric
 
 ## Book Ingest Mode — B-1–B-5 and Promotion
 
-Adopted from 구요한 `/ingest` at `863ca43`: preserve the progressive procedure below. Only adaptations are Apatheia paths, the compact frontmatter/status override and git history replacing index/log. The helper's exact request keys and refusals are in [interface](interface.md#json-request) and [Book promotion](interface.md#book-promotion); this page states the procedure they implement.
+Adopted from 구요한 `/ingest` at `863ca43`: preserve the progressive procedure below. Only adaptations are Apatheia paths, the compact frontmatter/status override and git history replacing index/log.
 
 ### B-1 — Fetch TOC and URL pattern
 
@@ -17,15 +17,15 @@ This URL acquisition remains the contract for web books. A commercial or offline
 
 ### B-2 — Create Book Index (one Raw)
 
-Use `templates/book-index.md` under `10. Raw Sources/03 Books`, named `YYYY-MM-DD-{authorSlug}-{bookSlug}-book-index.md`. A scaffold request (`source_kind: book` with a nonempty `chapters` list) requires `book_title`, the exact obtained one-line title rendered as the Index `# ` heading; it is never derived from the path. The preface is preserved verbatim in Original Content. TOC has every chapter as `- [ ] [[stub]] — {obtained title}`, followed by ` — {toc_description}` only when the TOC source supplied that one-liner, grouped under `### {Part}` headings when parts are given (unparted chapters may only precede the first Part). Reading Paths holds the optional `reading_paths` verbatim (multiline kept byte-for-byte; level-1/2 headings refuse); an absent value and an explicit `null` (reported unavailable) each render a distinct `Not recorded:` line, never inferred paths. Progress Tracking is `| Ch | Title | Status | Read on |` with one `| N | [[stub]] | stub | — |` row per chapter. Ingest Notes record how many chapter locators and TOC descriptions were supplied and the Reading Paths state; these counts prove what the request supplied, not faithful acquisition. The Index has no chapterNumber and no status.
+Use `templates/book-index.md` under `10. Raw Sources/03 Books`, named `YYYY-MM-DD-{authorSlug}-{bookSlug}-book-index.md`. The Index `# ` heading is the exact obtained one-line title, never derived from the path. The preface is preserved verbatim in Original Content. TOC has every chapter as `- [ ] [[stub]] — {obtained title}`, followed by ` — {toc_description}` only when the TOC source supplied that one-liner, grouped under `### {Part}` headings when parts are given (unparted chapters may only precede the first Part). Reading Paths holds the source's reading paths verbatim; an absent value and an explicit `null` (reported unavailable) each render a distinct `Not recorded:` line, never inferred paths. Progress Tracking is `| Ch | Title | Status | Read on |` with one `| N | [[stub]] | stub | — |` row per chapter. Ingest Notes record how many chapter locators and TOC descriptions were supplied and the Reading Paths state; these counts state what was obtained, not that it was checked. The Index has no chapterNumber and no status.
 
 ### B-3 — Create N chapter stubs
 
-Use `templates/book-chapter.md` in the same Books location, named `YYYY-MM-DD-{authorSlug}-{bookSlug}-ch{NN}-{slug}.md`. Each `chapters` entry is `{path, title, part?, locator?, toc_description?}`. Supply `locator` only as obtained evidence (a direct chapter URL also fills `source_url`); never invent one. A stub without a recorded locator cannot be promoted later. Supply `toc_description` only when the source gives a one-liner: it becomes `description` and TOC Preview; otherwise `description` is `""` and TOC Preview states that none was supplied, and the title is never relabelled as a one-liner. The stub keeps inherited book purpose, `status: stub`, integer chapterNumber, original-language chapterPart, bookIndex and chapterPrev/chapterNext links (null at endpoints) to its adjacent TOC chapters. Its body renders the title, the Source section (direct URL or an explicit `Not recorded:` line, Book link, previous/next), TOC Preview, Original Content's explicit non-empty pending-fill placeholder, an empty human Reading Notes section and Ingest Notes. Acquisition time means scaffold time, not chapter-read time. No chapter-specific Wiki pages yet. Validation allows explicitly marked stubs without treating placeholders as source evidence.
+Use `templates/book-chapter.md` in the same Books location, named `YYYY-MM-DD-{authorSlug}-{bookSlug}-ch{NN}-{slug}.md`. Record a chapter `source_locator` only as obtained evidence (a direct chapter URL also fills `source_url`); never invent one. A stub without a recorded locator cannot be promoted later. Supply `toc_description` only when the source gives a one-liner: it becomes `description` and TOC Preview; otherwise `description` is `""` and TOC Preview states that none was supplied, and the title is never relabelled as a one-liner. The stub keeps inherited book purpose, `status: stub`, integer chapterNumber, original-language chapterPart, bookIndex and chapterPrev/chapterNext links (null at endpoints) to its adjacent TOC chapters. Its body renders the title, the Source section (direct URL or an explicit `Not recorded:` line, Book link, previous/next), TOC Preview, Original Content's explicit non-empty pending-fill placeholder, an empty human Reading Notes section and Ingest Notes. Acquisition time means scaffold time, not chapter-read time. No chapter-specific Wiki pages yet. Validation allows explicitly marked stubs without treating placeholders as source evidence.
 
 ### B-4 — Book-level Wiki only
 
-Compile only what TOC/preface supports: book Entity, author Entity, optional companion-site Entity, 1–3 anchor Concepts named in the preface, and optional 0–1 Guide if the preface provides reusable methodology. Link Book Index to an existing relevant Map with an exact approved diff. If no Map exists, report absence; never create one. Do not precompile unread chapter concepts.
+Compile only what TOC/preface supports: book Entity, author Entity, optional companion-site Entity, 1–3 anchor Concepts named in the preface, and optional 0–1 Guide if the preface provides reusable methodology. Link the Book Index from the relevant Map, creating the Map when none exists (Step 4). Do not precompile unread chapter concepts.
 
 ### B-5 — Record scaffold
 
@@ -33,15 +33,15 @@ One git commit records the whole scaffold and its actually compiled book-level k
 
 ### Promotion — when a chapter is selected for reading
 
-Promotion is a guarded update member carrying `promotion` instead of `preserve`; it needs a stated or reused purpose.
+Promotion fills one chapter stub the owner has read. It reuses the book's purpose.
 
-1. Acquire the chapter from the stub's recorded locator (`source_locator`, else `source_url`) and save the verbatim text outside the vault, digest-bound as `text_file`/`text_sha256`. Record the exact placeholder `[start,end)` and its digest from the current stub bytes: it must equal the template's pending-fill placeholder and be the whole Original Content section.
-2. The reviewed chapter postimage equals the preimage with only that span replaced by the acquired bytes, plus `status` and `date_modified` rewritten. All other bytes stay, including Source, TOC Preview, human Reading Notes, Ingest Notes and the five navigation fields.
-3. Coverage decides status: `full` → `completed`; `partial` or `excerpt` → `reading`. Only `status: stub` is promotable. A later `reading`→`completed` change has no supported surface: an ordinary update cannot rewrite Raw Original Content and promotion refuses non-stubs. Report it as unsupported; never fake it.
-4. Before any write, `bookIndex` must resolve to the promotion Index and `chapterPrev`/`chapterNext` to the adjacent TOC chapters (null at the endpoints).
-5. The reviewed Index postimage changes only this chapter's TOC checkbox `[ ]`→`[x]` (ticked for both `reading` and `completed`, because the chapter was actually read) and its Progress row to `| N | [[chapter]] | reading-or-completed | date |`. The row keeps partial coverage explicit. Any other Index change refuses.
-6. Optional `analyses` quote the acquired chapter text and target neither the chapter nor its Index. Update existing Concepts/Entities first, through their own reviewed members.
-7. The chapter, Index and analyses form one session: one apply and, with `--git`, one `ingest:` commit. Read back every result; never append to log.md.
+1. Acquire the chapter verbatim from the stub's recorded locator (`source_locator`, else `source_url`). The stub's Original Content must still be exactly the template's pending-fill placeholder.
+2. Replace only that placeholder with the acquired text, and rewrite `status` and `date_modified`. All other bytes stay, including Source, TOC Preview, human Reading Notes, Ingest Notes and the five navigation fields.
+3. Coverage decides status: `full` → `completed`; `partial` or `excerpt` → `reading`. Only `status: stub` is promotable. A later `reading`→`completed` change needs the missing text as a new full Raw; an existing Original Content is never rewritten.
+4. Before writing, `bookIndex` must resolve to the promotion Index and `chapterPrev`/`chapterNext` to the adjacent TOC chapters (null at the endpoints).
+5. In the Index change only this chapter's TOC checkbox `[ ]`→`[x]` (ticked for both `reading` and `completed`, because the chapter was actually read) and its Progress row to `| N | [[chapter]] | reading-or-completed | date |`. The row keeps partial coverage explicit. Nothing else in the Index changes.
+6. Compile the chapter's Wiki pages by Step 3, quoting the acquired text: update existing Concepts and Entities first.
+7. The chapter, Index and Wiki pages are one `ingest:` commit. Read back every result, then reindex.
 
 ## Bibliographic acquisition
 

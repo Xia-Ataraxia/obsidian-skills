@@ -124,7 +124,7 @@ Bundled Mermaid:      unknown unless the app's own release notes state it
 
 Do not invent the bundled Mermaid version. Obsidian's user-facing settings report the app and installer versions; the Mermaid version underneath is not part of that surface, and a guessed number is worse than an honest `unknown` because it will be reused as if it were measured.
 
-A source-informed baseline for one installation is recorded in this package's CHANGELOG. It was not reproduced here, it describes someone else's machine, and it does not substitute for probing yours.
+A source-informed baseline for one installation is recorded in this package's Git history. It was not reproduced here, it describes someone else's machine, and it does not substitute for probing yours.
 
 ## Sources
 
@@ -137,4 +137,4 @@ A source-informed baseline for one installation is recorded in this package's CH
 - Mermaid XY chart syntax — <https://mermaid.js.org/syntax/xyChart.html>
 - Obsidian advanced formatting help, for the `mermaid` fence and `internal-link` class — <https://help.obsidian.md/advanced-syntax>
 
-When one of these changes the grammar or a version gate, re-probe the affected family, fix the catalog entry, and append the CHANGELOG.
+When one of these changes the grammar or a version gate, re-probe the affected family, and fix the catalog entry.

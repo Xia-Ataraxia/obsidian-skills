@@ -1,3 +1,0 @@
-# Stale index
-
-- [[Wiki/Attention]]

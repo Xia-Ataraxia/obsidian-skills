@@ -1,70 +1,102 @@
 ---
 name: ingest
-description: Preserve selected URL, file, text or Inbox evidence as Raw and compile source-grounded Entity, Concept, Paper, Book, Persona or Guide knowledge. Use for ingest, paper analysis, book notes (책 노트, 독서 노트, 목차 넣어줘), chapter promotion and attributed Persona updates. Not automatic collection, corpus indexing, personal profiles or undesignated research questions.
+description: Turn one selected URL, file, text or Inbox candidate into a preserved Raw source plus 10–15 created or updated Wiki pages, updated Maps and a refreshed index, in a single run. Use for ingest, paper analysis (12-axis), book notes (책 노트, 독서 노트, 목차 넣어줘), chapter promotion and attributed Persona updates. Not automatic collection, personal profiles or undesignated research questions.
 metadata:
   version: "0.3.0"
 ---
 
 # Ingest
 
-A lean router for selected evidence, not permission to write. Read the destination's live policy, placement and templates, the [shared contract](references/contract.md), and [frontmatter](references/frontmatter.md). Design decisions against the reference workflow are recorded in [comparison](references/comparison.md); the helper's simplification record is [script inventory](references/script-inventory.md). Resolve exact scope and effects before writing. Blank/all input delegates selection to `inbox`; direct ingest does not require `capture`.
+One request runs to the end. The owner naming a source and asking for ingest approves every standard effect below for that source: create the Raw, create and update Wiki pages and Maps, move the Inbox original into Raw, commit, and reindex. Do not stop for a plan review or a second approval between steps. Stop only when a preservation check fails, the source cannot be obtained, or a paper falls outside the vault's scope.
 
-## Step 0 — Purpose and scope
+Read the destination's live policy, placement and templates, the [shared contract](references/contract.md) and [frontmatter](references/frontmatter.md) first. Decisions against the reference workflow are recorded in [comparison](references/comparison.md). Blank or `all` input delegates selection to `inbox`; direct ingest does not require `capture`.
 
-Reuse the owner's purpose; ask one consolidated question only when it is absent. A batch may share one purpose. Unknown purpose allows preservation, not automatic compilation. Select the per-type reference: [articles](references/articles.md), [videos](references/videos.md), [repositories](references/repositories.md), [mail](references/mail.md), [conversations](references/conversations.md), [papers](references/papers.md) or [books](references/books.md). Prefer live placement over category inference; do not persist `category`.
+## Step 0 — Purpose (mandatory)
 
-## Step 0-a — Read-only mothership connections
+Ask one consolidated question before anything else: why was this collected and where will it be used. Save the answer verbatim as `purpose`.
 
-When configured and relevant, search the mothership read-only. Verify each target exists before recording `mothership` links. Build `obsidian://open?vault=…&file=…` with `urllib.parse.quote(value, safe='')` for both components; never invent a target or write a mothership People note. No counterpart vault is required.
+- Skip the question only when the owner already stated the purpose in this task, or the source is a capture candidate that carries one. Record `reused`.
+- If the owner says to decide ("알아서", "자동으로"), infer the most likely use from the source and the vault's context, state the inference and its reason, and record it.
+- A batch asks once: one purpose for all, or one per source.
+
+Select the per-type reference: [articles](references/articles.md), [videos](references/videos.md), [repositories](references/repositories.md), [mail](references/mail.md), [conversations](references/conversations.md), [papers](references/papers.md) or [books](references/books.md). A paper always uses Paper mode; a multi-chapter book or docs site uses Book mode. Prefer live placement over category inference; do not persist `category`.
+
+## Step 0-a — Mothership connections
+
+When a mothership is configured, search it read-only with the source's key concepts and the purpose. Keep the 2–5 most relevant notes. Verify each target exists before recording `mothership` links, and build `obsidian://open?vault=…&file=…` with `urllib.parse.quote(value, safe='')` for both components. Never invent a target or write into the mothership.
 
 ## Step 0.5 — Acquisition and conversion
 
-Obtain the selected range, retaining original attachments in the approved `_attachments` location. Use an actually available document converter or audio transcription tool; failure is a gap, not success. Record `source_extraction`, `source_attachment` and narrative conversion/coverage limits in `## Ingest Notes`, even for converted text input. See the per-type reference for acquisition tools.
+Obtain the full selected source. Convert binaries with an available document converter and audio with a transcription tool; retain the original in the `_attachments` location. A failed conversion halts the run with the missing tool named. Record `source_extraction`, `source_attachment` and conversion limits in `## Ingest Notes`.
 
-## Step 1 — Analyze provenance before compiling
+## Step 1 — Analyze
 
-Invoke `principle-respect-des-fonds`. Distinguish primary originals from secondary interpretation. Inspect bounded existing Raw, Entity and Concept candidates before creating anything: stable identity, then canonical URL/locator, never title alone. Identify claims, counterevidence, reusable concepts and missing ranges without quotas or reading index.md.
+Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 
-## Step 2 — Preserve Raw in original order
+- 3–8 key concepts worth a Concept page;
+- 1–5 entities: people, organizations, products, models, tools;
+- 0–3 pieces of practical guidance worth a Guide;
+- key claims to track, with counterevidence;
+- connections to pages that already exist.
 
-Invoke `principle-original-order`. Use [raw](templates/raw.md). Preserve each original in its own Raw; secondary Raw links all originals through `referenced`. Existing capture bodies are append-only; better extraction creates a new Raw linking the earlier capture, never silently replaces it. Keep exact preflight body spans outside notes, verify unchanged body prefixes and read back newly written capture spans.
+Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
-Ingest never deletes its input; it records the Raw Original Content extent and selected bytes in its session state. Inbox→Raw becomes a move only through `inbox delete` with a separate exact-path delete approval: immediately before unlinking, it must compare the current Inbox bytes with the approved preimage, the Raw Original Content extent with the selected capture bytes, and the whole Raw with its expected postimage. Pause/drain affected writers or verify their destination switch. Do not substitute whole-file Inbox/Raw hash equality; metadata differs. Do not delete other originals.
+## Step 2 — Preserve Raw (move, not copy)
 
-## Step 3 — Update before create
+Invoke `principle-original-order`. Use [raw](templates/raw.md). Write the original verbatim under `## Original Content` — no summary, no trimming, images and media links included. Each original gets its own Raw; a secondary source links its originals through `referenced`. An existing Raw body is never rewritten; a better extraction becomes a new Raw linking the earlier one.
 
-Invoke `principle-hierarchical-management`. Both the secondary author and each original author become source-grounded Entities, including people, not mothership People records. Use [entity](templates/entity.md), [concept](templates/concept.md) and [guide](templates/guide.md). Update proven existing pages before creating new ones, with exact reviewed diffs and preservation of unrelated human content: the helper's `update_path` member takes a reviewed postimage outside the vault, whole preimage/postimage digests and offset-located preserved spans. New Entities need a one-line `description` and may list `related` links. New Concept/atom analyses need an explicit one-line evidence-grounded `confidence` and may add a one-line `description` and `related` links; existing Concepts only gain an appended analysis, with frontmatter (including `explored`) unchanged.
+Check before moving on: `## Original Content` is present, its length matches the obtained source, and embedded media, quotations and code blocks survived.
 
-Concepts use Overview/Details/Related/Sources/Open Questions, explicit Contradiction callouts, `confidence` and a Bias Check. New Entities, Concepts and Guides start `explored: false`. Restructuring an existing terminology Concept requires the owner's reviewed diff. No fixed page count or fabricated bridge notes.
+When the source came from the Inbox, delete the Inbox original once that check passes. This is the second half of the move; leaving it causes a duplicate ingest on the next scan. A URL, an external file or raw text leaves nothing to delete. Never delete before the check passes.
 
-## Step 3.5 — Persona mode
+## Step 3 — Compile Wiki pages
 
-Only append to an existing designated Persona after resolving its corresponding Entity. Use [persona](templates/persona.md): verify each quotation in Raw Original Content, retain attribution, date and anchor, and append stance/Timeline/Log without replacing earlier contradictions. Keep `personaMaturity` unchanged; never create a Persona as an ingest side effect. GitHub evidence uses raw-at-commit-SHA URLs.
+Invoke `principle-hierarchical-management`. For each concept, entity and guide from Step 1, update the existing page or create a new one. Use [concept](templates/concept.md), [entity](templates/entity.md) and [guide](templates/guide.md). **Target: 10–15 Wiki pages touched per source.** A thin source may fall short; say so in the report rather than padding with empty pages.
 
-## Step 4 — Connect collectively
+Updating an existing page is the default when one matches:
 
-Invoke `principle-collective-description`. Check exact wikilink targets and source/related relationships; leave no newly created orphan. Do not automatically update Maps/MOCs in standard mode. Book B-4 alone permits the approved Book Index→existing Map link. No automatic query, report or reindex effects.
+- add the new information under the relevant section, merging with what is there rather than appending a duplicate block;
+- add the Raw to `source` and new cross-references to `related`;
+- when the new information contradicts the page, keep both and add a `> [!warning] Contradiction` callout;
+- preserve human-written passages and unknown frontmatter keys.
 
-## Step 5 — Stage provenance, not index.md
+New pages: Concepts use Overview/Details/Related/Sources/Open Questions with a one-line `confidence`; Entities cover both the secondary author and each original author; Guides hold step-by-step practice. Every new page starts `explored: false`. A `confidence: high` or synthesis-heavy page carries a Bias Check callout with a counter-argument and a data gap.
 
-Follow [git provenance](references/git-provenance.md). One ingest transaction is one commit, including all its Raw and Wiki effects. No index.md is created or synchronized.
+## Step 3.5 — Persona
 
-## Step 6 — Record history, not log.md
+When the author or main speaker matches an existing designated Persona, append to it using [persona](templates/persona.md): 1–3 quotations verified against Raw Original Content, a dated position row, and a log line. Keep contradictory positions visible and `personaMaturity` unchanged. Never create a Persona during ingest. GitHub evidence uses raw-at-commit-SHA URLs.
 
-No log.md. Commit trailers identify sources and exact owned paths; [re-ingest](references/reingest.md) uses git history as truth, with state outside the vault. Publication needs its own authorization.
+## Step 4 — Connect and update Maps
 
-## Step 7 — Review and read back
+Invoke `principle-collective-description`. Add wikilinks between all related pages. Create or update the relevant Map/MOC so every page touched in this run is reachable from one. Leave no new orphan.
 
-Verify actual writes, preserved originals, source anchors, incomplete coverage, links, non-target bytes and partial failures. Finish the approved Inbox move only after Step 2's immediate checks, compare staged blobs to intended postimages, then commit and publish through the approved git procedure. Reindex remains separately requested. Report exact Raw paths, source identity, purpose, obtained ranges, limitations, reused/updated knowledge and evidence level. Exit 0 alone is not proof.
+## Step 5 — Commit
+
+Follow [git provenance](references/git-provenance.md). One ingest is one local commit containing all its Raw, Wiki and Map effects, with trailers naming the source. No `index.md` or `log.md`; history is the log. Publication needs its own request.
+
+## Step 6 — Review
+
+Check every item and fix failures before reporting:
+
+- Raw has verbatim `## Original Content` of the expected length;
+- the Inbox original is gone when the source came from the Inbox;
+- every new wikilink resolves and no duplicate page was created;
+- every new page has `explored: false`, and high-confidence pages have a Bias Check;
+- every mothership link resolves on disk;
+- every touched page is linked from a Map.
+
+## Step 7 — Reindex and report
+
+Invoke `reindex` so the new pages are searchable. Report the Raw path, purpose, pages created, pages updated, Maps touched, the page count against the 10–15 target, coverage gaps and open questions.
 
 ## Paper mode
 
-Use [papers](references/papers.md) and [paper hub](templates/paper-hub.md): ar5iv/PMC HTML → PDF → Markdown → OCR last, with actual full-text coverage checks. Prefer Zotero metadata; unregistered keys use `provisional:`. Hub placement follows live Role Placement, not the schema. No mandatory 12-stage pipeline, atomic-note quota, RQ creation or p7 verifier.
+Mandatory for every paper. Follow [papers](references/papers.md): purpose and scope gate, paper type, Raw, a hub plus knowledge atoms across all twelve analysis axes, Wiki promotion of at least 10–15 pages, and the verification gate. Use [paper hub](templates/paper-hub.md) and [paper atom](templates/paper-atom.md). The run is complete only when the gate passes.
 
 ## Book mode
 
-Follow [Book B-1–B-5 and Promotion](references/books.md), preserving the upstream progressive-read procedure with only Apatheia paths, compact schema/status override and git history replacing index/log. A chapter scaffold requires the obtained `book_title`; `reading_paths` (verbatim) and per-chapter `toc_description`/`locator` are supplied only as obtained evidence, never invented. Promotion is one guarded transaction over the chapter and its Index: acquired text from outside the vault replaces the exact placeholder, navigation resolves, and the read chapter's checkbox is ticked. Partial coverage becomes `reading`, full becomes `completed`; `reading`→`completed` is unsupported. Web books keep B-1 URL acquisition; a commercial book first needs lawful text and an approved file/page locator adaptation. Do not compile unread chapter content.
+Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. Never compile unread chapter content.
 
-## Local helper
+## Acquisition helpers
 
-Read [interface](references/interface.md) and [batch mappings](references/batches.md) before invoking `python3 scripts/ingest.py --vault "$VAULT" --request "$REQUEST" --state "$SESSION"` (acquire and preflight; `SESSION` outside the vault), then `python3 scripts/ingest.py --vault "$VAULT" --apply-state "$SESSION"` only for the reviewed, approved effects. Helpers preserve bytes; agents perform semantic synthesis. For converted text, the retained attachment is the real original passed as `attachment_source` with its digest. Every coverage level can carry `notes`. The helper resolves every wikilink it records — new Raw `author`/`referenced`, new Entity and Concept/atom `related`, and update postimage `author`/`referenced`/`source`/`related` — to exactly one existing or same-session path and refuses otherwise; it proves existence, not relevance, so review each link before approval. A refusal is a reportable defect, not something to route around. Compose `obsidian-cli` explicitly for approved app operations. Python 3.8+ standard library is sufficient for the core helper; optional per-type acquisition dependencies and unavailable runtime checks stay explicit.
+Optional tools for obtaining sources: `scripts/youtube-transcript-extract.py`, `scripts/web-source-validate.py`, `scripts/fetch_yes24.py` and `scripts/fetch_aladin_toc.py`. They fetch and check; they never gate writing. Compose `obsidian-cli` explicitly for app operations.
