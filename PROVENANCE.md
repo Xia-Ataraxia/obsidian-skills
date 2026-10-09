@@ -309,3 +309,12 @@ remain necessary before later publication or deployment.
 - Only synthetic, public examples appear in shipped files. No credential, account
   identifier, workstation path, private note, or internal planning document is
   reproduced in this repository, including in this record.
+
+## Installer removed — 2026-10-10
+
+`install.sh`, `scripts/install_packages.py` and `docs/install-matrix.md` were
+removed. Packages are installed and updated only through each runtime's own
+plugin or skill registry, listed in the README. A directory copy made by the
+script alongside a plugin install had shadowed the plugin, so plugin updates
+were not used (#25). Earlier records above that cite these files remain as
+history. No code, asset or licence changed.

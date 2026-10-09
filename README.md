@@ -13,9 +13,8 @@ Twenty-six Agent Skills that let an agent run an Obsidian vault as a second brai
 Each package is one `SKILL.md` that owns one job. There is no root skill, no dispatcher and no shared runtime. Your agent loads the package the task needs and nothing else.
 
 ```sh
-git clone https://github.com/Xia-Ataraxia/secondbrain-skills
-cd secondbrain-skills
-./install.sh copy --runtime claude --skill all --scope user --apply
+claude plugin marketplace add Xia-Ataraxia/secondbrain-skills
+claude plugin install secondbrain-skills@secondbrain-skills
 ```
 
 Then ask in plain language: *"Ingest this article."*
@@ -78,17 +77,17 @@ Six more packages hold the stance that the eleven above work from.
 
 ## Install
 
-`install.sh` copies packages into a runtime's skill directory. A dry run is the default, it never reaches the network, and an existing file at any destination refuses the whole run.
+Install through each runtime's own plugin or skill registry, and update the same way. This repository ships no installer script, and a directory copy next to a plugin install shadows the plugin.
 
-```sh
-./install.sh skills                                        # the packages in this checkout
-./install.sh copy --runtime cursor --skill all --scope user        # dry run
-./install.sh copy --runtime claude --skill ingest \
-  --scope project --project-root ~/work/notes --apply      # one package, one project
-./install.sh native --runtime hermes                       # print the native route
-```
+| Runtime | Install | Update |
+| --- | --- | --- |
+| Claude Code | `claude plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then `claude plugin install secondbrain-skills@secondbrain-skills` | `claude plugin marketplace update secondbrain-skills`, then `claude plugin update secondbrain-skills@secondbrain-skills` |
+| Codex | `codex plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then `codex plugin add secondbrain-skills@secondbrain-skills` | `codex plugin marketplace upgrade secondbrain-skills`, then `codex plugin add secondbrain-skills@secondbrain-skills` |
+| GJC | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then `gjc plugin install secondbrain-skills@secondbrain-skills` | `gjc plugin marketplace update secondbrain-skills`, then `gjc plugin upgrade secondbrain-skills@secondbrain-skills` |
+| Grok Build | `grok plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then install from the Marketplace tab | the Marketplace tab |
+| Hermes | `hermes skills tap add Xia-Ataraxia/secondbrain-skills`, then `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` per package | the tap |
 
-Supported runtimes are `claude`, `codex`, `gjc`, `grok`, `hermes`, `cursor` and `agent-skills`. Native plugin and tap commands, skill directories and requirements for each are in [docs/install-matrix.md](docs/install-matrix.md).
+Runtimes without a plugin registry (Cursor, generic Agent Skills) read `skills/<name>/` folders from their skill directory; use their own documented import.
 
 Release: `scripts/release.sh <version>` on `main` sets that version everywhere, tags, pushes and publishes the prerelease.
 
@@ -102,9 +101,7 @@ Every result, its revision and its limits are in [docs/verification-matrix.md](d
 
 ```
 skills/<name>/SKILL.md   one package; everything else sits in a subfolder beside it
-install.sh               collision-checked copy installer and route table
-scripts/                 inventory audit and contract sync
-docs/                    naming, contracts, install and verification matrices, security
+docs/                    naming, contracts, verification matrix, security
 AGENTS.md                repository contract for contributors and agents
 ```
 
