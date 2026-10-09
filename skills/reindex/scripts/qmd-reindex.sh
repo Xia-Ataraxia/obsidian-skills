@@ -40,13 +40,19 @@ fi
   touch "$STATE.running"
   trap 'rm -f "$STATE.running"' EXIT
   seen=""
+  prev=""
   while [ "$(mtime "$STATE.request")" != "$seen" ]; do
     seen=$(mtime "$STATE.request")
     sleep "$SETTLE"
   done
   {
     echo "=== $(date -u +%FT%TZ) qmd reindex ==="
-    qmd update && qmd embed
+    qmd update && while :; do
+      qmd embed
+      left=$(qmd status | sed -n 's/^ *Pending: *\([0-9]*\) need embedding.*/\1/p')
+      [ -n "$left" ] && [ "$left" != 0 ] && [ "$left" != "$prev" ] || break
+      prev=$left
+    done
     echo "=== exit $? ==="
   } >>"$STATE.log" 2>&1
 ) >/dev/null 2>&1 &
