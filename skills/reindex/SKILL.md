@@ -3,7 +3,7 @@ name: reindex
 description: Refreshes the qmd search index (BM25 and embeddings) after notes change. Use when the owner requests a search-index refresh, at the end of an ingest, or after bulk edits made outside the agent. Not for creating collections, editing qmd configuration, choosing models, querying notes, or changing source files.
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Reindex
@@ -13,7 +13,7 @@ index and its collections are whatever qmd is already configured with; this
 skill does not create, rename, or edit them.
 
 ```bash
-scripts/qmd-reindex.sh    # qmd update && qmd embed, in the background
+scripts/qmd-reindex.sh    # qmd update, then qmd embed until nothing pending, in the background
 qmd status                # confirm document and vector counts afterwards
 ```
 
@@ -23,8 +23,9 @@ qmd status                # confirm document and vector counts afterwards
   `$TMPDIR/secondbrain-qmd-reindex.log`.
 - `qmd update` and `qmd embed` act on the whole index, so every collection in
   it is refreshed. Both are incremental and never touch the notes themselves.
-- To reindex in the foreground, run `qmd update && qmd embed` directly. Use
-  `qmd embed -f` only after the embedding model changed.
+- To reindex in the foreground, run `qmd update`, then `qmd embed` until
+  `qmd status` shows nothing pending. Use `qmd embed -f` only after the
+  embedding model changed.
 - When `qmd` is not installed the script exits quietly; report that.
 
 A runtime with edit hooks can call the same script after each note edit, passing
