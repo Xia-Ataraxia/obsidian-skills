@@ -3,8 +3,8 @@
   "version": "0.3.0",
   "description": "Twenty-four independent secondbrain-skills packages: nine native Obsidian and fifteen knowledge packages, including four archival principles. Version 0.3.0 is a public prerelease; the principles are local candidate additions, not verified runtime loads.",
   "owner": {
-    "name": "Xia-Ataraxia",
-    "url": "https://github.com/Xia-Ataraxia"
+    "name": "beomsukoh",
+    "url": "https://beomsukoh.com"
   },
   "plugins": [
     {
