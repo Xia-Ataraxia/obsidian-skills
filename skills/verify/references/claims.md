@@ -34,7 +34,7 @@ Invoke `principle-respect-des-fonds` for each claim before judging its strength.
 For a secondary claim, follow the Raw's `referenced` list to the original:
 
 - original already in Raw → check the claim against the original, not the retelling, and note where the retelling drifted;
-- original linked only as an Inbox candidate → the claim is unconfirmed at the original; report the candidate and recommend ingesting it; the citing Raw is not proof;
+- original linked only as an Inbox candidate, or as a Book Index whose chapter is still unread (no chapter text in Raw) → the claim is unconfirmed at the original; report the candidate and recommend ingesting it; the citing Raw is not proof;
 - no `referenced` entry and no locatable original → provenance unknown; the claim can at most be attributed to the secondary author, never confirmed as the original creator's finding.
 
 A quotation inside a secondary source is not the original. Attribution that silently moves a secondary author's interpretation onto the original creator is a 정합성 (Consistency) failure, even when both texts exist.
@@ -50,7 +50,7 @@ Describe how far the page's support reaches, once for the page and per claim whe
 | `multi-source-mixed` | Primary + secondary (commentary, interpretation). |
 | `synthesis-only` | Derived from other Wiki pages, no direct Raw. |
 | `user-original` | Sourced from the owner's mothership notes. |
-| `secondary-only` | Owner addition: only secondary Raw, with originals unacquired (Inbox candidate) or unknown. |
+| `secondary-only` | Owner addition: only secondary Raw, with originals unacquired (Inbox candidate, unread Book Index) or unknown. |
 
 Count lines of evidence, not links: two Raw from the same creator, or a secondary that only repeats one primary, are one line.
 

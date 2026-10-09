@@ -31,7 +31,7 @@ When a mothership is configured, search it read-only with the source's key conce
 
 ## Step 0.5 — Acquisition and conversion
 
-Obtain the full selected source. Convert binaries with an available document converter and audio with a transcription tool; retain the converted binary or audio in the `_attachments` location (a source whose original is a public URL keeps none). A failed conversion halts the run with the missing tool named. Record `source_extraction`, `source_attachment` and conversion limits in `## Ingest Notes`.
+Obtain the full selected source. Convert binaries with an available document converter and audio with a transcription tool; retain the original in the `_attachments` location, except where the per-type reference says none is kept. A failed conversion halts the run with the missing tool named. Record `source_extraction`, `source_attachment` and conversion limits in `## Ingest Notes`.
 
 ## Step 1 — Analyze
 
@@ -43,7 +43,7 @@ Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 - key claims to track, with counterevidence;
 - connections to pages that already exist.
 
-Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a located book, build its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
+Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book identified by title and author with a catalogue or publisher record, and no Index for it exists, build its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
 
 Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
@@ -102,7 +102,7 @@ Mandatory for every paper. Follow [papers](references/papers.md): purpose and sc
 
 ## Book mode
 
-Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. Never compile unread chapter content.
+Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. A book that a source only cites gets the Index alone, per that reference. Never compile unread chapter content.
 
 ## Tools
 

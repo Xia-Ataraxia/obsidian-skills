@@ -25,10 +25,10 @@ rg -L '^explored:' <wiki-scope>
 rg -L '^## Sources' <wiki-scope>
 
 # High confidence without a Bias Check
-rg -l '^confidence: "?high"?$' <wiki-scope> | xargs rg -L 'Bias Check'
+rg -l "^confidence: [\"']?high[\"']?\s*\$" <wiki-scope> | xargs rg -L 'Bias Check'
 
 # Confidence outside high, medium, low
-rg -n '^confidence:' <wiki-scope> | rg -v 'confidence: "?(high|medium|low)"?$'
+rg -n '^confidence:' <wiki-scope> | rg -v "confidence: [\"']?(high|medium|low)[\"']?\s*\$"
 
 # Age of a page
 git log -1 --format=%cs -- <page>

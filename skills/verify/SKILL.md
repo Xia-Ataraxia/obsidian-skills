@@ -3,7 +3,7 @@ name: verify
 description: Reviews one Wiki page, or the claims the owner names on it, against evidence read in this session - checks it is well-formed knowledge, consistent with its sources and other pages, and how strongly it can be confirmed - then reports and, on approval, writes the outcome back. Use for claim review, contradiction checking, confidence calibration, or resolving a disputed page. Not for general knowledge queries, vault-wide quality sampling (audit), or syntax and link linting (lint).
 license: MIT
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Verify — Wiki Page Verification
@@ -76,7 +76,7 @@ Report first (Output below). The owner approves the proposal in conversation, wh
 
 1. Append a dated `## Verification` entry to the reviewed page: date, verified by (agent / human / both), verdict, claims reviewed with their status and evidence location, Claim Type and Evidence Scope, what remains open. Never rewrite a claim's text unless the owner approved that specific correction.
 2. Apply the approved Contradiction callouts, on the reviewed page and approved counterparts.
-3. Apply the approved `confidence` change, the drafted Bias Check, and missing frontmatter values.
+3. Apply the approved `confidence` change with its reason line under `## Sources`, the drafted Bias Check, and missing frontmatter values.
 4. Set `explored: true` only on the owner's explicit yes in this conversation.
 5. Update `date_modified` on every changed page; preserve human-written passages and unknown keys.
 6. Read each changed page back and report exactly what changed. History is the Git log; there is no `log.md`. Commit per `ingest`'s git provenance when the owner asks.

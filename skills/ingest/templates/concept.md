@@ -25,8 +25,7 @@ explored: false
 
 {{source_grounded_synthesis}}
 
-> [!warning] Contradiction
-> {{conflicting_claims_with_attribution_or_no_observed_conflict}}
+{{contradiction_callout_only_when_two_located_claims_conflict}}
 
 ### Bias Check
 
@@ -38,7 +37,7 @@ explored: false
 
 ## Sources
 
-{{raw_links_and_anchors}}
+{{raw_links_and_anchors_as_list_items}}
 - Confidence reason: {{why_this_level}}
 
 ## Open Questions
