@@ -2,14 +2,18 @@
 name: ingest
 description: Turn one selected URL, file, text or Inbox candidate into a preserved Raw source plus 10–15 created or updated Wiki pages, updated Maps and a refreshed index, in a single run. Use for ingest, paper analysis (12-axis), book notes (책 노트, 독서 노트, 목차 넣어줘), chapter promotion and attributed Persona updates. Not automatic collection, personal profiles or undesignated research questions.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Ingest
 
-One request runs to the end. The owner naming a source and asking for ingest approves every standard effect below for that source: create the Raw, create and update Wiki pages and Maps, move the Inbox original into Raw, commit, and reindex. Do not stop for a plan review or a second approval between steps. Stop only when a preservation check fails, the source cannot be obtained, or a paper falls outside the vault's scope.
+One request runs to the end. The owner naming a source and asking for ingest approves every standard effect below for that source: create the Raw, create and update Wiki pages and Maps, move the Inbox original into Raw, compose `capture` for the originals Step 1 traces, commit, and reindex. Do not stop for a plan review or a second approval between steps. Stop only when a preservation check fails, the source cannot be obtained, or a paper falls outside the vault's scope.
 
-Read the destination's live policy, placement and templates, the [shared contract](references/contract.md) and [frontmatter](references/frontmatter.md) first. Decisions against the reference workflow are recorded in [comparison](references/comparison.md). Blank or `all` input delegates selection to `inbox`; direct ingest does not require `capture`.
+The destination's live policy, placement and templates, and [frontmatter](references/frontmatter.md) govern every step. Decisions against the reference workflow are recorded in [comparison](references/comparison.md). Blank or `all` input delegates selection to `inbox`; direct ingest does not require `capture`.
+
+## Delegation
+
+Run Steps 0-a–1 in one subagent and Steps 3–4 in parallel subagents of at most five pages each, Maps last, on a lighter model when you can choose. Pass paths, not content; each returns one line per item, never quoted text or page bodies. The main thread keeps everything else.
 
 ## Step 0 — Purpose (mandatory)
 
@@ -39,11 +43,13 @@ Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 - key claims to track, with counterevidence;
 - connections to pages that already exist.
 
+Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
+
 Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
 ## Step 2 — Preserve Raw (move, not copy)
 
-Invoke `principle-original-order`. Use [raw](templates/raw.md). Write the original verbatim under `## Original Content` — no summary, no trimming, images and media links included. Each original gets its own Raw; a secondary source links its originals through `referenced`. An existing Raw body is never rewritten; a better extraction becomes a new Raw linking the earlier one.
+Invoke `principle-original-order`. Use [raw](templates/raw.md). Write the original verbatim under `## Original Content` — no summary, no trimming, images and media links included. Each original gets its own Raw. A Raw made from an Inbox candidate keeps the candidate's note name, so wikilinks to the candidate resolve to the Raw without a relink. An existing Raw body is never rewritten; a better extraction becomes a new Raw linking the earlier one.
 
 Check before moving on: `## Original Content` is present, its length matches the obtained source, and embedded media, quotations and code blocks survived.
 
@@ -81,13 +87,14 @@ Check every item and fix failures before reporting:
 - Raw has verbatim `## Original Content` of the expected length;
 - the Inbox original is gone when the source came from the Inbox;
 - every new wikilink resolves and no duplicate page was created;
+- every secondary claim's original is linked, captured as an Inbox candidate, or recorded as provenance unknown;
 - every new page has `explored: false`, and high-confidence pages have a Bias Check;
 - every mothership link resolves on disk;
 - every touched page is linked from a Map.
 
 ## Step 7 — Reindex and report
 
-Invoke `reindex` so the new pages are searchable. Report the Raw path, purpose, pages created, pages updated, Maps touched, the page count against the 10–15 target, coverage gaps and open questions.
+Invoke `reindex` so the new pages are searchable. Report the Raw path, purpose, originals linked, captured or unlocated, pages created, pages updated, Maps touched, the page count against the 10–15 target, coverage gaps and open questions.
 
 ## Paper mode
 
@@ -97,6 +104,6 @@ Mandatory for every paper. Follow [papers](references/papers.md): purpose and sc
 
 Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. Never compile unread chapter content.
 
-## Acquisition helpers
+## Tools
 
-Optional tools for obtaining sources: `scripts/youtube-transcript-extract.py`, `scripts/web-source-validate.py`, `scripts/fetch_yes24.py` and `scripts/fetch_aladin_toc.py`. They fetch and check; they never gate writing. Compose `obsidian-cli` explicitly for app operations.
+Pages: `defuddle`; transcripts: `defuddle`, `yt-dlp`; pages behind login or JavaScript: the aside browser; search: `qmd`; app operations: `obsidian-cli`.

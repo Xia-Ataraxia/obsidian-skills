@@ -1,6 +1,6 @@
 {
   "name": "secondbrain-skills",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Twenty-six independent secondbrain-skills packages: nine native Obsidian and seventeen knowledge packages, including four archival principles. Version 0.3.0 is a public prerelease; the principles are local candidate additions, not verified runtime loads.",
   "owner": {
     "name": "beomsukoh",
@@ -11,7 +11,7 @@
       "name": "secondbrain-skills",
       "source": "./",
       "displayName": "Obsidian Skills",
-      "description": "Twenty-six self-contained Agent Skills: nine native Obsidian and seventeen knowledge packages. Four independently usable archival principles carry no shared contract copies. This is a distribution container, not a router, dispatcher, or shared runtime.",
+      "description": "Twenty-six self-contained Agent Skills: nine native Obsidian and seventeen knowledge packages. Four independently usable archival principles are included. This is a distribution container, not a router, dispatcher, or shared runtime.",
       "category": "knowledge-management",
       "tags": [
         "obsidian",

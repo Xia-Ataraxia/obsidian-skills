@@ -28,7 +28,7 @@ A package is one directory, `skills/<name>/`, whose `SKILL.md` declares the same
 - A name is one lowercase path segment of letters, digits and single hyphens, at most 64 characters.
 - A name says what the package is responsible for. It is a task (`ingest`) or a format (`obsidian-canvas`), never a role, a team or a version.
 - There is no root skill, no dispatcher and no alias. An older concept name is not kept as a second name for a package; `compile` and `wiki` are not package names.
-- Each capability has exactly one owning package. `source-inventory.json` records it and `scripts/audit_inventory.py` refuses a unit with no owner or with more than one.
+- Each capability has exactly one owning package.
 
 ## Files inside a package
 
@@ -43,11 +43,10 @@ Name a file for what it covers. The directory already says which package and whi
 - `SKILL.md` holds when to use the package, its inputs and outputs, its permissions, and the branches that need a reference. Detail goes to the reference a branch names.
 - `references/<subject>.md` is one subject, read only when its branch is taken. A material type is named by the material in the plural: `articles.md`, `videos.md`, `repositories.md`, `mail.md`, `conversations.md`, `books.md`, `papers.md`.
 - `scripts/` holds executable code. `assets/` holds static files that are reused as they are. `templates/` holds output shapes the package fills, and `agents/` holds subagent briefs.
-- `references/contract.md` is reserved. It is the generated copy of `docs/contracts.md`, written by `scripts/sync_contracts.py`, and nobody edits it by hand.
 - Use lowercase words joined by hyphens. No spaces, no dates, no version suffixes, no `final` or `new`.
 
 ## What is not copied into a package
 
 - Vault policy and the vault's real templates stay in the vault. A package reads them at the destination; it does not ship a second copy as an asset or restate them in several `SKILL.md` files.
 - A package links only to files inside itself. Another package is composed by naming its identity in prose, not by a relative path.
-- Shared wording has one source. The shared field contract is the only text that is duplicated, and that duplication is generated and tested byte for byte.
+- Shared wording has one source. No text is duplicated across packages.

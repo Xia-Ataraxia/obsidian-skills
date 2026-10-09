@@ -36,7 +36,7 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Acquisition time | source_obtained_at | Raw, books | date ingested, conversion-date |
 | Publication date | date_published | Raw, hub, books | date created |
 | In-vault evidence notes | source (wikilink list) | Entity, Concept, Persona, Guide, hub | source URL |
-| Originals/earlier captures | referenced (wikilink list) | secondary Raw, new full capture | — |
+| Originals/earlier captures | referenced (wikilink list; an original not yet ingested is linked as its Inbox candidate, whose note name its Raw keeps) | secondary Raw, new full capture | traced_from |
 | Related knowledge | related (wikilink list) | Entity, Concept, Persona, Guide | — |
 | Collection purpose | purpose | Raw, books (inherited) | collectionPurpose, user_intent_interview |
 | Purpose basis | purpose_origin (stated/reused/inferred/unknown) | Raw, books | — |
@@ -60,9 +60,8 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Next chapter | chapterNext (scalar wikilink or null) | chapter only | — |
 | Chapter progress | status | chapter only | ingested |
 | Non-Raw processing stage | status | Guide, hub | — |
-| Queue | no field; location | Raw | status, approval_* |
+| Queue | no field; location | Raw | status |
 | Fidelity/conversion limitations | body: Ingest Notes | Raw, hub, books | fidelity*, conversion-fidelity |
 | Capture roles | body: Captures | hub | full/current, excerpt/earlier |
-| Integrity | temporary preflight byte spans outside notes | all writes | source_content_digest/bytes |
 
-Identity matching: `source_identity`, then canonical `source_url`/`source_locator`; titles never prove sameness. New evidence gets a new Raw if it is a better extraction; retain earlier captures in `referenced`. The hub `source` list includes current full and earlier excerpt Raw, with roles explained in Captures. Unknown applicable metadata stays unknown, never invented. Optional fields are omitted when inapplicable. Approval records remain outside Raw; task-request approvals in other packages are unchanged.
+Identity matching: `source_identity`, then canonical `source_url`/`source_locator`; titles never prove sameness. New evidence gets a new Raw if it is a better extraction; retain earlier captures in `referenced`. The hub `source` list includes current full and earlier excerpt Raw, with roles explained in Captures. Unknown applicable metadata stays unknown, never invented. Optional fields are omitted when inapplicable.

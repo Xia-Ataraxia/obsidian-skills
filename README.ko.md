@@ -108,7 +108,7 @@ AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 
 ## 감사의 말
 
-- **[구요한 (Yohan Koo)](https://github.com/johnfkoo951/cmds-llm-wiki)**, cmds-llm-wiki. 지식 패키지의 작업 구성과 LLM 위키 워크플로는 여기서 가져왔습니다. 설계상의 영감이며 파일이나 문장은 복사하지 않았습니다.
+- **[구요한 (Yohan Koo)](https://github.com/johnfkoo951/cmds-llm-wiki)**, cmds-llm-wiki. 지식 패키지는 그의 명령 위에 쌓았습니다. 단계 뼈대와 섹션 이름, 용어는 그대로 두고 그 위에 소유자의 판단을 더했습니다. 무엇을 받아들이고 바꾸고 버렸는지는 각 패키지의 `references/comparison.md`에 있습니다.
 - **[Andrej Karpathy](https://github.com/karpathy)**, cmds-llm-wiki가 바탕으로 삼은 LLM Wiki 패턴.
 - **[Steph Ango (kepano)](https://github.com/kepano/obsidian-skills)**, obsidian-skills (MIT). `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`는 여기서 출발해 수정했습니다.
 - **[Jonghak Seo](https://github.com/Jonghakseo/pi-extension)**, pi-extension (MIT). `obsidian-visualize`의 검사 린트와 skeleton·style 참조는 여기서 가져와 고쳤습니다.

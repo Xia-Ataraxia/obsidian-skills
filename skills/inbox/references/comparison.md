@@ -1,0 +1,17 @@
+# Three-column comparison
+
+Upstream: 구요한 `/inbox`, commit `863ca43`. One row per upstream section and Step; this is the decision record, not a second runtime procedure. The procedure is written in this package's own words; no upstream file is copied.
+
+| 구요한 (863ca43) | secondbrain inbox before this revision | Decision + reason |
+| --- | --- | --- |
+| Header: scan `00. Inbox/` and offer to ingest; delegate per-file work to /ingest | read-only reporter handing off to ingest | Adopt: the scan-and-offer framing and delegation; the skill stays read-only because ingest owns the move. |
+| Prerequisite: read Core Context once; purpose once or per file | purpose asked with scope | Adapt: no Core Context file read; the purpose question carries its name 미래의 나에게 보내는 편지 and ingest reads vault context itself. |
+| Input: blank / category / `count`/`status` | all / lane / count / named notes | Adopt with named notes added. |
+| Inbox Structure: fixed 01–04 subfolders plus root | live lanes, `{NN Agent}` lanes | Adapt: keep his lane/root distinction and the "root is uncategorized" rule, but read the destination's actual lanes; never assume a layout. Location is the state (no `status`). |
+| Step 1 Scan: recursive, skip `.gitkeep`, "Inbox is empty" | same, plus unreadable notes as problems | Adopt his empty message; keep problem reporting. |
+| Step 2 Preview: first 100 lines; Clipper `category`/`source`/`author`/`date clipped`; infer category; title/URL/language/length/topics | fidelity, purpose, size, topics, duplicates | Adopt his preview fields; stack fidelity (manifest-only is not text), recorded `purpose`/`purpose_origin`, topics from Original Content not capture notes, and the duplicate check by stable identity within Inbox and against Raw (principle-original-order: distinct excerpts kept). Reject persisting `category`: lane plus `source_kind` in ingest replaces it. |
+| Step 3 Present: grouped counts box and table | counts plus table | Adopt counts-then-table; table widened with fidelity, purpose, size, duplicate; problems listed below. |
+| Step 4 Ask: scope (전부/카테고리만/선택만) and purpose mode (Single-axis bulk / Per-file / Auto-infer), one turn | scope and purpose together | Adopt his labels and Korean names; add Reuse for candidates that already carry `purpose` (capture asked once). No answer selects nothing. Map `collectionPurpose` → `purpose`, inferred → `purpose_origin: inferred`. Never invent a purpose for RSS. |
+| Step 5 Ingest: folder→Raw category map, preserve Clipper metadata, 10–15 pages, update index.md/log.md | compose ingest once | Adapt: compose `ingest` with paths, purpose and duplicate flags; Raw placement, metadata preservation and 10–15 pages are ingest's rules, not restated here. Reject index.md/log.md: Git history. Keep his `[3/7] Ingesting:` progress. |
+| Step 6 Cleanup: ask "Inbox에서 처리된 파일 삭제할까요?" then delete | verify on disk | Adapt: ingest removes the candidate as the second half of its move after the preservation check, so asking here would duplicate the rule and risk a duplicate ingest; inbox only checks Raw exists under the note name, the candidate left, unselected untouched. |
+| Notes: Clipper `type: inbox` + `category` are reliable; frontmatter beats subfolder; 5+ files sequential with progress | — | Adapt: lane and frontmatter are both signals, disagreements reported and settled by ingest from live policy; keep sequential progress; no `category` written. |

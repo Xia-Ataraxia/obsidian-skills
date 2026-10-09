@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/skills/reindex/scripts/qmd-reindex.sh",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/skills/reindex/scripts/qmd-reindex.sh\"",
             "timeout": 5
           }
         ]
