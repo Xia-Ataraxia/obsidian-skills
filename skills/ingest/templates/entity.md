@@ -1,6 +1,6 @@
 ---
 type: note
-tags: [knowledge/entity]
+tags: [knowledge/entity{{, person when the entity is a person}}]
 date_created: {{date}}
 date_modified: {{date}}
 created_by: agent
