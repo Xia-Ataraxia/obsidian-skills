@@ -48,7 +48,7 @@ present; the package was written here.
   `.claude-plugin/plugin.json` independently declares `"license": "MIT"`.
 - Rights exercised: copy and modify, with the notice retained. `Copyright (c) 2026
   Steph Ango (@kepano)` appears in this repository's root `LICENSE`, in `NOTICE`
-  with the full permission text, and in the `LICENSE` file of each of the four
+  with the full permission text, and in the `references/LICENSE` file of each of the four
   packages that contain derived files.
 - Files imported: nine, listed one by one in `NOTICE` section 1.1 and digest-pinned
   in `source-inventory.json` as `mit-import`.
@@ -91,7 +91,7 @@ present; the package was written here.
 
 The authenticated native inventory below is preserved. The plugin-first F05
 addition is an additive owner-local source map in
-`skills/obsidian-visualize/source-map.json`, with exact revision, complete package
+`skills/obsidian-visualize/references/source-map.json`, with exact revision, complete package
 tree/digests, retained MIT notice, exclusions and verification paths. It is not
 represented as newly authenticated native rows or as part of an earlier release
 seal. Package `PROVENANCE.md` and Git history record the source-only

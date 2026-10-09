@@ -1,7 +1,7 @@
 {
   "name": "secondbrain-skills",
   "version": "0.3.0",
-  "description": "Twenty-four self-contained Agent Skills: nine native Obsidian and fifteen knowledge packages, including principle-respect-des-fonds, principle-original-order, principle-hierarchical-management, and principle-collective-description. The principles are local candidate additions. Version 0.3.0 is a public prerelease.",
+  "description": "Twenty-six self-contained Agent Skills: nine native Obsidian and seventeen knowledge packages, including principle-respect-des-fonds, principle-original-order, principle-hierarchical-management, and principle-collective-description. The principles are local candidate additions. Version 0.3.0 is a public prerelease.",
   "author": {
     "name": "beomsukoh",
     "url": "https://beomsukoh.com"
@@ -22,8 +22,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Obsidian Skills",
-    "shortDescription": "Twenty-four independent Agent Skills: nine native Obsidian and fifteen knowledge packages.",
-    "longDescription": "The secondbrain-skills collection contains nine native Obsidian packages, eleven knowledge task packages, and four independent archival principles: principle-respect-des-fonds, principle-original-order, principle-hierarchical-management, and principle-collective-description. Each owns exactly its named feature. This plugin is a distribution container, not a router, dispatcher, or shared runtime. The principles require no sibling packages or shared contract copies. Version 0.3.0 is a public prerelease; these local candidate additions have no verified runtime load. Historical Claude Code evidence in an isolated project scope remains bound to earlier revisions. Codex installation is unverified.",
+    "shortDescription": "Twenty-six independent Agent Skills: nine native Obsidian and seventeen knowledge packages.",
+    "longDescription": "The secondbrain-skills collection contains nine native Obsidian packages, eleven knowledge task packages, and four independent archival principles: principle-respect-des-fonds, principle-original-order, principle-hierarchical-management, and principle-collective-description, plus principle-skill-creating and the optional secondbrain-mode stance. Each owns exactly its named feature. This plugin is a distribution container, not a router, dispatcher, or shared runtime. The principles require no sibling packages or shared contract copies. Version 0.3.0 is a public prerelease; these local candidate additions have no verified runtime load. Historical Claude Code evidence in an isolated project scope remains bound to earlier revisions. Codex installation is unverified.",
     "developerName": "beomsukoh",
     "category": "Productivity",
     "capabilities": [

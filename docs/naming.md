@@ -4,7 +4,7 @@ How packages, their files and the collection are named. The layout is the Agent 
 
 ## The collection
 
-The collection is `secondbrain-skills`: 9 native Obsidian packages and 15 knowledge packages (11 workflow packages and 4 archival principle packages).
+The collection is `secondbrain-skills`: 9 native Obsidian packages and 17 knowledge packages (11 workflow packages, 4 archival principle packages, `principle-skill-creating` and the optional `secondbrain-mode` stance).
 
 Today the manifests name the collection only as descriptive metadata:
 
@@ -42,7 +42,7 @@ Name a file for what it covers. The directory already says which package and whi
 
 - `SKILL.md` holds when to use the package, its inputs and outputs, its permissions, and the branches that need a reference. Detail goes to the reference a branch names.
 - `references/<subject>.md` is one subject, read only when its branch is taken. A material type is named by the material in the plural: `articles.md`, `videos.md`, `repositories.md`, `mail.md`, `conversations.md`, `books.md`, `papers.md`.
-- `scripts/` holds executable code. `assets/` holds static files that are reused as they are.
+- `scripts/` holds executable code. `assets/` holds static files that are reused as they are. `templates/` holds output shapes the package fills, and `agents/` holds subagent briefs.
 - `references/contract.md` is reserved. It is the generated copy of `docs/contracts.md`, written by `scripts/sync_contracts.py`, and nobody edits it by hand.
 - Use lowercase words joined by hyphens. No spaces, no dates, no version suffixes, no `final` or `new`.
 
