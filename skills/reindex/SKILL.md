@@ -25,5 +25,10 @@ qmd status    # confirm document and vector counts
 - Use `qmd embed -f` only after the embedding model changed.
 - When `qmd` is not installed, report that and stop; nothing else is affected.
 
+The plugin's `hooks/qmd-reindex.sh` runs the same two commands in the background
+after a `Write` or `Edit` to a note inside a qmd collection. Run this skill by
+hand after edits the hook cannot see: shell or script writes, edits made in
+Obsidian, bulk moves.
+
 Report the counts `qmd update` printed and the final `qmd status` totals.
 Document count and vector count are separate numbers and need not match.
