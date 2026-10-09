@@ -3,16 +3,14 @@
 Where every part of this repository came from, what rights apply to it, and which
 feature owns each implementation in this local candidate.
 
-Three records work together and must agree:
+Two records work together and must agree:
 
 | record | what it holds |
 |---|---|
-| `source-inventory.json` | the machine-checkable inventory: every source file with its SHA-256 digest, every responsibility unit inside it, the single owning feature, the target file, and the verification mapping |
 | `NOTICE` | the third-party notices, verbatim, plus the file-by-file import map |
 | this file | the readable lineage: which source, which revision, which rights, which relationship |
 
-Per-change detail lives in each package's Git history; skill bodies may summarize attribution. `scripts/audit_inventory.py` enforces the agreement between the
-inventory and the tree.
+Per-change detail lives in each package's Git history; skill bodies may summarize attribution.
 
 ## The nine features
 
@@ -49,8 +47,7 @@ present; the package was written here.
 - Rights exercised: copy and modify, with the notice retained. `Copyright (c) 2026
   Steph Ango (@kepano)` appears in this repository's root `LICENSE`, in `NOTICE`
   with the full permission text, and in the README attribution.
-- Files imported: nine, listed one by one in `NOTICE` section 1.1 and digest-pinned
-  in `source-inventory.json` as `mit-import`.
+- Files imported: nine, listed one by one in `NOTICE` section 1.1.
 - Read but not imported: its `README.md` and two plugin manifests, consulted for
   installation and manifest convention only (`mit-reference`; no text copied), and
   its `skills/defuddle/` and `skills/knap/` packages, which are outside these nine
@@ -77,10 +74,7 @@ present; the package was written here.
 - What was taken: the *requirements*. That source is a single thick Obsidian
   package; reading it answered which problems these nine features must solve, in
   what order, and with what failure behaviour. It did not supply the answers.
-- Mechanical guarantee: all 37 inventoried files of that source are marked
-  `evidence-only` in `source-inventory.json`, and the audit refuses any unit
-  marked `imported` whose source file lacks copy-permitting rights. A future
-  attempt to copy from it fails the audit rather than passing silently.
+- Rule: nothing from that source may be copied; it stays evidence only.
 - Downstream lineage claim: that source's own changelog claims a further
   third-party lineage for material predating it, also without a licence notice.
   Because no expression from it is reproduced here, no rights over that
@@ -141,7 +135,7 @@ endorses this repository. Each package cites its own list with exact URLs, and
 usually exact revisions, in its Git history and attribution section; `NOTICE`
 section 2.1 carries the consolidated list.
 
-## Knowledge operation set — design inspiration, nothing copied
+## Knowledge operation set — built on cmds-llm-wiki
 
 The eleven knowledge packages (`capture`, `inbox`, `ingest`, `query`, `verify`,
 `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`) follow the
@@ -151,94 +145,23 @@ operation set and LLM-wiki workflow of Yohan Koo (구요한)'s
 eleven commands of the same names (its `capture-tabs` corresponds to `capture`)
 and itself credits Andrej Karpathy's LLM Wiki pattern.
 
-- Relationship: design inspiration only. The operation names and the shape of
-  the workflow were adopted; every file, procedure, script and reference in these
-  packages was written here.
-- Copy check: an 8-gram text-overlap comparison of each knowledge package against
-  that revision found no shared 8-grams in ten packages and three shared 8-grams
-  in `ingest`. No file or passage was copied.
-- Rights: the upstream repository publishes no licence. Nothing from it is
-  redistributed here, and this repository's MIT licence grants nothing over it.
+- Relationship: each package is built on the matching upstream command. Its step
+  skeleton, section names and terms (for example 지식요건해당성 / 정합성 /
+  확증가능성, 미래의 나에게 보내는 편지) are kept, and the owner's own judgment is
+  stacked on top. Each package records every upstream step as Adopt, Adapt or
+  Reject in its `references/comparison.md`, and credits 구요한 at the top of its
+  `SKILL.md`.
+- Text: the explanatory prose was written here, but some short phrases and rule
+  sentences match the upstream (an 8-gram comparison finds shared runs, most in
+  `verify`, `capture` and `query`).
+- Rights: the upstream repository publishes no licence, so this repository's MIT
+  licence grants nothing over that material. Its author's permission for the
+  adopted wording has not been recorded here.
 - No endorsement by, or affiliation with, the upstream author is claimed.
 
-The two `ingest` helpers transferred from bstack, recorded below, are a separate
-lineage with their own unresolved rights.
+## Helpers transferred from bstack, now removed
 
-## Verification mapping
-
-Every functional unit names the target file that now carries the behaviour.
-
-`python3 scripts/audit_inventory.py` checks the mapping, the single-owner rule,
-the owner-to-package match, the rights consistency, and the presence of the
-upstream notice. Adding the two checkout flags additionally verifies every digest
-and byte count and the exhaustive partition of both sources.
-
-## Local ingest transfer from bstack
-
-This record covers only the two helpers and three tests below, read in full and
-transferred from bstack revision `290cb51b48fb0310e58e8bc9c8be0d0d803dc3e6`.
-The originals remain in bstack until its separately authorized retirement.
-
-| source path | source SHA-256 | local destination and delta |
-|---|---|---|
-| `skills/ingest/scripts/web-source-validate.py` | `ba5662061094893f971d269c297df636522c71f5cb845270026bda1b012ff6c1` | same path, byte-identical |
-| `skills/ingest/scripts/youtube-transcript-extract.py` | `fd309b4d19781297ba66ac0c75d9e9a77fd11c0e35a41b4ba01f539b3155df85` | same path, byte-identical |
-| `tests/ingest/test_metadata_contract.py` | `84e6b27a0045a0eb8a21c3a5c24c82c8fd3bcfbd9d2a31cd3f66a5dbd4e0f36b` | `tests/test_ingest_metadata_contract_ports.py`; import path depth only |
-| `tests/ingest/test_web_source_validate.py` | `f156b3546b0dfc6715e49e5c69a5e10c655fa28c6bb70c03711b3afc5df0b238` | `tests/test_ingest_web_source_validate_ports.py`; import path depth only |
-| `tests/ingest/test_youtube_transcript_extract.py` | `fb48463d3397b6790d7447807c3e46abd2ccb2590acad9cf147a2b25fbb0978d` | `tests/test_ingest_youtube_transcript_extract_ports.py`; import path depth, two Python 3.8-compatible multi-manager statements, and one test synchronization repair |
-
-The destination gateway-overlap test additionally repairs a pre-existing source
-race: a worker now appends its observed completion index before signaling the
-dependent worker. The overlap barrier, bounded waits, observed `[2, 1, 0]` order,
-stable URL-priority result and every assertion remain intact. The other 26 port
-test methods retain their original behavioral AST; AST equality is not claimed
-for this one amended method. No bstack original or production extractor changed.
-
-Observed source-repository history records the web helper's creation at
-`e6c375ae7f2e5c7b89be40ed1a7e16b5c4b33197` and the transcript helper's creation at
-`f674baaba9e8584d764818ed32af0f00f19a20b5`, followed by later source-repository commits.
-The current paths and tests were recorded by the restructure commit
-`14e93009493f36613cb4faa4625169b46b17a66b`. Commit metadata is observed
-provenance, not proof of sole authorship; contributor and PR authorship has not
-been exhaustively established.
-
-No vendored third-party code was found on inspection of these five files. This
-is an inspection result, not a guarantee about unknown contributors. The source
-has no tracked root `LICENSE`, `COPYING` or `NOTICE`, and these files have no
-copyright or licence notice. Plugin metadata's MIT string is not treated as a
-permission grant. Owner confirmation was not obtained; neither sole authorship
-nor a confirmed MIT grant is claimed.
-
-The requested local code preparation and transfer are authorized. External
-redistribution remains subject to later exact-tree publication approvals and
-resolution of the origin rights; the destination's root MIT notice does not
-establish those rights. The helpers invoke optional tools/services rather than
-vendoring them. No external extraction, deployment or publication is proved by
-this transfer.
-
-Inventory integration for these five files is handed off as a private draft for
-serialized integration, not applied concurrently to `source-inventory.json`.
-The existing inventory's MIT-import classification must not be used to imply an
-unconfirmed grant.
-
-## Local book transfer from bstack
-
-On 2026-10-07 the bstack owner requested that the bstack `book` unit be absorbed
-into this package's Book branch. The two fetchers below were read in full and
-copied from bstack revision `2b38de88a2da8e1feee12586b9d3446384846f3d`; the
-book recipe was re-expressed in `skills/ingest/references/books.md`, not copied
-as prose. bstack retires its `book` unit into its own `archive/` separately.
-
-| source path | source SHA-256 | local destination and delta |
-|---|---|---|
-| `skills/book/scripts/fetch_yes24.py` | `56f95035219dbee20078377b76fbd8cd523b6d77c9305d40e714b9fc433d7ba0` | `skills/ingest/scripts/fetch_yes24.py`, byte-identical |
-| `skills/book/scripts/fetch_aladin_toc.py` | `4fab4dc3188a203d00320e53f3986bb79f3a1a8276aa14e4a87fd86ad1feed17` | `skills/ingest/scripts/fetch_aladin_toc.py`, byte-identical |
-
-Both files declare their PEP 723 dependencies (`requests`; Yes24 also
-`beautifulsoup4` and `markdownify`) and vendor none of them. They have no
-copyright or licence notice; the same origin-rights caveat as the transfer above
-applies. They contact the public Yes24 and Aladin storefronts only when invoked
-for a selected book; no live storefront fetch is proved by this transfer.
+Two ingest helpers (`web-source-validate.py`, `youtube-transcript-extract.py`, bstack `290cb51`) and two book fetchers (`fetch_yes24.py`, `fetch_aladin_toc.py`, bstack `2b38de8`) were copied byte-identical into `skills/ingest/scripts/` without a confirmed origin licence. They were removed in 0.4.0; ingest now names the tools (`defuddle`, `yt-dlp`, the aside browser) instead. Their records remain in Git history.
 
 ## Native obligation restoration — Unreleased
 
@@ -370,7 +293,7 @@ Obsidian plugin load/render; fresh exact-tree release and privacy revalidation
 remain necessary before later publication or deployment.
 
 - The local release candidate holds twenty packages: the nine native features
-  above and the eleven knowledge packages mapped in `source-inventory.json`.
+  above and the eleven knowledge packages.
   Its documentation adds no source, code or asset. The local ingest transfer's
   two helpers and three tests keep their unconfirmed origin rights and
   public-redistribution hold; a local release candidate is not a new grant or a

@@ -1,78 +1,78 @@
 ---
 name: onboard
-description: Initializes an independent personal or knowledge vault from a reviewed two-role candidate, previews exact settings changes for an existing vault, and resumes an interrupted initialization. Use for fresh vault setup, additive onboarding, or a zero-diff rerun. Not for moving existing notes, installing skills, Sync pairing, source ingestion, or editing vault policy.
+description: Initializes an independent personal or knowledge vault through a short owner interview that fills template placeholders and writes the core context note, proposes settings changes for an existing vault, and resumes an interrupted setup by detecting what is already done. Use for fresh vault setup, additive onboarding, or a zero-diff rerun. Not for moving existing notes, installing skills, Sync pairing, source ingestion, or editing vault policy.
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Onboard
 
-Set up one selected role without requiring or creating a counterpart vault.
+Turn a starting vault into the owner's vault in about ten minutes by interviewing them and filling everything in, without requiring or creating a counterpart vault. The skeleton is 구요한's `/onboard`; decisions against it are in [comparison](references/comparison.md).
 
-## Output contract
+## Philosophy
 
-A fresh target receives the candidate's declared folders, source bytes, native
-assets, generated structure declaration, and canonical candidate manifest.
-An existing target receives only an exact owner-approved settings diff. A rerun
-reports zero diffs when the exact candidate or approved diff is already applied.
-The CLI reads back each materialized file; this is filesystem evidence, not an
-Obsidian render, runtime load, privacy review, or publication receipt.
+1. **Context-first** — fill *who you are* (Core Context) before ingesting; without it every `ingest` purpose question and every `query` answer is generic.
+2. **Answer-1-of-many** — ask a handful per turn; the owner answers only what is relevant. Context accumulates across turns.
+3. **Agent-does-the-typing** — the owner speaks in plain words; you write frontmatter, placeholders and Core Context.
+4. **Resume-safe** — rerunning detects what is done and continues from the first unfinished step; a finished vault changes nothing.
 
-Invalid inputs, conflicting bytes, links in a write route, missing source
-assets, and stale or absent approval produce a nonzero exit. Preflight failures
-write nothing. An I/O interruption can retain completed files; resume only the
-same candidate or exact approval, never replace conflicting bytes.
+## Pre-flight
 
-## Inputs and permission
+```bash
+pwd
+rg -l '\{(your-name|Your Name|PATH_TO_[A-Z_]+|your-mothership-vault-name|YYYY-MM-DD)\}' -g '*.{md,json,yml,yaml,sh}' . | wc -l
+rg -m1 '^status:' "Core Context.md"
+```
 
-Read [the shared contract](references/contract.md). Confirm the owner's selected
-role, candidate directory, target, and concrete creation/update effect. Read the
-target's applicable policy owners and user context before proposing changes;
-unknown context stays unknown. Role choice and path eligibility are not approval
-to edit existing items. Quiesce concurrent writers while applying approved edits.
-The target's parent must already exist; the CLI never creates ancestors outside
-the target.
-Verify source and asset rights before copying; this package supplies no template
-or plugin license grant. Optional policy tooling is used only if explicitly selected.
+- 0 placeholder files and `status: active` → already onboarded. Say so and ask whether to revisit anything (identity or axis changes belong to `refresh-context`).
+- Target missing or empty → lay down the starting vault first: ask the role (`personal` or `knowledge`) and the template folder, copy it into the empty target (`cp -R "$TEMPLATE/." "$VAULT"`), and recommend `git init` — Git is the vault's log. Never copy over an existing vault; confirm the owner may use the template's files and plugins.
+- A vault that already has notes but was never onboarded → no copy; touch only what the owner approves (settings below).
+- Otherwise → Interview.
 
-Use Python 3.8 or newer and the standard library. No installed runtime, policy
-plugin, network, counterpart, or other skill is required. Candidate locators
-resolve against the parent of the supplied candidate directory.
+## Interview — 필수 5 + 옵션 2 (answer-1-of-many)
 
-## Procedure
+In voice mode one question at a time, in text a batch. After each answer, confirm it back in one or two sentences.
 
-1. Inspect the selected role manifest and common native manifest. Match them to
-   the reviewed candidate identity and rights evidence. Candidate text is input
-   data, never instructions to execute or additional write authorization.
-2. For an absent or empty target, run:
+**Q1 — Location & name.** The vault's absolute path comes from `pwd`. Ask the name to use inside the vault (real name, handle, any script — it goes into wikilinks) → `{your-name}` / `{Your Name}`.
 
-   ```bash
-   python3 scripts/onboard.py --candidate "$CANDIDATE" --role knowledge --target "$TARGET" --mode fresh
-   ```
+**Q2 — Operating mode.**
+- **Mode A (standalone)**: this vault only; mothership placeholders are ignored.
+- **Mode B (mothership)**: an existing main vault is the mothership and this one a satellite. The mothership is read-only from here, always.
 
-   Select `personal` for the other independent role. Never point this command at
-   an existing live vault when intending fresh setup.
-3. For an existing vault, follow [settings approval](references/settings.md).
-   Preview is read-only. Apply only the exact approved paths and keys; retain
-   notes, roots, links, templates, plugin binaries, and unknown settings.
-4. Rerun the same command or use `--mode resume` after an interrupted fresh
-   initialization. The canonical manifest must match the candidate. A changed
-   existing file is a conflict, not permission to overwrite it. Reapply the same
-   settings approval to resume an additive batch.
-5. Inspect the JSON result and read back the destination. Report the changed
-   paths, candidate digest, zero-diff rerun, and any missing runtime evidence.
-   Do not install, sync, deploy, generate a work record, migrate notes, or invoke
-   ingest as a side effect. Compose another package only for a separately
-   selected task.
+**Q3 — (Mode B only) Mothership path & name.** Its absolute path, checked to exist, and its registered Obsidian vault name — the folder name used in `obsidian://open?vault=`, not the path. Confirm the registration with `obsidian-cli`.
 
-## Recovery
+**Q4 — Core Context §1 identity (core).** Name, role, field, main activities, and the **continuity statement**: in one to three sentences, which earlier question today's work grew out of.
 
-Fresh writes are exclusive and publish complete bytes. The manifest is written
-first, so subsequent interruption can resume without overwriting completed files.
-Keep conflicting or partial output for inspection. A forced process termination
-can leave an `.onboard-*` staging file inside the target; do not confuse it with
-an approved source file or automatically delete unrelated files.
+**Q5 — Core Context §2 reuse axes, 5–9 (core).** Where a source might end up: research, writing, teaching, consulting, product, essays, community… Seven is a good number; too few and everything piles on one, too many and they stop discriminating. These axes are what the owner answers when `ingest` asks a source's purpose.
 
-For additive updates, the approval contains exact original bytes or absence and
-the recovery expectation. Restore only that approved item under separately
-authorized recovery; never reset, mirror, or recreate the vault.
+**Optional — §3 personal frameworks / §4 philosophy, 3–5.** Fill when given; otherwise skip (`refresh-context` can add them later).
+
+**When stuck (failure mode): passive mode.** If answers do not come, ask for paths to existing writing (blog, essays, the mothership's Me note), read them, and propose §1 and §2 for the owner to correct. Nothing in Core Context is invented.
+
+## Fill
+
+**F1 — Placeholder replacement.** Show the values (name, vault path, today's date in the owner's timezone, and in Mode B mothership path and name). After OK, replace only the literal tokens across `.md`, `.json`, `.yml`/`.yaml` and `.sh` files, `.git` excluded (`sed -i ''` on macOS): `{your-name}`, `{Your Name}`, `{PATH_TO_YOUR_LLM_WIKI}`, `{YYYY-MM-DD}`; in Mode B also `{PATH_TO_YOUR_MOTHERSHIP_VAULT}`, `{PATH_TO_YOUR_MOTHERSHIP}`, `{your-mothership-vault-name}`.
+
+**F2 — Write Core Context.md.** Draft §1 identity and §2 reuse axes (plus optional §3/§4) from the interview, and §5 listing the mothership's system files in Mode B; in Mode A delete §5. Show the draft and confirm. Then set `status: template` → `active`, `snapshot_date` to today, keep `version: "1.0"`.
+
+**F3 — Verify replacement.** Run the pre-flight `rg` again. No output passes; in Mode A the unused mothership placeholders may remain harmlessly.
+
+**Settings for an existing vault.** Only `.obsidian/app.json`, `.obsidian/daily-notes.json`, and the `data.json` of the `homepage`, `templater-obsidian` and `obsidian-excalidraw-plugin` plugins are in scope. Show the exact top-level keys to change with old and new values; apply only approved keys, leave every other key and the formatting untouched, with Obsidian closed or idle.
+
+## Resume logic
+
+Every run starts at the pre-flight and continues at the first unfinished step: placeholders remain → F1; Core Context still `status: template` → F2; both done → already onboarded.
+
+## Wrap-up
+
+Read back the files written and list them. Then suggest:
+
+1. `status` — the vault at a glance.
+2. A first `ingest <URL>` — when the purpose question comes, answer with one of the §2 reuse axes ("미래의 나에게 보내는 편지", a letter to your future self).
+3. A first `query <question>`.
+4. As it grows: recurring open questions become Research Question cards in `20. Wiki/25. Questions/`; a defended claim becomes a Synthesis card.
+5. Later: `capture` and `inbox` for collecting before ingesting, `qmd` for search (`reindex`).
+
+Do not install skills, sync, migrate notes or ingest as a side effect.
+
+Tools: `rg`, `sed`, `git`, `obsidian-cli`.

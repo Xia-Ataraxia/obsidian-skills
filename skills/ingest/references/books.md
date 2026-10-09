@@ -46,9 +46,9 @@ Promotion fills one chapter stub the owner has read. It reuses the book's purpos
 ## Bibliographic acquisition
 
 Prefer the URL the user supplied.
-For a Yes24 product page run `uv run scripts/fetch_yes24.py <URL>` from this package directory; it prints title, subtitle, authors, cover, publication date, ISBN-13, categories, TOC and publisher text as JSON.
-When that TOC is empty, run `uv run scripts/fetch_aladin_toc.py <ISBN13>`; it returns the Aladin TOC image URLs (cover excluded), which still need an actually performed OCR before they count as TOC text.
-For a title or ISBN alone, search Yes24 first and then Aladin; the Yes24 fetcher does not accept Aladin URLs.
+Read a Yes24 product page with `defuddle` or the aside browser for title, authors, publication date, ISBN-13, TOC and publisher text.
+When the TOC is missing, open `https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=<ISBN13>`; its TOC images are `…/letslook/…_toc<N>.jpg` (`_toc1` is the cover) and count as TOC text only after OCR is actually performed.
+For a title or ISBN alone, search Yes24 first and then Aladin.
 For classic or historical texts, distinguish the recognized local title, the original-language title, the translator and the edition.
 
 Label every recorded field by origin: observed storefront metadata, OCR or inferred summary, or user-supplied reading context.

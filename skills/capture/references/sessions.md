@@ -9,7 +9,7 @@ This differs from a multi-platform research bundle, where one question goes to s
 ## Building a bundle
 
 1. The owner names the topic and the sessions, or a bounded way to find them ("today's sessions about the inbox redesign"). Read through an available read-only runtime interface or a selected export. Never sweep every session, schedule exports or archive whole sessions.
-2. Give each session one `sources` member with its stable session identifier as `source_identity`, the agent or runtime and range in `source_locator`, and `role`: the task that session was given, in one line.
+2. Give each session one source entry with its stable session id, the agent or runtime and range as `source_locator`, and `role`: the task that session was given, in one line.
 3. Choose the mode per member by density:
    - `excerpt` — the default for a working session: the owner's own turns verbatim (questions, decisions, corrections, concerns) and the agent's conclusions, with tool output left out and named as an omission;
    - `transcript` — a short session, or one whose reasoning is itself the point;
@@ -34,4 +34,4 @@ The last item is the handoff: ingest starts its analysis from that list.
 
 A runtime report, a transcript and a machine ledger are different records. A report's Attempt/Why/Result sections do not prove a transcript was acquired. A truncated span is partial. Never fill missing messages from a summary; reconstruction is Agent Capture Notes, never original text.
 
-For a UTF-8 export the helper reads inclusive line spans. A line range is not a turn range unless the exporter says so. Live runtime querying needs an actually available tool; the helper does not manufacture one.
+A line range in an export is not a turn range unless the exporter says so. Say the runtime was queried only when a real tool queried it.

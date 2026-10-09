@@ -4,15 +4,15 @@ This repository owns twenty-six independent Agent Skills, the `secondbrain-skill
 
 - Native: Markdown, Bases, Canvas, Mermaid, visualization, official CLI operations, Web Clipper, plugin/Templater diagnosis, and Headless Sync. Each `skills/obsidian-*/SKILL.md` owns exactly its named feature.
 - Knowledge: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`. Each `skills/<name>/SKILL.md` owns exactly its named task and carries no `obsidian-` prefix.
-- Principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description` belong to the knowledge group. They provide contextual guidance, carry no shared contract copy, and grant no write authorization.
+- Principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description` belong to the knowledge group. They provide contextual guidance and grant no write authorization.
 - Authoring: `principle-skill-creating` decides what a package keeps in Markdown and what it hands to templates, thin scripts and agents; read it before changing a package. `secondbrain-mode` is an optional stance for multi-package work; it dispatches nothing and every package still runs directly.
 
-There is no callable root skill, mandatory shared runtime, compatibility alias, or hidden dispatcher. `docs/naming.md` fixes package and file names. `source-inventory.json` maps every capability unit to exactly one owning package, and `scripts/audit_inventory.py` enforces it.
+There is no callable root skill, mandatory shared runtime, compatibility alias, or hidden dispatcher. `docs/naming.md` fixes package and file names. Each capability has exactly one owning package; checks stay at package format (`claude plugin validate . --strict`).
 
 ## Authoring
 
 - Keep required references, assets, and scripts inside the owning package. Compose neighboring packages by explicit identity only when the task needs them.
-- The shared approval, purpose, source, and fidelity field contract is authored once in `docs/contracts.md`. `scripts/sync_contracts.py <name>...` generates the byte-identical `skills/<name>/references/contract.md`; never edit a copy. Name only the packages you own, and run the all-package form only when no other writer is active.
+- Prefer naming an existing tool (`defuddle`, `yt-dlp`, the aside browser, `qmd`, `obsidian-cli`, `git`) over shipping a script that wraps or polices it. A script stays only for exact bookkeeping a model cannot hold.
 - Preserve MIT notices for upstream-derived files. Record exact source revision, modifications, and asset rights in `PROVENANCE.md`.
 - Credit every person or project a package draws on, copied or only consulted, in the README Acknowledgements section (both languages) in the same change. Do not add a per-package `LICENSE`.
 - Use only synthetic public examples. Never include credentials, private account identifiers, workstation paths, personal notes, internal plans, or raw private logs.

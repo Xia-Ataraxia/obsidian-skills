@@ -108,7 +108,7 @@ AGENTS.md                repository contract for contributors and agents
 
 ## Acknowledgements
 
-- **[Yohan Koo (구요한)](https://github.com/johnfkoo951/cmds-llm-wiki)**, cmds-llm-wiki. The knowledge packages take their operation set and LLM-wiki workflow from it. This is design inspiration only; no file or text was copied.
+- **[Yohan Koo (구요한)](https://github.com/johnfkoo951/cmds-llm-wiki)**, cmds-llm-wiki. The knowledge packages are built on its commands: their step skeletons, section names and terms are kept, with the owner's judgment stacked on top. Each package's `references/comparison.md` records what was adopted, adapted or rejected.
 - **[Andrej Karpathy](https://github.com/karpathy)**, the LLM Wiki pattern that cmds-llm-wiki builds on.
 - **[Steph Ango (kepano)](https://github.com/kepano/obsidian-skills)**, obsidian-skills (MIT). `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas` and `obsidian-cli` started from it and were modified.
 - **[Jonghak Seo](https://github.com/Jonghakseo/pi-extension)**, pi-extension (MIT). The inspection lint and the skeleton and style references in `obsidian-visualize` are adapted from it.

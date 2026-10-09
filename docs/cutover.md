@@ -22,7 +22,7 @@ Consumer-specific policy and exact callsite evidence belong to that consumer's p
 
 ## Where this candidate stands
 
-Evidence for every line below: [`tests/evidence/publication-canary.json`](../tests/evidence/publication-canary.json), published rows in [verification-matrix.md](verification-matrix.md).
+Evidence for every line below: published rows in [verification-matrix.md](verification-matrix.md).
 
 | Step | State | What was actually observed |
 | --- | --- | --- |

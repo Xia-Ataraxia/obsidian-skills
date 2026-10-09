@@ -4,7 +4,7 @@
 
 What this candidate has actually been shown to do, how it was shown, and — just as important — what each result does not prove. A row is upgraded only by new evidence of the named kind. A plausible-looking run is not evidence, a passing parse is not a render, and an exit code is not a result.
 
-The machine-readable report for the application and CLI rows is tracked at [`tests/evidence/native-app.json`](../tests/evidence/native-app.json). The publication, native canary, Hermes install, isolated-plugin, and Web Clipper rows come from [`tests/evidence/publication-canary.json`](../tests/evidence/publication-canary.json).
+The machine-readable evidence reports behind these rows were removed and remain in Git history.
 
 ## Evidence ladder
 
@@ -53,7 +53,7 @@ Recorded in an untracked local probe log during the same session: `obsidian vers
 
 ## Passed — publication and public rendering
 
-Recorded in [publication-canary.json](../tests/evidence/publication-canary.json). The release is immutable and is not retagged, so every row here is pinned to that one revision.
+The release is immutable and is not retagged, so every row here is pinned to that one revision.
 
 | Claim | Method | Observed | Level |
 | --- | --- | --- | --- |
@@ -113,7 +113,7 @@ Web Clipper 1.7.1, taken from the official Chrome release archive and installed 
 
 **Not activated: *Add to Obsidian*.** The destination still read *Last used*, so no clip was delivered: delivery into an exact vault and a readback of the created note are unverified. That is the one open Clipper surface — extension execution, template import, and extraction are established. No user browser profile and no vault note was changed.
 
-The synthetic and public-page selector work in [clipper-selectors.json](../tests/evidence/clipper-selectors.json) stays separate: it is a DOM-selector check, and the extension evidence above is what proves execution.
+The synthetic and public-page selector work stays separate: it is a DOM-selector check, and the extension evidence above is what proves execution.
 
 ## False-success hazards found while verifying
 
@@ -161,7 +161,7 @@ All seven runtime rows in [install-matrix.md](install-matrix.md) carry route-spe
 
 ## Local candidate: twenty-six packages
 
-The current local inventory adds four archival principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description`; `principle-skill-creating` and `secondbrain-mode` were added later and are registered through `scripts/audit_inventory.py` only. `tests/test_packages.py::DeclaredPackagesTest::test_twenty_four_packages` checks exact registration; `test_principles_install_without_siblings_or_contract_copies` copies each alone from a checkout with no siblings and verifies exact bytes, apply-when, citation, and absence of `contract.md`. `tests/test_inventory.py::RealManifestTest::test_four_principles_have_distinct_owners_and_local_resources` checks independent ownership. These checks are local evidence, not runtime discovery or publication. The historical twenty-package results below remain unchanged.
+The current local inventory adds four archival principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description`; `principle-skill-creating` and `secondbrain-mode` were added later. `tests/test_packages.py::DeclaredPackagesTest::test_twenty_four_packages` checks exact registration; `test_principles_install_without_siblings_or_contract_copies` copies each alone from a checkout with no siblings and verifies exact bytes, apply-when, citation, and absence of `contract.md`. `tests/test_inventory.py::RealManifestTest::test_four_principles_have_distinct_owners_and_local_resources` checks independent ownership. These checks are local evidence, not runtime discovery or publication. The historical twenty-package results below remain unchanged.
 
 The nine native packages and the eleven knowledge packages are checked together on the local candidate. Every row below is local; none is publication, installation or runtime evidence.
 
@@ -185,17 +185,17 @@ Not established: a runtime load of any knowledge package, automatic discovery, a
 | Format semantics | `tests/test_contracts.py`: actual JSON/YAML parsing and schema checks on neutral good/bad cases and shipped examples. These do not execute Clipper's template engine or replace native app checks. |
 | Source ownership and rights | `scripts/audit_inventory.py` checked both pinned source trees: 50 files, 135 responsibility units, 95 functional single-owner units, 40 supporting units. `tests/test_inventory.py` exercises omission, duplication, rights and digest tampering. |
 | Original assets | `tests/test_assets.py` checks every SVG against its rights ledger, exact hashes/bytes, safe XML and bilingual image references. |
-| Native metadata | `claude plugin validate . --strict` and validation of `.claude-plugin/plugin.json` passed; actual invocations and observed results are in [native-manifests.json](../tests/evidence/native-manifests.json). The other native JSON manifests parsed only. Loading is verified for Claude Code, in the canary above, and for Hermes, which reads no manifest from this repository and registers one unit per skill; it remains unverified for Codex, GJC, Grok, Cursor and vendor-neutral Agent Skills. |
+| Native metadata | `claude plugin validate . --strict` and validation of `.claude-plugin/plugin.json` passed. The other native JSON manifests parsed only. Loading is verified for Claude Code, in the canary above, and for Hermes, which reads no manifest from this repository and registers one unit per skill; it remains unverified for Codex, GJC, Grok, Cursor and vendor-neutral Agent Skills. |
 
-The `tests/test_*.py` rows above record what ran for the 0.3.0 release; the suite was removed afterwards. The remaining checks are `claude plugin validate . --strict`, `python3 scripts/sync_contracts.py --check` and `python3 scripts/audit_inventory.py`.
+The `tests/test_*.py` rows above record what ran for the 0.3.0 release; the suite, the source inventory audit, the contract sync script and the evidence files were removed afterwards. The remaining check is `claude plugin validate . --strict`.
 
-Browser selector checks are recorded in [clipper-selectors.json](../tests/evidence/clipper-selectors.json):
+Browser selector checks:
 synthetic selectors returned expected values and class-name drift returned no match.
 The public-page selector assertion failed because the expected heading was absent;
 no clip was delivered in that check. It is a DOM-selector probe, not the extension
 evidence — actual extension execution and extraction are recorded in their own
 section above, and clip delivery remains unverified there too.
-The local Headless failure is recorded in [headless-local.json](../tests/evidence/headless-local.json).
+The local Headless failure:
 
 Optional-policy absence and unselected presence are supported by independent package
 closure and explicit skill contracts. The diagnostic helper's missing-evidence

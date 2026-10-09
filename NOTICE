@@ -6,10 +6,7 @@ derived from MIT-licensed upstream work; the rest is authored here. This file
 records which is which, file by file, so the notice travels with the copies that
 require it.
 
-The machine-readable version of the original native record — with the SHA-256 digest of
-every source file, the responsibility units inside it, and the feature that owns
-each adopted behaviour — is `source-inventory.json`, checked by
-`scripts/audit_inventory.py`. Narrative lineage is in `PROVENANCE.md`.
+Narrative lineage is in `PROVENANCE.md`.
 The additive plugin-first visualization lineage is mapped separately in
 `skills/obsidian-visualize/references/source-map.json`; the authenticated native records
 are not rewritten by this addition.
@@ -151,10 +148,6 @@ repository can honour or pass on. Accordingly:
 - Every behaviour adopted from it was re-expressed from the underlying
   requirement and grounded in public vendor documentation, which each package
   cites in its own Git history.
-- `source-inventory.json` records all 37 inventoried files of that source with
-  their digests and marks every one of them `evidence-only`, which
-  `scripts/audit_inventory.py` enforces: a unit may not be marked `imported`
-  unless its source file carries a licence that permits copying.
 
 That source's own changelog claims a further third-party lineage for material
 that predates it, also without a licence notice. Since no expression from it is
