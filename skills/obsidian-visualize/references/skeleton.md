@@ -1,7 +1,7 @@
 # Skeleton ideas for plugin drawings
 
-Adapted from pi-extension at the pin in [../PROVENANCE.md](../PROVENANCE.md);
-its MIT grant travels in [../NOTICE](../NOTICE). This is input-design guidance,
+Adapted from pi-extension at the pin in [../PROVENANCE.md](PROVENANCE.md);
+its MIT grant travels in [../NOTICE](NOTICE). This is input-design guidance,
 not a claim that Obsidian accepts standalone skeleton JSON as a saved drawing.
 
 ## Shape, label and binding shorthand

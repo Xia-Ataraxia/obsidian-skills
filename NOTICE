@@ -11,7 +11,7 @@ every source file, the responsibility units inside it, and the feature that owns
 each adopted behaviour — is `source-inventory.json`, checked by
 `scripts/audit_inventory.py`. Narrative lineage is in `PROVENANCE.md`.
 The additive plugin-first visualization lineage is mapped separately in
-`skills/obsidian-visualize/source-map.json`; the authenticated native records
+`skills/obsidian-visualize/references/source-map.json`; the authenticated native records
 are not rewritten by this addition.
 
 
@@ -56,7 +56,7 @@ this repository's root `LICENSE` beside this repository's own copyright line:
 Each line is `this repository` <- `upstream path at 3ccff533`. Every one of
 these files was imported and then modified; the modifications are listed in the
 owning package's Git history. Each of these four packages also carries a copy
-of the MIT text in `skills/<package>/LICENSE` so the notice stays with the
+of the MIT text in `skills/<package>/references/LICENSE` so the notice stays with the
 package when a single package is installed on its own.
 
     skills/obsidian-markdown/SKILL.md                      <- skills/obsidian-markdown/SKILL.md
@@ -92,11 +92,11 @@ to them:
     skills/obsidian-doctor/
     skills/obsidian-sync/
 
-Each of these also ships `skills/<package>/LICENSE` — this repository's MIT
-licence, not a third-party notice — so an independently installed package still
-carries its own terms and attribution.
+These are covered by this repository's root `LICENSE`; a package root holds
+only `SKILL.md`.
 
-The original parts of `skills/obsidian-visualize/` also retain that MIT LICENSE;
+The original parts of `skills/obsidian-visualize/` keep a copy of that MIT text
+in `skills/obsidian-visualize/references/LICENSE`;
 its newly adapted parts additionally carry the notice in section 6 below.
 
 The repository-level files (`install.sh`, `scripts/`, `tests/`, `docs/`,
@@ -195,10 +195,10 @@ Upstream package: packages/skill-excalidraw/skills/excalidraw
     skills/obsidian-visualize/references/skeleton.md    <- references/skeleton.md (adapted)
 
 Original source hashes/bytes, complete tree exclusions and the owning F05
-mapping are in skills/obsidian-visualize/source-map.json. Modifications are
+mapping are in skills/obsidian-visualize/references/source-map.json. Modifications are
 recorded in the package Git history and PROVENANCE. No standalone app, font,
 binary or Obsidian plugin is copied. The following upstream grant is also
-retained verbatim in skills/obsidian-visualize/NOTICE for independent installs:
+retained verbatim in skills/obsidian-visualize/references/NOTICE for independent installs:
 
 MIT License
 

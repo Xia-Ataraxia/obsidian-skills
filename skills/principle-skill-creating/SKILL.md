@@ -23,7 +23,7 @@ The direction is always Markdown calling code. Judgment written as code is britt
 
 ## The package
 
-A package is `skills/<name>/SKILL.md` plus only the resources it actually uses.
+A package is `skills/<name>/SKILL.md` plus only the resources it actually uses. `SKILL.md` is the only file at the package root; everything else lives in a subfolder.
 
 | Part | Holds | Rule |
 | --- | --- | --- |

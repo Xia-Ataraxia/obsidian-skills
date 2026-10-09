@@ -512,6 +512,10 @@ def audit(data, root=ROOT, source_roots=None, *, native_contract=None):
                 if not any(_matches(pattern, path) for pattern in patterns):
                     errors.append(f"unpartitioned source file: {name} -> {path}")
 
+    for extra in sorted((root / "skills").glob("*/*")):
+        if extra.is_file() and extra.name != "SKILL.md":
+            errors.append(f"package root holds a file other than SKILL.md: {extra.relative_to(root)}")
+
     if any(row.get("rights") in COPYABLE_RIGHTS for row in files.values()):
         notice = root / "NOTICE"
         if not notice.is_file():

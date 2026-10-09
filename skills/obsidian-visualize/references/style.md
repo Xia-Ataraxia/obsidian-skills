@@ -1,7 +1,7 @@
 # Plugin layout recipes
 
-Adapted from the pinned pi-extension style reference; see [../NOTICE](../NOTICE)
-and [../PROVENANCE.md](../PROVENANCE.md). These are palette, spacing and layout
+Adapted from the pinned pi-extension style reference; see [../NOTICE](NOTICE)
+and [../PROVENANCE.md](PROVENANCE.md). These are palette, spacing and layout
 recipes, not evidence that an installed plugin has a particular font or renderer.
 Compute coordinates with the deterministic generator; for native edits preserve
 existing geometry unless its change is explicitly selected.
