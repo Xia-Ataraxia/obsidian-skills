@@ -8,6 +8,7 @@ Missing subtitles, inaccessible audio and absent segments remain explicit omissi
 Use an actually obtained transcript/export; do not reconstruct words from a generated summary.
 For YouTube, use `defuddle` with `-l <spoken language>` first; fall back to `yt-dlp`.
 Keep no caption file as an attachment.
+Transcribe a local audio or video file; keep no media file in the vault, and record its location, duration and transcription tool in Ingest Notes.
 Record the tool and the caption track (manual or auto-generated) in Ingest Notes.
 Preserve chapter headings and timestamps as obtained.
 Name a highlight reel or another programme's trailer in Ingest Notes; do not treat it as separate evidence.
