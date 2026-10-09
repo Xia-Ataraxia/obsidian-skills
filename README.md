@@ -90,6 +90,8 @@ Six more packages hold the stance that the eleven above work from.
 
 Supported runtimes are `claude`, `codex`, `gjc`, `grok`, `hermes`, `cursor` and `agent-skills`. Native plugin and tap commands, skill directories and requirements for each are in [docs/install-matrix.md](docs/install-matrix.md).
 
+Release: `scripts/release.sh <version>` on a clean `main` sets that version on every package and `plugin.json`, then tags, pushes and publishes a GitHub prerelease. Every package shares the release version.
+
 ## What is verified
 
 The nine Obsidian packages were installed natively on Claude Code and on Hermes, and exercised against an isolated Obsidian 1.12.7 profile. The knowledge packages pass the local format checks only; no runtime load of them is recorded. Do not install the `v0.1.0` tag on Hermes.
