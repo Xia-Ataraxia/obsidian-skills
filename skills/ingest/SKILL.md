@@ -2,7 +2,7 @@
 name: ingest
 description: Turn one selected URL, file, text or Inbox candidate into a preserved Raw source plus 10–15 created or updated Wiki pages, updated Maps and a refreshed index, in a single run. Use for ingest, paper analysis (12-axis), book notes (책 노트, 독서 노트, 목차 넣어줘), chapter promotion and attributed Persona updates. Not automatic collection, personal profiles or undesignated research questions.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Ingest
@@ -31,7 +31,7 @@ When a mothership is configured, search it read-only with the source's key conce
 
 ## Step 0.5 — Acquisition and conversion
 
-Obtain the full selected source. Convert binaries with an available document converter and audio with a transcription tool; retain the original in the `_attachments` location, except where the per-type reference says none is kept. A failed conversion halts the run with the missing tool named. Record `source_extraction`, `source_attachment` and conversion limits in `## Ingest Notes`.
+Obtain the full selected source. Convert a document file (PDF, Office, HWP, EPUB, HTML file, image) with an available document converter and retain the original in the `_attachments` location. Transcribe audio and video; keep no media file. A fetched URL keeps only its fetched text. A failed conversion halts the run with the missing tool named. Record `source_extraction`, `source_attachment` and conversion limits in `## Ingest Notes`.
 
 ## Step 1 — Analyze
 
@@ -43,7 +43,7 @@ Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 - key claims to track, with counterevidence;
 - connections to pages that already exist.
 
-Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book, write its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
+Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book, write its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, acquire it now as its own Raw per Step 0.5 and 2 with the inherited `purpose` (`reused`) and link it through `referenced`, without chasing the originals it cites in turn; when located but not fetchable (login, paywall, offline), compose `capture` for a manifest-only Inbox candidate with the citing passage and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
 
 Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
@@ -87,7 +87,7 @@ Check every item and fix failures before reporting:
 - Raw has verbatim `## Original Content` of the expected length;
 - the Inbox original is gone when the source came from the Inbox;
 - every new wikilink resolves and no duplicate page was created;
-- every secondary claim's original is linked, captured as an Inbox candidate or Book Index, or recorded as provenance unknown;
+- every secondary claim's original is linked as a Raw or Book Index, captured as an Inbox candidate because it could not be fetched, or recorded as provenance unknown;
 - every new page has `explored: false`, and high-confidence pages have a Bias Check;
 - every mothership link resolves on disk;
 - every touched page is linked from a Map.
