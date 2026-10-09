@@ -66,7 +66,7 @@ Updating an existing page is the default when one matches:
 - when the new information contradicts the page, keep both and add a `> [!warning] Contradiction` callout only when two located claims cannot both be true; record a detail the checked material is silent about as unverified;
 - preserve human-written passages and unknown frontmatter keys.
 
-New pages: Concepts use Overview/Details/Related/Sources/Open Questions with a `confidence` per [frontmatter](references/frontmatter.md); Entities cover both the secondary author and each original author, tagged `person` as upstream does so people stay queryable inside Entities; relationship notes about people belong to the mothership People collection, which ingest only links through `mothership` and never creates or edits; Guides hold step-by-step practice. Every new page starts `explored: false`. A `confidence: high` or synthesis-heavy page carries a Bias Check callout with a counter-argument and a data gap.
+New pages: Concepts use Overview/Details/Related/Sources/Open Questions with a `confidence` per [frontmatter](references/frontmatter.md); Entities cover both the secondary author and each original author, tagged `person` for a person; relationship notes about people stay in the mothership People collection, linked through `mothership`, never created or edited; Guides hold step-by-step practice. Every new page starts `explored: false`. A `confidence: high` or synthesis-heavy page carries a Bias Check callout with a counter-argument and a data gap.
 
 ## Step 3.5 — Persona
 
