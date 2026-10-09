@@ -255,7 +255,7 @@ AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 
 MIT — 두 저작권 고지가 모두 담긴 [LICENSE](LICENSE)를 참고하십시오.
 
-`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 Git history에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
+`obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-cli`의 일부는 [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills)의 커밋 `3ccff5338ea700537839b21900aa5358a0402c98`(MIT, Copyright © 2026 Steph Ango)에서 가져와 수정한 것입니다. `obsidian-visualize`의 검사·레이아웃 린트와 skeleton·style 참조는 [Jonghakseo/pi-extension](https://github.com/Jonghakseo/pi-extension)(MIT, Copyright © 2026 Jonghak Seo)을 바탕으로 고쳐 쓴 것이고, 그 패키지의 나머지는 원본입니다. 두 허가 고지는 [NOTICE](NOTICE)에 실려 있습니다. 나머지 네이티브 패키지 다섯 개와 지식 패키지 열한 개는 여기서 작성했습니다. 다만 `ingest`의 보조 스크립트 두 개와 그 테스트는 비공개 출처에서 옮겨 왔고 원 출처 권리가 아직 확인되지 않았습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오. 각 패키지의 Git history에 정확한 원본 리비전, 가져온 파일, 가한 수정이 모두 기록되어 있습니다.
 
 지식 패키지 열한 개의 작업 구성과 LLM 위키 워크플로는 구요한(Yohan Koo)의 [cmds-llm-wiki](https://github.com/johnfkoo951/cmds-llm-wiki)에서 착안했습니다. 그 저장소 역시 Andrej Karpathy의 LLM Wiki 패턴을 출처로 밝힙니다. 설계상의 영감일 뿐 파일이나 문장은 복사하지 않았으며, 그 저장소는 라이선스를 공개하지 않으므로 여기서 재배포하는 것은 없습니다. 보증이나 제휴 관계를 주장하지 않습니다. [PROVENANCE.md](PROVENANCE.md)를 참고하십시오.
 

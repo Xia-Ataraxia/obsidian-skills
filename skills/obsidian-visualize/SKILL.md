@@ -204,4 +204,4 @@ Use the plugin's automation API for an authorized selected edit of a plugin-mana
 
 ## Attribution
 
-The deterministic generator, full-scene adapter, native workbench helper and plugin workflow are original work under [LICENSE](references/LICENSE). Inspection/layout lint and the skeleton/style resources are adapted from Jonghak Seo's MIT-licensed pi-extension at the pin in [PROVENANCE.md](references/PROVENANCE.md), with its full grant retained in [NOTICE](references/NOTICE). No standalone app, font, binary or Obsidian plugin is redistributed. See Git history for source facts, versions, modifications and unrun runtime checks.
+The deterministic generator, full-scene adapter, native workbench helper and plugin workflow are original work under the repository's MIT `LICENSE`. Inspection/layout lint and the skeleton/style resources are adapted from Jonghak Seo's MIT-licensed pi-extension at the pin in [PROVENANCE.md](references/PROVENANCE.md), with its full grant retained in [NOTICE](references/NOTICE). No standalone app, font, binary or Obsidian plugin is redistributed. See Git history for source facts, versions, modifications and unrun runtime checks.

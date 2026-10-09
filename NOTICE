@@ -55,9 +55,8 @@ this repository's root `LICENSE` beside this repository's own copyright line:
 
 Each line is `this repository` <- `upstream path at 3ccff533`. Every one of
 these files was imported and then modified; the modifications are listed in the
-owning package's Git history. Each of these four packages also carries a copy
-of the MIT text in `skills/<package>/references/LICENSE` so the notice stays with the
-package when a single package is installed on its own.
+owning package's Git history. The notice is kept here, in the root `LICENSE`
+and in the README attribution, not inside each package.
 
     skills/obsidian-markdown/SKILL.md                      <- skills/obsidian-markdown/SKILL.md
     skills/obsidian-markdown/references/CALLOUTS.md        <- skills/obsidian-markdown/references/CALLOUTS.md
@@ -95,9 +94,8 @@ to them:
 These are covered by this repository's root `LICENSE`; a package root holds
 only `SKILL.md`.
 
-The original parts of `skills/obsidian-visualize/` keep a copy of that MIT text
-in `skills/obsidian-visualize/references/LICENSE`;
-its newly adapted parts additionally carry the notice in section 6 below.
+The original parts of `skills/obsidian-visualize/` are covered the same way;
+its adapted parts additionally carry the notice in section 6 below.
 
 The repository-level files (`install.sh`, `scripts/`, `tests/`, `docs/`,
 `AGENTS.md`, `README.md`, `README.ko.md`, the plugin and marketplace manifests,
