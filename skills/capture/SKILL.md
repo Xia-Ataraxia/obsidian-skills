@@ -38,7 +38,7 @@ Prefer the least lossy available path, and record which one you used as `source_
 | Existing tab group or open tabs | The aside browser: list tabs, read titles and URLs non-destructively, then read each selected tab's text | Ask the owner to paste or export the text |
 | Normal URL that opens without the owner's session | `defuddle` | The aside browser, then a paste |
 | Account-bound or script-rendered page, AI chat | The aside browser reading the page; a built-in copy/export control when it yields local text without a share link | The owner's export or paste |
-| Video or podcast | For YouTube `defuddle` with `-l`, per `ingest`'s videos reference; otherwise `yt-dlp` for metadata and original-language subtitles | Manifest-only with the locator; say no transcript was available |
+| Video or podcast | `defuddle` for YouTube; otherwise `yt-dlp` | Manifest-only with the locator; say no transcript was available |
 | Local file | Read it directly | Name the converter that is missing |
 | Chat conversation | [conversations](references/conversations.md) | — |
 | Agent sessions | [sessions](references/sessions.md) | — |
