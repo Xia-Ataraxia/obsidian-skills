@@ -3,7 +3,7 @@ name: obsidian-canvas
 description: Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mentions Canvas files in Obsidian. Not for Markdown note syntax, .base file internals, or diagrams written as code blocks inside a note.
 license: MIT
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Obsidian Canvas Skill

@@ -2,7 +2,7 @@
 name: onboard
 description: Initializes an independent personal or knowledge vault through a short owner interview that fills template placeholders and writes the core context note, proposes settings changes for an existing vault, and resumes an interrupted setup by detecting what is already done. Use for fresh vault setup, additive onboarding, or a zero-diff rerun. Not for moving existing notes, installing skills, Sync pairing, source ingestion, or editing vault policy.
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Onboard

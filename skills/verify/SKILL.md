@@ -3,7 +3,7 @@ name: verify
 description: Reviews one Wiki page, or the claims the owner names on it, against evidence read in this session - checks it is well-formed knowledge, consistent with its sources and other pages, and how strongly it can be confirmed - then reports and, on approval, writes the outcome back. Use for claim review, contradiction checking, confidence calibration, or resolving a disputed page. Not for general knowledge queries, vault-wide quality sampling (audit), or syntax and link linting (lint).
 license: MIT
 metadata:
-  version: "0.5.0"
+  version: "0.5.1"
 ---
 
 # Verify — Wiki Page Verification
