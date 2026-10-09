@@ -11,7 +11,7 @@ aliases: []
 description: {{description}}
 source: []
 related: []
-confidence: {{evidence_grounded_confidence}}
+confidence: {{high_medium_or_low}}
 explored: false
 ---
 
@@ -39,6 +39,7 @@ explored: false
 ## Sources
 
 {{raw_links_and_anchors}}
+- Confidence reason: {{why_this_level}}
 
 ## Open Questions
 

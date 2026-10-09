@@ -36,13 +36,13 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Acquisition time | source_obtained_at | Raw, books | date ingested, conversion-date |
 | Publication date | date_published | Raw, hub, books | date created |
 | In-vault evidence notes | source (wikilink list) | Entity, Concept, Persona, Guide, hub | source URL |
-| Originals/earlier captures | referenced (wikilink list; an original not yet ingested is linked as its Inbox candidate, whose note name its Raw keeps) | secondary Raw, new full capture | traced_from |
+| Originals/earlier captures | referenced (wikilink list; a non-book original not yet ingested is linked as its Inbox candidate, whose note name its Raw keeps; a cited book is linked as its Book Index) | secondary Raw, new full capture | traced_from |
 | Related knowledge | related (wikilink list) | Entity, Concept, Persona, Guide | — |
 | Collection purpose | purpose | Raw, books (inherited) | collectionPurpose, user_intent_interview |
 | Purpose basis | purpose_origin (stated/reused/inferred/unknown) | Raw, books | — |
 | Retained binary | source_attachment | converted Raw, PDF hub | source-attachment |
 | Read-only mothership connection | mothership (verified deeplink list) | Raw, Entity, Concept | mainVaultRelated; reject mainVaultCmds/source-vault |
-| Knowledge confidence | confidence | Concept | not fidelity |
+| Knowledge confidence | confidence: exactly `high`, `medium` or `low`, nothing else in the value; the level follows `verify`'s calibration table and the reason is the last item under `## Sources` | Concept | not fidelity |
 | Exploration flag | explored | Entity, Concept, Guide | — |
 | Persona target | personaOf (scalar Entity link) | Persona | — |
 | Persona maturity | personaMaturity (preserve existing) | Persona | — |
