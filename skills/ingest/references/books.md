@@ -17,7 +17,7 @@ This URL acquisition remains the contract for web books. A commercial or offline
 
 ### Book cited by a source
 
-Write one Book Index from [book-index-cited](../templates/book-index-cited.md) and link it from the citing Raw through `referenced`. Create no chapter stubs. When the owner starts reading, run B-2 and B-3.
+Write one Book Index and link it from the citing Raw through `referenced`. Create no chapter stubs: leave the TOC lines unlinked and omit Progress Tracking. When the owner starts reading, run B-2 and B-3.
 
 ### B-2 — Create Book Index (one Raw)
 
