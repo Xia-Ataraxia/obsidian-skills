@@ -13,9 +13,8 @@
 패키지 하나는 한 가지 일을 맡는 `SKILL.md` 하나입니다. 루트 스킬도, 디스패처도, 공유 런타임도 없습니다. 에이전트는 그 작업에 필요한 패키지만 불러옵니다.
 
 ```sh
-git clone https://github.com/Xia-Ataraxia/secondbrain-skills
-cd secondbrain-skills
-./install.sh copy --runtime claude --skill all --scope user --apply
+claude plugin marketplace add Xia-Ataraxia/secondbrain-skills
+claude plugin install secondbrain-skills@secondbrain-skills
 ```
 
 그다음에는 평소 말로 시키면 됩니다. *"이 글 ingest 해줘."*
@@ -78,17 +77,17 @@ cd secondbrain-skills
 
 ## 설치
 
-`install.sh`는 패키지를 런타임의 스킬 디렉터리로 복사합니다. 기본은 드라이 런이고, 네트워크에 접속하지 않으며, 대상 위치에 파일이 하나라도 있으면 전체 실행을 거부합니다.
+각 런타임의 공식 플러그인·스킬 레지스트리로 설치하고, 업데이트도 같은 경로로 합니다. 이 저장소는 설치 스크립트를 제공하지 않습니다. 플러그인과 함께 스킬 디렉터리에 복사본을 두면 복사본이 플러그인을 가립니다.
 
-```sh
-./install.sh skills                                        # 이 체크아웃에 있는 패키지
-./install.sh copy --runtime cursor --skill all --scope user        # 드라이 런
-./install.sh copy --runtime claude --skill ingest \
-  --scope project --project-root ~/work/notes --apply      # 패키지 하나를 프로젝트 하나에
-./install.sh native --runtime hermes                       # 네이티브 경로 출력
-```
+| 런타임 | 설치 | 업데이트 |
+| --- | --- | --- |
+| Claude Code | `claude plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 `claude plugin install secondbrain-skills@secondbrain-skills` | `claude plugin marketplace update secondbrain-skills` 후 `claude plugin update secondbrain-skills@secondbrain-skills` |
+| Codex | `codex plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 `codex plugin add secondbrain-skills@secondbrain-skills` | `codex plugin marketplace upgrade secondbrain-skills` 후 `codex plugin add secondbrain-skills@secondbrain-skills` |
+| GJC | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 `gjc plugin install secondbrain-skills@secondbrain-skills` | `gjc plugin marketplace update secondbrain-skills` 후 `gjc plugin upgrade secondbrain-skills@secondbrain-skills` |
+| Grok Build | `grok plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 Marketplace 탭에서 설치 | Marketplace 탭 |
+| Hermes | `hermes skills tap add Xia-Ataraxia/secondbrain-skills` 후 패키지마다 `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` | 탭 |
 
-지원 런타임은 `claude`, `codex`, `gjc`, `grok`, `hermes`, `cursor`, `agent-skills`입니다. 런타임별 네이티브 플러그인·탭 명령, 스킬 디렉터리, 요구 사항은 [docs/install-matrix.md](docs/install-matrix.md)에 있습니다.
+플러그인 레지스트리가 없는 런타임(Cursor, 일반 Agent Skills)은 스킬 디렉터리의 `skills/<name>/` 폴더를 읽습니다. 그 런타임이 문서화한 가져오기 방법을 쓰십시오.
 
 ## 검증된 것
 
@@ -100,9 +99,7 @@ Obsidian 패키지 아홉 개는 Claude Code와 Hermes에 네이티브로 설치
 
 ```
 skills/<name>/SKILL.md   패키지 하나. 나머지는 모두 옆의 하위 폴더에 둡니다
-install.sh               충돌을 검사하는 복사 설치기와 경로 표
-scripts/                 인벤토리 감사와 계약 동기화
-docs/                    이름 규칙, 계약, 설치·검증 매트릭스, 보안
+docs/                    이름 규칙, 계약, 검증 매트릭스, 보안
 AGENTS.md                기여자와 에이전트를 위한 저장소 계약
 ```
 

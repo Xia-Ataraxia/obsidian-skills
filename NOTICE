@@ -94,7 +94,7 @@ only `SKILL.md`.
 The original parts of `skills/obsidian-visualize/` are covered the same way;
 its adapted parts additionally carry the notice in section 6 below.
 
-The repository-level files (`install.sh`, `scripts/`, `tests/`, `docs/`,
+The repository-level files (`docs/`,
 `AGENTS.md`, `README.md`, `README.ko.md`, the plugin and marketplace manifests,
 and this file) are likewise authored here.
 

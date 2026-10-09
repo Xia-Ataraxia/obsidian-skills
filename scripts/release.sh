@@ -8,7 +8,6 @@ git diff --quiet HEAD || { echo "working tree not clean" >&2; exit 1; }
 git fetch -q origin && [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "main is not at origin/main" >&2; exit 1; }
 perl -pi -e 's/^(  version: )".*"/$1"$ENV{V}"/' skills/*/SKILL.md
 perl -pi -e 's/^(  "version": )".*"/$1"$ENV{V}"/' .claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json
-perl -pi -e 's/^PKG_VERSION=.*/PKG_VERSION=$ENV{V}/' install.sh
 grep -L "^  version: \"$V\"" skills/*/SKILL.md | grep . && { echo "packages above have no metadata.version" >&2; exit 1; }
 git commit -qam "release: $V"
 git tag "$V"
