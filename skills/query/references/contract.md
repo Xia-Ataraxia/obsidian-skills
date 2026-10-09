@@ -5,6 +5,16 @@ Every knowledge package states approval, purpose, source and fidelity with the f
 
 A field is a record of something that happened or was decided. Writing a field does not grant the permission, establish the fact, or perform the check it names.
 
+## Consumer impact and Raw boundary
+
+| Consumer | Representation | Effect of compact Raw schema |
+| --- | --- | --- |
+| capture, inbox, ingest | Raw frontmatter | No approval_*, fidelity*, source_content_digest/bytes or ordinary Raw status. Purpose/source fields remain; capture integrity uses approved byte spans outside notes. |
+| query, verify, audit, lint, status, reindex, refresh-context, onboard | task requests/results, including verify_io/audit_io | Approval fields below remain mandatory when applicable; removing Raw metadata never removes task-request approval. |
+| all eleven knowledge consumers | narrative evidence/limitations | Fidelity distinctions below remain meaningful; ingest writes them in body `## Ingest Notes`, not Raw fields. |
+
+The Approval and Fidelity tables describe task records and reports, not required Raw frontmatter. Ingest's package-local frontmatter reference owns its templates. Original evidence remains separate from interpretation. Raw source deletion still requires separate concrete-effect approval and immediate preservation checks.
+
 ## Approval
 
 Approval is an explicit statement by the vault owner about one concrete effect. It is never inferred from a question, from the arrival of material, from an earlier and different approval, or from a package being installed.

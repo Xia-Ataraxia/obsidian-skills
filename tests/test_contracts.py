@@ -1435,7 +1435,7 @@ def knowledge_names() -> list:
     match = re.search(r"^KNOWLEDGE_SKILLS='([^']*)'", INSTALLER.read_text("utf-8"), re.M)
     if match is None:
         raise AssertionError("install.sh no longer declares KNOWLEDGE_SKILLS")
-    return match.group(1).split()
+    return [name for name in match.group(1).split() if not name.startswith("principle-")]
 
 
 def present_knowledge_packages() -> list:
@@ -1520,6 +1520,21 @@ class SharedContractTest(unittest.TestCase):
     def test_the_source_starts_with_the_generated_copy_header(self):
         self.assertTrue(CONTRACT_SOURCE.read_bytes().startswith(CONTRACT_HEADER))
 
+    def test_raw_boundary_does_not_remove_task_request_approval(self):
+        source = CONTRACT_SOURCE.read_text()
+        self.assertIn("verify_io/audit_io", source)
+        self.assertIn("not required Raw frontmatter", source)
+        approval = source.split("## Approval", 1)[1].split("## Purpose", 1)[0]
+        for field in ("approval_state", "approval_effect", "approval_scope", "approval_basis", "approval_preimage"):
+            self.assertIn("`" + field + "`", approval)
+        self.assertIn("delete` and `send` are always approved separately", approval)
+
+    def test_principles_are_standalone_without_shared_contract_copies(self):
+        principles = sorted(SKILLS_DIR.glob("principle-*"))
+        self.assertEqual(len(principles), 4)
+        for package in principles:
+            self.assertFalse((package / CONTRACT_COPY).exists())
+
     def test_installer_generator_and_audit_declare_the_same_knowledge_packages(self):
         scripts = str(REPO / "scripts")
         self.addCleanup(lambda: scripts in sys.path and sys.path.remove(scripts))
@@ -1529,7 +1544,7 @@ class SharedContractTest(unittest.TestCase):
 
         self.assertEqual(len(knowledge_names()), 11)
         self.assertEqual(tuple(knowledge_names()), sync_contracts.KNOWLEDGE_PACKAGES)
-        self.assertEqual(tuple(knowledge_names()), audit_inventory.KNOWLEDGE_PACKAGES)
+        self.assertEqual(tuple(knowledge_names()), tuple(name for name in audit_inventory.KNOWLEDGE_PACKAGES if not name.startswith("principle-")))
         self.assertEqual(CONTRACT_HEADER, sync_contracts.HEADER)
 
     def test_every_present_knowledge_package_carries_the_byte_identical_copy(self):

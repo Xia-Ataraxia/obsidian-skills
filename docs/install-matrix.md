@@ -142,7 +142,9 @@ The same class of refusal also covers a repeated `--scope` or `--project-root` w
 `./install.sh skills` reports each declared package as `[present]`, `[BROKEN ]` (a directory without `SKILL.md`), or `[absent ]`, prints how many are installable from the checkout, and closes by restating that each package stands alone, with no router, no dispatcher and no shared runtime. Twenty names are fixed in the installer, and a name outside them is refused:
 
 - native: `obsidian-markdown`, `obsidian-bases`, `obsidian-canvas`, `obsidian-mermaid`, `obsidian-visualize`, `obsidian-cli`, `obsidian-clipper`, `obsidian-doctor`, `obsidian-sync`;
-- knowledge: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`.
+- knowledge: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, `onboard`, `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, `principle-collective-description`.
+
+The current local candidate declares twenty-four packages. Each principle can be selected alone with `copy --runtime claude --skill <name> --scope project --apply`; it needs no sibling directory or shared contract copy. `tests/test_packages.py::DeclaredPackagesTest::test_principles_install_without_siblings_or_contract_copies` checks isolated temporary materialization and byte readback. Historical pins and runtime observations below still concern their original package sets; no new runtime load is claimed.
 
 `--skill all` selects the nine native packages plus every knowledge package present in the checkout.
 

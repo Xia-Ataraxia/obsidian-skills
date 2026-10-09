@@ -57,6 +57,54 @@ class AssetRightsTests(unittest.TestCase):
                 self.assertTrue(alt.strip())
 
 
+class IngestTemplateTests(unittest.TestCase):
+    """Check role-specific schemas, not merely field membership."""
+
+    def test_router_covers_steps_modes_and_named_principles(self):
+        package = ROOT / "skills/ingest"
+        router = (package / "SKILL.md").read_text()
+        comparison = (package / "references/comparison.md").read_text()
+        for step in ("0", "0-a", "0.5", "1", "2", "3", "3.5", "4", "5", "6", "7"):
+            self.assertRegex(router, r"(?m)^## Step " + re.escape(step) + r" —")
+            self.assertRegex(comparison, r"\| Step " + re.escape(step) + r"(?:[: ])")
+        for name in ("principle-respect-des-fonds", "principle-original-order", "principle-hierarchical-management", "principle-collective-description"):
+            self.assertIn("`" + name + "`", router)
+        for mode in ("Paper", "Book"):
+            self.assertIn("## " + mode + " mode", router)
+            self.assertIn(mode + " Mode", comparison)
+        self.assertIn("Guide mode", comparison)
+        self.assertIn("863ca43", comparison)
+
+    def test_role_types_tags_and_status_rules(self):
+        expected = {
+            "raw": ("article", "reference/article", None),
+            "entity": ("note", "knowledge/entity", None),
+            "concept": ("note", "knowledge/concept", None),
+            "persona": ("note", "knowledge/persona", None),
+            "guide": ("guide", "knowledge/guide", "todo"),
+            "paper-hub": ("paper", "reference/paper", "todo"),
+            "book-index": ("book", "reference/book", None),
+            "book-chapter": ("book", "reference/book", "stub"),
+        }
+        chapter_fields = {"bookIndex", "chapterNumber", "chapterPart", "chapterPrev", "chapterNext"}
+        for role, (kind, tag, status) in expected.items():
+            with self.subTest(role=role):
+                text = (ROOT / "skills/ingest/templates" / (role + ".md")).read_text()
+                frontmatter = text.split("---", 2)[1]
+                fields = dict(re.findall(r"^([A-Za-z_]+): (.*)$", frontmatter, re.M))
+                self.assertEqual(fields["type"], kind)
+                self.assertIn(tag, fields["tags"])
+                self.assertEqual(fields.get("status"), status)
+                self.assertTrue({"date_created", "date_modified", "created_by", "authorship", "model", "effort", "aliases", "description"} <= fields.keys())
+                self.assertEqual(chapter_fields & fields.keys(), chapter_fields if role == "book-chapter" else set())
+                self.assertFalse(any(key.startswith(("approval_", "fidelity", "source_content_")) for key in fields))
+                if role in {"entity", "concept", "guide"}:
+                    self.assertEqual(fields["explored"], "false")
+                if role == "paper-hub":
+                    self.assertIn("source", fields)
+                    self.assertIn("## Captures", text)
+
+
 class EvidenceReferenceTests(unittest.TestCase):
     """Every evidence link in the matrix resolves, and no report is unpublished."""
 

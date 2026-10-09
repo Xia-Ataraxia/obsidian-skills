@@ -645,7 +645,7 @@ class SyntheticAuditTest(unittest.TestCase):
 
     def test_feature_outside_the_native_and_knowledge_registries_is_rejected(self):
         data = copy.deepcopy(self.data)
-        data["features"]["K12"] = {"name": "extra", "package": "skills/obsidian-sync"}
+        data["features"]["K99"] = {"name": "extra", "package": "skills/obsidian-sync"}
         self.assertTrue(
             any(e.startswith("feature registry must declare exactly") for e in self._audit(data))
         )
@@ -660,6 +660,20 @@ class SyntheticAuditTest(unittest.TestCase):
 
 class RealManifestTest(unittest.TestCase):
     """Properties of the shipped inventory that a reviewer should not have to hand-check."""
+
+    def test_four_principles_have_distinct_owners_and_local_resources(self):
+        names = {
+            "principle-respect-des-fonds", "principle-original-order",
+            "principle-hierarchical-management", "principle-collective-description",
+        }
+        rows = [row for row in MANIFEST["knowledge_capabilities"] if row["package"] in names]
+        self.assertEqual({row["package"] for row in rows}, names)
+        self.assertEqual(len({row["owner"] for row in rows}), 4)
+        for row in rows:
+            package = ROOT / "skills" / row["package"]
+            self.assertEqual(list(package.rglob("contract.md")), [])
+            self.assertTrue((package / "LICENSE").is_file())
+            self.assertTrue((package / "CHANGELOG.md").is_file())
 
     def test_real_manifest_passes_the_audit(self):
         self.assertEqual([], audit(MANIFEST, ROOT))

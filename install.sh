@@ -84,9 +84,9 @@ PKG_LICENSE=MIT
 
 # The nine packages this release declares. A name outside this list is refused.
 PACKAGE_SKILLS='obsidian-markdown obsidian-bases obsidian-canvas obsidian-mermaid obsidian-visualize obsidian-cli obsidian-clipper obsidian-doctor obsidian-sync'
-# The eleven knowledge packages. They are declared by name so that one can be
+# The fifteen knowledge packages. They are declared by name so that one can be
 # copied on its own as soon as it exists; 'all' selects the ones present.
-KNOWLEDGE_SKILLS='capture inbox ingest query verify audit lint status reindex refresh-context onboard'
+KNOWLEDGE_SKILLS='capture inbox ingest query verify audit lint status reindex refresh-context onboard principle-respect-des-fonds principle-original-order principle-hierarchical-management principle-collective-description'
 
 KNOWN_RUNTIMES='claude codex gjc grok hermes cursor agent-skills'
 
@@ -643,8 +643,8 @@ cmd_copy() {
 cmd_help() {
   cat <<EOF
 ${PKG_NAME} ${PKG_VERSION} (${PKG_STATUS}) — ${PKG_ORG} — ${PKG_LICENSE}
-Twenty Agent Skills, the secondbrain-skills collection: nine native Obsidian
-packages and eleven knowledge packages. No router, no dispatcher: each package
+Twenty-four Agent Skills, the secondbrain-skills collection: nine native Obsidian
+packages and fifteen knowledge packages. No router, no dispatcher: each package
 stands alone.
 
 USAGE
@@ -654,7 +654,7 @@ COMMANDS
   routes                     Print every runtime's confirmed route, the manifest
                              that backs it, its skill directories, its published
                              reference and the evidence it was confirmed from.
-  skills                     List the twenty declared packages and whether each
+  skills                     List the twenty-four declared packages and whether each
                              is present in this checkout.
   native  --runtime <id>     Print the native install commands for one runtime.
                              Nothing is executed. A runtime without a self-serve

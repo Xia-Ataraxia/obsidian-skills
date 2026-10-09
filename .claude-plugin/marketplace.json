@@ -1,7 +1,7 @@
 {
   "name": "secondbrain-skills",
   "version": "0.3.0",
-  "description": "Obsidian Agent Skills by Xia-Ataraxia: Obsidian-flavoured Markdown, Bases, JSON Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and vault sync. Version 0.3.0 is a public prerelease and is registered from a repository or a local path, not from a public plugin directory. The plugin ships the whole secondbrain-skills collection: these nine native packages and eleven knowledge packages.",
+  "description": "Twenty-four independent secondbrain-skills packages: nine native Obsidian and fifteen knowledge packages, including four archival principles. Version 0.3.0 is a public prerelease; the principles are local candidate additions, not verified runtime loads.",
   "owner": {
     "name": "Xia-Ataraxia",
     "url": "https://github.com/Xia-Ataraxia"
@@ -11,7 +11,7 @@
       "name": "secondbrain-skills",
       "source": "./",
       "displayName": "Obsidian Skills",
-      "description": "Twenty self-contained Agent Skills: nine native Obsidian packages and eleven knowledge packages. Each skill is a portable SKILL.md package under skills/ with its own references and assets; the plugin is a distribution container only and ships no router, no dispatcher, and no shared runtime.",
+      "description": "Twenty-four self-contained Agent Skills: nine native Obsidian and fifteen knowledge packages. Four independently usable archival principles carry no shared contract copies. This is a distribution container, not a router, dispatcher, or shared runtime.",
       "category": "knowledge-management",
       "tags": [
         "obsidian",
@@ -50,7 +50,11 @@
           "status",
           "reindex",
           "refresh-context",
-          "onboard"
+          "onboard",
+          "principle-respect-des-fonds",
+          "principle-original-order",
+          "principle-hierarchical-management",
+          "principle-collective-description"
         ]
       }
     }

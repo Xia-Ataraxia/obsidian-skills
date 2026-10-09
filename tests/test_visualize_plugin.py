@@ -27,7 +27,7 @@ class PluginImportTests(unittest.TestCase):
     def setUp(self):
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve()
         self.source = self.root / "Flow.excalidraw"
         self.target = self.root / "Flow.excalidraw.md"
         self.scene = flow_scene().to_scene()
@@ -161,6 +161,17 @@ class PluginImportTests(unittest.TestCase):
         with self.assertRaises(adapter.drawing.SceneWriteError):
             adapter.import_scene(str(self.source), str(self.target), digest)
         self.assertEqual(actual.read_text(), "Keep.\n")
+
+    def test_symlink_source_is_refused_without_creating_target(self):
+        real_source = self.root / "Real.excalidraw"
+        raw = json.dumps(self.scene, ensure_ascii=False).encode()
+        real_source.write_bytes(raw)
+        alias = self.root / "Alias.excalidraw"
+        alias.symlink_to(real_source)
+        with self.assertRaises(adapter.drawing.SceneWriteError):
+            adapter.import_scene(str(alias), str(self.target), hashlib.sha256(raw).hexdigest())
+        self.assertFalse(self.target.exists())
+        self.assertEqual(real_source.read_bytes(), raw)
 
     def test_cli_import_materializes_a_valid_plugin_document(self):
         digest = self.source_bytes()

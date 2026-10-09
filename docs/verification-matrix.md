@@ -159,13 +159,15 @@ All seven runtime rows in [install-matrix.md](install-matrix.md) carry route-spe
 | Deployed cutover | published, canaried, and installed into operator profiles; a downstream consumer update is reported, but no old owner retired, no post-change caller audit, no deployed rollback | steps 5–7 of [cutover.md](cutover.md) are outstanding, and a deployed consumer change is admitted in the source-local authoring path, separately from anything in this repository |
 | Other platforms | Windows and non-macOS hosts not exercised | `install.sh` is POSIX `sh`; portability is unverified |
 
-## Local release candidate: twenty packages
+## Local candidate: twenty-four packages
+
+The current local inventory adds four archival principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description`. `tests/test_packages.py::DeclaredPackagesTest::test_twenty_four_packages` checks exact registration; `test_principles_install_without_siblings_or_contract_copies` copies each alone from a checkout with no siblings and verifies exact bytes, apply-when, citation, and absence of `contract.md`. `tests/test_inventory.py::RealManifestTest::test_four_principles_have_distinct_owners_and_local_resources` checks independent ownership. These checks are local evidence, not runtime discovery or publication. The historical twenty-package results below remain unchanged.
 
 The nine native packages and the eleven knowledge packages are checked together on the local candidate. Every row below is local; none is publication, installation or runtime evidence.
 
 | Claim | Method | Observed | Level |
 | --- | --- | --- | --- |
-| The collection declares twenty packages | `tests/test_packages.py::test_twenty_packages`, manifests and inventory | nine native and eleven knowledge names, one directory and one owning package each; the Claude manifests list both groups | static registration |
+| The 0.3.0 collection declared twenty packages (historical row; the pin is now `test_twenty_four_packages`) | `tests/test_packages.py::test_twenty_packages` at the 0.3.0 run, manifests and inventory | nine native and eleven knowledge names, one directory and one owning package each; the Claude manifests list both groups | static registration |
 | The directory copy materializes all twenty | `./install.sh copy --runtime claude --skill all --scope project --apply` into a disposable project | exactly twenty package directories; every copied file byte-identical to the checkout | temporary materialization |
 | A symlinked destination refuses the copy | a symlink at one package destination in a disposable project | exit 1; the disposable tree, the link and its target unchanged | materialized readback |
 | Knowledge scenarios run end to end | package scripts in temporary vaults: onboarding, direct ingest with a query deeplink, capture through Inbox to ingest, additive onboarding with collision refusals | scenarios passed; refusals left their fixtures unchanged | local behavior |

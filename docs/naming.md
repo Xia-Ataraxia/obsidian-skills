@@ -4,7 +4,7 @@ How packages, their files and the collection are named. The layout is the Agent 
 
 ## The collection
 
-The collection is `secondbrain-skills`: 9 native Obsidian packages and 11 knowledge packages.
+The collection is `secondbrain-skills`: 9 native Obsidian packages and 15 knowledge packages (11 workflow packages and 4 archival principle packages).
 
 Today the manifests name the collection only as descriptive metadata:
 

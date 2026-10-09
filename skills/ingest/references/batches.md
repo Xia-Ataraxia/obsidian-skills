@@ -1,73 +1,40 @@
-# Selected Inbox batches
+# Selected batches
 
-```bash
-python3 scripts/ingest.py --vault "$VAULT" --handoff "$HANDOFF" --request "$MAPPING"
-python3 scripts/ingest.py --vault "$VAULT" --handoff "$HANDOFF" --request "$MAPPING" --apply
+Use the same direct CLI with one JSON request:
+
+```json
+{
+  "purpose": "Understand public evidence preservation",
+  "members": [
+    {
+      "source_input": "candidate",
+      "source_kind": "article",
+      "locator": "Inbox/public-candidate.md",
+      "obtained_at": "2026-10-08",
+      "candidate_index": 0,
+      "raw_path": "Raw/public-article.md"
+    }
+  ]
+}
 ```
 
-This consumes the actual `inbox/handoff@1` produced by Inbox.
-It is a package-local input boundary, not a dispatcher or shared runtime.
-The single-source `--request` interface remains available without `--handoff`.
+```bash
+python3 scripts/ingest.py --vault "$VAULT" --request "$REQUEST" --state "$SESSION"
+python3 scripts/ingest.py --vault "$VAULT" --apply-state "$SESSION"
+```
 
-## Inputs
+One common nonempty purpose is applied once, with `purpose_origin: reused` for each member. Members otherwise use the [direct interface](interface.md). All members preflight before the first mutation. Exact input bytes and all aggregate target preimages are held in session state outside notes. Later members read staged Raw/Wiki output, so selected excerpts can share an explicit destination without losing earlier evidence. Different source identities cannot share a Raw. New full-text captures must name a new Raw path rather than reuse the old excerpt destination.
 
-The handoff supplies its existing schema, ready-for-ingest status, consumer ingest, Inbox scope, selected_paths, selected_preimages, one purpose/purpose_origin, source_groups, unclassified_paths and empty mutations_performed.
-Each captured member identifies candidate_path, zero-based candidate_index and the complete source record.
-The helper verifies the selected files' current SHA256, scope, member indices and exact structured source values.
-It refuses missing, duplicate, altered, unselected or outside-scope members.
-Group labels are not identity or permission: explicit differing source identities are kept distinct even if Inbox grouped their common locator.
+The final `ingest/result@2` contains one merged change per path and one result per member. Readback checks verify final postimages. A refused preflight writes nothing; a partial I/O failure reports already written outputs. Quiesce competing writers, inspect partial output and preflight a new reviewed session against current bytes; do not blindly replay a stale session or replace human changes. The Phase 3 caller wraps the aggregate writes in one git transaction, not one commit per member.
 
-The mapping JSON has exactly two keys:
+## Inbox boundary
 
-- `members`: a list of `{candidate_path, candidate_index, request}`.
-- `approval`: one concrete owner approval record for the final batch effects.
+The old `--handoff` mapping and CLI approval protocol are removed. `inbox.py` emits `inbox/handoff@1`, a prepared selection, **not** a request understood by the ingest CLI; this boundary is kept as is (see the independently selected inbox skill, references/handoff.md). The caller maps exactly the selected candidates/member indices into the members JSON above, one member per handoff member, preserving the handoff's purpose and checking its selected input preimages before preflight. Do not silently consume unselected RSS or infer destinations from a group title.
 
-Every selected member needs exactly one mapping.
-The captured member's `request` supplies the existing single-source output fields: raw_path, optional wiki_path, analyses, attachment_path, chapters, methodology, citation, optional_links, targets, Persona citation fields, bounded catalog and destination note_fields.
-Do not repeat or override purpose, approval, source_input, locator, candidate_index, source_kind, identity, obtained_at, text or selection there.
-Those source facts are read from the actual digest-bound capture member.
+The regression replay uses the real capture→inbox selection, maps selected members explicitly, and verifies retained candidate/unselected bytes.
 
-For a selected unclassified file, use candidate_index null.
-Its request must explicitly provide the real source_kind and obtained_at required by the direct file reader, plus any actually known identity, fidelity, omissions or selected range and its output fields.
-The input is that selected UTF-8 file, with locator resolved against --vault.
-No source record or provenance is invented for it.
+## Category batches
 
-The common handoff purpose is used once at invocation and recorded as reused in every produced note when known.
-Unknown stays unknown and permits preservation only.
-If supplied, destination user_intent_interview must equal the common purpose.
-Nothing prompts for a second purpose.
+Re-ingest of existing Raw is proven per category by one representative pilot, nine in all (the categories listed in [re-ingest](reingest.md)), each preflighted, approved and published as its own single `--git` commit with disk/HEAD/origin readback. A published pilot proves the procedure for its category; it authorizes no further notes. A category batch holds at most ten members of one Raw category and needs its own exact-path approval of its reviewed postimages; approval of one batch never carries to the next batch or to another category. Batches use the same restartable [re-ingest](reingest.md) manifest.
 
-## Shared sources and output approval
-
-Resolve targets explicitly before applying.
-Map proven same-source excerpts to the same Raw/Wiki identity, or name the existing identity in the bounded catalog.
-Earlier Raw outputs from this exact batch extend that catalog; no whole-vault scan is added.
-Distinct excerpts and selected spans are appended as separate evidence even when their quoted text happens to match.
-An incompatible second Wiki target or conflicting output identity is refused, not renamed or silently duplicated.
-Conflicting known identities require separate outputs.
-
-Planning uses an in-memory output view so later members can reuse earlier planned notes without writing temporary destination fixtures.
-The resulting `changes` list contains the final effect for each target, not conflicting intermediate create/update requests.
-New outputs require create approval and absent preimages.
-Existing notes require update approval, their actual preimage and approval_diff[path] equal to the final planned approval_diff_sha256, including all selected contributions.
-For ordinary appends this is append_sha256; first compilation of a Raw-only source also binds its known compiled_target field and uses update_sha256 plus the explicit proposed_diff.
-Review the returned proposed_diff/proposed_append before approving either mutation.
-Source and candidate eligibility is never output approval.
-
-All members, required metadata, citations, destinations and aggregate permissions are preflighted before the first write.
-Selected input digests and all output preimages are checked again immediately before application.
-Selected candidates are retained unchanged, even when an output mapping accidentally names one.
-No unselected source is consumed or compiled.
-
-## Result and recovery
-
-Exit 0 returns `ingest/batch-result@1`, planned or applied, the common purpose, selected paths/preimages, one result per member and the merged changes.
-Applied results include the same exact file readback digests as single-source ingestion.
-Exit 1 returns `ingest/error@1`; usage exits 2.
-A refused preflight writes nothing.
-
-This is not a crash-atomic transaction.
-An I/O failure or interruption after application starts can leave completed files; the existing apply error records completed writes when available.
-Inspect the actual target, preserve completed evidence and resume only with current preimages and exact approval.
-Quiesce competing source and output writers while applying.
-Do not convert a plan, grouping result, partial apply or exit code into a full knowledge or installed-runtime claim.
+Ingest never deletes its input. Deleting an Inbox original is a separate owner decision executed only by `inbox delete`, which applies 5-C against this run's session state. This does not authorize unrelated original cleanup or mothership operations.

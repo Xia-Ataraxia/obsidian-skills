@@ -1,7 +1,7 @@
 <p align="center">
 
 > **Evidence boundary:** Hermes native installs resolved public main at `c22ce26bae518e7973f078cac972ea88707b8e79`; installed bytes were compared afterwards. A local clone checkout does not pin remote tap/install commands. The operator reports 45 installations in five existing local user profiles and a downstream consumer update; fresh task responses cover only CLI/Sync. The immutable `v0.1.0` refusal was two `skills-guard-v6` `credential_exposure` false positives on fake nonce strings, not real credentials or a semantic execution verdict. No scanner bypass was used.
-  <img src="assets/brand/hero.svg" alt="Obsidian Skills: twenty independent Agent Skills for Obsidian vaults, nine native and eleven knowledge packages" width="880">
+  <img src="assets/brand/hero.svg" alt="Obsidian Skills: twenty-four independent Agent Skills for Obsidian vaults, nine native and fifteen knowledge packages" width="880">
 </p>
 
 <p align="center">
@@ -10,7 +10,7 @@
 
 # Obsidian Skills
 
-Twenty independent Agent Skills, the `secondbrain-skills` collection. Nine native packages work with Obsidian itself: Markdown, Bases, Canvas, Mermaid, visual form selection, the official CLI, Web Clipper, vault diagnosis, and headless Sync. Eleven knowledge packages work with the notes: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`.
+Twenty-four independent Agent Skills, the `secondbrain-skills` collection. Nine native packages work with Obsidian itself. Fifteen knowledge packages include the eleven task owners below and four independently usable archival principles. The four new principles are local candidate additions, not part of the historical published pin or runtime evidence.
 
 > **Current published source.** All twenty packages, including the qmd parser fix, are public in the 0.3.0 release merge commit `c8c3a63d71a732eb7e5bcc39124fac5313937ddc` in <https://github.com/Xia-Ataraxia/secondbrain-skills>. The older pins and runtime results below are historical evidence, not verification of this current source. The historical `v0.1.0` tag is unchanged; the current collection release identity is `0.2.1`, carried by every plugin manifest so that a host which installed `0.1.0` sees the upgrade. The recommended source pin is moved to each release's merge commit by a follow-up docs-only commit, because a commit cannot name its own hash.
 
@@ -48,9 +48,9 @@ Every package is a self-contained `SKILL.md` with its own references and scripts
 | `obsidian-doctor` | Plugin and Templater failure diagnosis from sanitized evidence, with a read-only classifier script. | *"Templater stopped firing on new notes — classify the evidence."* |
 | `obsidian-sync` | The headless `ob` client (npm `obsidian-headless`) for Obsidian Sync: pairing, direction, one-shot or continuous runs, incident containment. | *"Set up pull-only headless sync on a server and keep it reversible."* |
 
-## The eleven knowledge packages
+## The fifteen knowledge packages
 
-These eleven packages are included in the current published source. Historical runtime evidence below remains bound to its original revisions.
+The eleven task packages are included in the published pin; the four principles are local additions. Historical runtime evidence remains bound to its original revisions.
 
 | Package | What it owns |
 | --- | --- |
@@ -65,8 +65,12 @@ These eleven packages are included in the current published source. Historical r
 | `reindex` | Refreshes search derivations for one audited collection in an isolated named index. |
 | `refresh-context` | Binds proposed derived context snapshots to exact source hashes and applies only approved paths. |
 | `onboard` | Initializes an independent personal or knowledge vault from a reviewed candidate, or previews additive settings changes. |
+| `principle-respect-des-fonds` | Distinguishes creators and keeps primary and secondary sources as separately attributed Raw captures. |
+| `principle-original-order` | Preserves meaningful source sequence and verbatim captured content. |
+| `principle-hierarchical-management` | Arranges records from collection to item using live destination policy. |
+| `principle-collective-description` | Describes aggregate structure, context, coverage, and history. |
 
-Run `./install.sh skills` to see which of the twenty are present in your checkout.
+Each principle installs alone, carries no shared contract copy, and grants no write permission. Run `./install.sh skills` to see which of the twenty-four are present.
 
 ## Install
 

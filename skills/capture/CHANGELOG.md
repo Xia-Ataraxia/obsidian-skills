@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Candidates no longer carry a queue `status: candidate` field; Inbox location is the processing state. Agent session notes land in `00. Inbox/{NN Agent}` as `type: idea`.
+
 ## 0.3.0 — 2026-10-07
 
 - 2026-10-07 — Collection release `0.3.0`: `metadata.version` follows the collection release identity under the renamed plugin identity `secondbrain-skills@secondbrain-skills`. No behavior, reference or script change in this package.

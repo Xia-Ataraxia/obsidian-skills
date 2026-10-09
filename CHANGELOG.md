@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Add four independent archival principle packages: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description`.
+- Register twenty-four owning packages in the inventory, installer, manifests, and documentation; test principle-only installation without sibling directories or shared contract copies.
+- These are local candidate changes; historical published pins and runtime evidence are unchanged.
+
 ## 0.3.0 — 2026-10-07
 
 - Breaking: the native plugin and marketplace identity is renamed from `obsidian-skills` to `secondbrain-skills` (`PKG_NAME`, every plugin and marketplace manifest, installer commands, asset ledger). Install with `secondbrain-skills@secondbrain-skills`; uninstall the retired `obsidian-skills@obsidian-skills` identity first. Package names and contents are unchanged.

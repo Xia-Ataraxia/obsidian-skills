@@ -21,7 +21,10 @@ import getpass
 import json
 import os
 import re
+import shutil
+import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -90,7 +93,7 @@ def declared_packages() -> list:
 
 
 def knowledge_packages() -> list:
-    """The eleven knowledge package names install.sh declares."""
+    """The fifteen knowledge package names install.sh declares."""
     match = re.search(r"^KNOWLEDGE_SKILLS='([^']*)'", INSTALL_SH.read_text("utf-8"), re.M)
     if match is None:
         raise AssertionError("install.sh no longer declares KNOWLEDGE_SKILLS")
@@ -227,13 +230,14 @@ class DeclaredPackagesTest(unittest.TestCase):
         missing = [n for n in self.declared if not (SKILLS_DIR / n / "SKILL.md").is_file()]
         self.assertEqual(missing, [], f"declared but not installable from this checkout: {missing}")
 
-    def test_installer_declares_the_eleven_knowledge_names_without_a_native_prefix(self):
+    def test_installer_declares_the_fifteen_knowledge_names_without_a_native_prefix(self):
         knowledge = knowledge_packages()
         self.assertEqual(
             sorted(knowledge),
             sorted(
                 "capture inbox ingest query verify audit lint status reindex "
-                "refresh-context onboard".split()
+                "refresh-context onboard principle-respect-des-fonds principle-original-order "
+                "principle-hierarchical-management principle-collective-description".split()
             ),
         )
         self.assertEqual(len(set(knowledge)), len(knowledge), "duplicate knowledge name")
@@ -252,11 +256,11 @@ class DeclaredPackagesTest(unittest.TestCase):
             with self.subTest(package=name):
                 self.assertTrue((SKILLS_DIR / name / "SKILL.md").is_file())
 
-    def test_twenty_packages(self):
-        """Nine native plus eleven knowledge: one directory, one listing, one owner each."""
+    def test_twenty_four_packages(self):
+        """Nine native plus fifteen knowledge: one directory, one listing, one owner each."""
         knowledge = knowledge_packages()
         twenty = sorted(self.declared + knowledge)
-        self.assertEqual(len(set(twenty)), 20, twenty)
+        self.assertEqual(len(set(twenty)), 24, twenty)
         self.assertEqual(present_packages(), twenty)
         for name in twenty:
             with self.subTest(package=name):
@@ -290,6 +294,40 @@ class DeclaredPackagesTest(unittest.TestCase):
             sorted(row["package"] for row in inventory["knowledge_capabilities"]),
             sorted(knowledge),
         )
+
+    def test_principles_install_without_siblings_or_contract_copies(self):
+        for name in knowledge_packages():
+            if not name.startswith("principle-"):
+                continue
+            with self.subTest(package=name), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                checkout = root / "checkout"
+                source = checkout / "skills"
+                source.mkdir(parents=True)
+                shutil.copy2(INSTALL_SH, checkout / "install.sh")
+                (checkout / "scripts").mkdir()
+                shutil.copy2(REPO / "scripts" / "install_packages.py", checkout / "scripts" / "install_packages.py")
+                shutil.copytree(SKILLS_DIR / name, source / name)
+                self.assertEqual(sorted(p.name for p in source.iterdir()), [name])
+                self.assertEqual(list((source / name).rglob("contract.md")), [])
+                text = (source / name / "SKILL.md").read_text("utf-8")
+                self.assertIn("## Apply when", text)
+                self.assertIn("https://wikidocs.net/25577", text)
+                self.assertIn("Apply when", frontmatter(source / name / "SKILL.md")["description"])
+                project = root / "project"
+                project.mkdir()
+                result = subprocess.run(
+                    ["sh", str(checkout / "install.sh"), "copy", "--runtime", "claude",
+                     "--skill", name, "--scope", "project", "--apply"],
+                    cwd=project,
+                    capture_output=True, text=True,
+                )
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                installed = project / ".claude" / "skills"
+                self.assertEqual(sorted(p.name for p in installed.iterdir()), [name])
+                for file in (source / name).rglob("*"):
+                    if file.is_file():
+                        self.assertEqual(file.read_bytes(), (installed / name / file.relative_to(source / name)).read_bytes())
 
     def test_repository_ships_no_callable_root_skill(self):
         self.assertFalse((REPO / "SKILL.md").exists(), "a root SKILL.md would be a router")

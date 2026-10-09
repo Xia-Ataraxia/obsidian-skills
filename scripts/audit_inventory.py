@@ -30,6 +30,8 @@ FEATURES = {f"F{i:02}" for i in range(1, 10)}
 KNOWLEDGE_PACKAGES = (
     "capture", "inbox", "ingest", "query", "verify", "audit", "lint", "status",
     "reindex", "refresh-context", "onboard",
+    "principle-respect-des-fonds", "principle-original-order",
+    "principle-hierarchical-management", "principle-collective-description",
 )
 KNOWLEDGE_FEATURES = {
     f"K{i:02}": name for i, name in enumerate(KNOWLEDGE_PACKAGES, start=1)

@@ -176,7 +176,7 @@ def capture(root: Path, request: Dict[str, Json]) -> Dict[str, Json]:
     notes = text(request.get("agent_capture_notes", ""), "agent_capture_notes", empty=True)
     fields: Dict[str, Json] = {
         "capture_schema": "capture/candidate@1", "title": title,
-        "purpose": purpose, "purpose_origin": origin, "status": "candidate",
+        "purpose": purpose, "purpose_origin": origin,
         "approval_state": request["approval_state"],
         "approval_effect": request["approval_effect"],
         "approval_scope": request["approval_scope"],

@@ -14,6 +14,8 @@ Keep the material the owner selected, with its actual acquisition limits.
 
 One new Inbox candidate separates Original Content from Agent Capture Notes and records the shared [field contract](references/contract.md). Transcript, excerpt, manifest-only and mixed captures retain per-source fidelity. A source list is never displayed as obtained full text. Inaccessible or missing text stays absent, with an omission; it is not reconstructed from a summary.
 
+Agent session notes land in the destination's `00. Inbox/{NN Agent}` lane (for example `01 Chat`, `04 GJC`; resolve the actual lane from the live vault, never invent one) with frontmatter `type: idea`, `created_by: agent`, `authorship: agent`, `tags: [agent-session]` and the runtime's `session_id`. There is no queue `status`: the Inbox location is the processing state, and `inbox` hands the note to `ingest` from there.
+
 The default end is candidate capture, not ingest. No upload, share-link creation, send, automatic session report or full-session backup is performed.
 
 ## Workflow

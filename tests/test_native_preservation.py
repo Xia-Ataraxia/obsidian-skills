@@ -44,8 +44,8 @@ class NativePreservationTest(unittest.TestCase):
     def test_untampered_real_copy_has_complete_structural_mapping(self):
         result = self.run_cli()
         self.assertEqual(0, result.returncode, result.stderr)
-        self.assertIn("11 knowledge capabilities", result.stdout)
-        self.assertIn("20 total owning packages", result.stdout)
+        self.assertIn("15 knowledge capabilities", result.stdout)
+        self.assertIn("24 total owning packages", result.stdout)
         self.assertIn("unmapped=0", result.stdout)
 
     def test_directory_cannot_replace_functional_target_file(self):

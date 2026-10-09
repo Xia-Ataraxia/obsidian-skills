@@ -1,93 +1,70 @@
 ---
 name: ingest
-description: Preserves and compiles explicitly selected source evidence into Raw and source-grounded Wiki knowledge. Use for ingest this URL, compile this file, ingest pasted text, create or update a book note from a Yes24/Aladin URL, ISBN or title (책 노트, 독서 노트, 목차 넣어줘), process selected book chapters, analyze a paper, or append an attributed Persona stance. Direct ingest does not require capture. Not for automatic source collection, knowledge queries, corpus indexing, creating personal profiles, or editing undesignated research questions.
+description: Preserve selected URL, file, text or Inbox evidence as Raw and compile source-grounded Entity, Concept, Paper, Book, Persona or Guide knowledge. Use for ingest, paper analysis, book notes (책 노트, 독서 노트, 목차 넣어줘), chapter promotion and attributed Persona updates. Not automatic collection, corpus indexing, personal profiles or undesignated research questions.
 metadata:
   version: "0.3.0"
 ---
 
 # Ingest
 
-Turn the selected evidence into reusable knowledge while retaining the original, its limits, and its identity.
+A lean router for selected evidence, not permission to write. Read the destination's live policy, placement and templates, the [shared contract](references/contract.md), and [frontmatter](references/frontmatter.md). Design decisions against the reference workflow are recorded in [comparison](references/comparison.md); the helper's simplification record is [script inventory](references/script-inventory.md). Resolve exact scope and effects before writing. Blank/all input delegates selection to `inbox`; direct ingest does not require `capture`.
 
-## Output contract
+## Step 0 — Purpose and scope
 
-Return the exact Raw path, source identity, purpose, obtained range, fidelity and known missing ranges, plus the actually written or reused Wiki/hub, analyses, Concept connections and readback hashes.
-Follow the shared [field contract](references/contract.md).
-Original Content remains evidence, and agent interpretation stays in separate labelled sections or notes.
-Unknown purpose permits preservation, not automatic compilation.
-An incomplete source stays incomplete; file existence and successful extraction are not coverage proof.
+Reuse the owner's purpose; ask one consolidated question only when it is absent. A batch may share one purpose. Unknown purpose allows preservation, not automatic compilation. Select the per-type reference: [articles](references/articles.md), [videos](references/videos.md), [repositories](references/repositories.md), [mail](references/mail.md), [conversations](references/conversations.md), [papers](references/papers.md) or [books](references/books.md). Prefer live placement over category inference; do not persist `category`.
 
-Re-ingestion reuses a proven source, never a surname/year or title match.
-Additional selected evidence can be appended under exact update approval without replacing the earlier Raw body.
-Report planned effects separately from materialized writes and partial failures.
-An unavailable extractor, converter, template, source, permission or app check remains an explicit gap.
+## Step 0-a — Read-only mothership connections
 
-## Resolve the invocation
+When configured and relevant, search the mothership read-only. Verify each target exists before recording `mothership` links. Build `obsidian://open?vault=…&file=…` with `urllib.parse.quote(value, safe='')` for both components; never invent a target or write a mothership People note. No counterpart vault is required.
 
-Read the destination vault's actual AGENTS, property, placement, relationship and template owners.
-Resolve exact source scope, output paths, creation effects and existing-note append diffs from those owners and the request; a package does not grant authority.
-Reuse the task's stated purpose instead of asking for it again.
-Do not require a capture prerequisite, a counterpart vault, a policy plugin or an installed shared runtime.
+## Step 0.5 — Acquisition and conversion
 
-Keep input designation, material kind and extraction method on separate axes.
-Read only the branch in this table:
+Obtain the selected range, retaining original attachments in the approved `_attachments` location. Use an actually available document converter or audio transcription tool; failure is a gap, not success. Record `source_extraction`, `source_attachment` and narrative conversion/coverage limits in `## Ingest Notes`, even for converted text input. See the per-type reference for acquisition tools.
 
-| Material | Reference |
-| --- | --- |
-| Article, news, static HTML | [articles](references/articles.md) |
-| Video, timestamps, transcript | [videos](references/videos.md) |
-| Repository, pinned revision, selected tool | [repositories](references/repositories.md) |
-| Mail, thread, attachment | [mail](references/mail.md) |
-| Messenger, web AI conversation, selected session | [conversations](references/conversations.md) |
-| Book note, bibliography, TOC, selected chapters | [books](references/books.md) |
-| Paper, methodology, citation, hub/atoms/Concept | [papers](references/papers.md) |
+## Step 1 — Analyze provenance before compiling
 
-## Compile selected evidence
+Invoke `principle-respect-des-fonds`. Distinguish primary originals from secondary interpretation. Inspect bounded existing Raw, Entity and Concept candidates before creating anything: stable identity, then canonical URL/locator, never title alone. Identify claims, counterevidence, reusable concepts and missing ranges without quotas or reading index.md.
 
-Read the obtained material and preserve code, quotations, image/attachment references and conversions.
-Identify claims, independent reusable information, counterevidence and gaps against the owner's purpose.
-Write semantic synthesis as an agent, not a string-matching summary or an extraction-size score.
-Every analysis names its actual source and citation location; the helper checks quote presence, not entailment.
-Review the claims against the complete selected range before reporting them as supported.
+## Step 2 — Preserve Raw in original order
 
-Inspect bounded existing-source and Concept candidates before choosing new identities.
-Reuse an existing Concept through an exact approved append; preserve its unknown metadata and human sections.
-Resolve existing Entity, Guide, Map or MOC relationships only when relevant and designated, never manufacture bridge notes or index/log effects.
-For Book and Paper keep incomplete coverage visible instead of substituting a fixed output count for analysis.
+Invoke `principle-original-order`. Use [raw](templates/raw.md). Preserve each original in its own Raw; secondary Raw links all originals through `referenced`. Existing capture bodies are append-only; better extraction creates a new Raw linking the earlier capture, never silently replaces it. Keep exact preflight body spans outside notes, verify unchanged body prefixes and read back newly written capture spans.
 
-Connect only a user-designated existing RQ, manuscript or Wiki Persona.
-Never create an RQ, Persona, People note or operational profile as an ingest side effect.
-Append each attributed Persona citation and stance with date, source identity, quotation and anchor; preserve earlier or conflicting stances rather than asserting a timeless belief.
+Ingest never deletes its input; it records the Raw Original Content extent and selected bytes in its session state. Inbox→Raw becomes a move only through `inbox delete` with a separate exact-path delete approval: immediately before unlinking, it must compare the current Inbox bytes with the approved preimage, the Raw Original Content extent with the selected capture bytes, and the whole Raw with its expected postimage. Pause/drain affected writers or verify their destination switch. Do not substitute whole-file Inbox/Raw hash equality; metadata differs. Do not delete other originals.
 
-## Local filesystem surface
+## Step 3 — Update before create
 
-Use `python3 scripts/ingest.py --vault "$VAULT" --request "$REQUEST"` to plan, then add `--apply` only with exact approval.
-Read [the interface](references/interface.md) first.
-For one selected Inbox batch, use `--handoff "$HANDOFF" --request "$MAPPING"` with the actual `inbox/handoff@1` and [explicit batch mappings](references/batches.md).
-The common purpose arrives once, every member stays digest-bound, and all output effects are planned and authorized before any write.
-The CLI handles direct UTF-8 URL/file/text inputs and the actual capture candidate format.
-It requires existing destination parents and accepts only caller-designated bounded catalog paths.
-It creates Raw/hub/analysis artifacts and performs approved additive appends; it does not synthesize meaning, authenticate an approval, execute templates, query private runtimes or perform app operations.
+Invoke `principle-hierarchical-management`. Both the secondary author and each original author become source-grounded Entities, including people, not mothership People records. Use [entity](templates/entity.md), [concept](templates/concept.md) and [guide](templates/guide.md). Update proven existing pages before creating new ones, with exact reviewed diffs and preservation of unrelated human content: the helper's `update_path` member takes a reviewed postimage outside the vault, whole preimage/postimage digests and offset-located preserved spans. New Entities need a one-line `description` and may list `related` links. New Concept/atom analyses need an explicit one-line evidence-grounded `confidence` and may add a one-line `description` and `related` links; existing Concepts only gain an appended analysis, with frontmatter (including `explored`) unchanged.
 
-The local candidate includes a [web source validator](scripts/web-source-validate.py) and a [YouTube transcript extractor](scripts/youtube-transcript-extract.py) transferred from bstack.
-Read the article or video reference before invoking them; neither grants vault writes or proves whole-source completeness.
-The Book branch adds two bibliographic fetchers transferred from bstack, [Yes24 metadata](scripts/fetch_yes24.py) and [Aladin TOC images](scripts/fetch_aladin_toc.py); read the books reference before invoking them.
-Their local transfer is authorized, but origin redistribution rights are unconfirmed. The source repository's provenance record identifies the five transferred files and their exact revision; no blanket package licence is asserted here.
-For live app-managed mutations compose `obsidian-cli` by identity and use its actual approved surface rather than treating this filesystem helper as an app adapter.
-Compose capture/inbox for requested candidate selection, query for requested retrieval or answers, and reindex for a separately requested index change.
+Concepts use Overview/Details/Related/Sources/Open Questions, explicit Contradiction callouts, `confidence` and a Bias Check. New Entities, Concepts and Guides start `explored: false`. Restructuring an existing terminology Concept requires the owner's reviewed diff. No fixed page count or fabricated bridge notes.
 
-## Verification
+## Step 3.5 — Persona mode
 
-Inspect the actual JSON status and exact destination readback, not exit 0 alone.
-Check non-target preservation, same-source reuse, citation anchors, incomplete ranges and the Book/Paper branch state.
-A materialized local fixture result is not an installed skill load, Obsidian render, Sync result or permission for live writes.
-Stop with the requested outputs and exact remaining gaps; do not delete sources or trigger indexing, reporting, sending or deployment.
+Only append to an existing designated Persona after resolving its corresponding Entity. Use [persona](templates/persona.md): verify each quotation in Raw Original Content, retain attribution, date and anchor, and append stance/Timeline/Log without replacing earlier contradictions. Keep `personaMaturity` unchanged; never create a Persona as an ingest side effect. GitHub evidence uses raw-at-commit-SHA URLs.
 
-## Requirements
+## Step 4 — Connect collectively
 
-The local helper uses Python 3.8 or later and the standard library.
-URL reads support UTF-8 static HTML/plain text/Markdown and have a bounded network timeout.
-Unsupported documents need an actually performed conversion with original attachment retention; login and JavaScript pages need a separately authorized acquisition tool or supplied export.
-The web validator uses only the standard library. The transcript extractor optionally invokes `defuddle` and `yt-dlp` and contacts the public Defuddle gateway and YouTube oEmbed for the designated video.
-The book fetchers run through `uv` with their declared dependencies and contact the public Yes24 or Aladin storefront for the selected book only.
-Those acquisitions require the actual selected source and authorization; no install, login or network acquisition happens merely by loading the skill. Missing dependencies and unexercised external extraction remain unavailable or unverified, not a pass.
+Invoke `principle-collective-description`. Check exact wikilink targets and source/related relationships; leave no newly created orphan. Do not automatically update Maps/MOCs in standard mode. Book B-4 alone permits the approved Book Index→existing Map link. No automatic query, report or reindex effects.
+
+## Step 5 — Stage provenance, not index.md
+
+Follow [git provenance](references/git-provenance.md). One ingest transaction is one commit, including all its Raw and Wiki effects. No index.md is created or synchronized.
+
+## Step 6 — Record history, not log.md
+
+No log.md. Commit trailers identify sources and exact owned paths; [re-ingest](references/reingest.md) uses git history as truth, with state outside the vault. Publication needs its own authorization.
+
+## Step 7 — Review and read back
+
+Verify actual writes, preserved originals, source anchors, incomplete coverage, links, non-target bytes and partial failures. Finish the approved Inbox move only after Step 2's immediate checks, compare staged blobs to intended postimages, then commit and publish through the approved git procedure. Reindex remains separately requested. Report exact Raw paths, source identity, purpose, obtained ranges, limitations, reused/updated knowledge and evidence level. Exit 0 alone is not proof.
+
+## Paper mode
+
+Use [papers](references/papers.md) and [paper hub](templates/paper-hub.md): ar5iv/PMC HTML → PDF → Markdown → OCR last, with actual full-text coverage checks. Prefer Zotero metadata; unregistered keys use `provisional:`. Hub placement follows live Role Placement, not the schema. No mandatory 12-stage pipeline, atomic-note quota, RQ creation or p7 verifier.
+
+## Book mode
+
+Follow [Book B-1–B-5 and Promotion](references/books.md), preserving the upstream progressive-read procedure with only Apatheia paths, compact schema/status override and git history replacing index/log. A chapter scaffold requires the obtained `book_title`; `reading_paths` (verbatim) and per-chapter `toc_description`/`locator` are supplied only as obtained evidence, never invented. Promotion is one guarded transaction over the chapter and its Index: acquired text from outside the vault replaces the exact placeholder, navigation resolves, and the read chapter's checkbox is ticked. Partial coverage becomes `reading`, full becomes `completed`; `reading`→`completed` is unsupported. Web books keep B-1 URL acquisition; a commercial book first needs lawful text and an approved file/page locator adaptation. Do not compile unread chapter content.
+
+## Local helper
+
+Read [interface](references/interface.md) and [batch mappings](references/batches.md) before invoking `python3 scripts/ingest.py --vault "$VAULT" --request "$REQUEST" --state "$SESSION"` (acquire and preflight; `SESSION` outside the vault), then `python3 scripts/ingest.py --vault "$VAULT" --apply-state "$SESSION"` only for the reviewed, approved effects. Helpers preserve bytes; agents perform semantic synthesis. For converted text, the retained attachment is the real original passed as `attachment_source` with its digest. Every coverage level can carry `notes`. The helper resolves every wikilink it records — new Raw `author`/`referenced`, new Entity and Concept/atom `related`, and update postimage `author`/`referenced`/`source`/`related` — to exactly one existing or same-session path and refuses otherwise; it proves existence, not relevance, so review each link before approval. A refusal is a reportable defect, not something to route around. Compose `obsidian-cli` explicitly for approved app operations. Python 3.8+ standard library is sufficient for the core helper; optional per-type acquisition dependencies and unavailable runtime checks stay explicit.

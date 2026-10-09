@@ -7,8 +7,12 @@ Surname plus year is a search hint, never identity: different DOI values remain 
 Use optional Zotero/Better BibTeX links and original PDF locations only when actually resolved and authorized; neither integration is required.
 Retain the original PDF/export or actual conversion attachment, with tools, date and missing page/figure/appendix ranges.
 
-Separate the source Raw from its Paper hub, source-bound analysis atoms and reusable Concept notes.
-The hub carries bibliography, methodology, coverage map, analysis catalog and sibling links.
+Acquire in order: ar5iv/PMC HTML, then PDF, then Markdown conversion, with OCR last. An HTML fetch alone does not establish full coverage of scanned PMC/BMJ papers. Verify body, figures, tables, references and appendices against the selected original; record missing ranges and conversion quality in `## Ingest Notes`. Retain the PDF in `source_attachment` when obtained.
+
+Prefer resolved Zotero metadata and a registered citekey; otherwise use `citekey: provisional:<candidate>` and report registration as pending, without a second boolean field.
+
+Separate the source Raw from its Paper hub and reusable Concept notes. There is no mandatory 12-stage pipeline, atomic-note quota, RQ gate or p7 verifier.
+The hub uses `templates/paper-hub.md`, `type: paper`, `reference/paper`, Properties-required status and a `source` wikilink list covering current full and earlier excerpt captures. Its `## Captures` explains those roles. Better extraction creates a new full Raw with `referenced` pointing to the earlier excerpt, preserving earlier body bytes. Hub placement follows live Role Placement with per-paper analyses, not a new Wiki folder; existing analysis folders remain untouched.
 Each atom makes one independently useful contribution with an actual quotation/location; reviewer/analyst supplements are labelled interpretation, not the author's words.
 Concept promotion removes paper-specific assumptions only through source-grounded semantic judgment and reuses an existing Concept when it matches.
 Do not reduce analysis coordinates to a fixed set of summary files or cap a meaningful catalog.
