@@ -43,7 +43,7 @@ Invoke `principle-respect-des-fonds`. Read the whole source and extract:
 - key claims to track, with counterevidence;
 - connections to pages that already exist.
 
-Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book identified by title and author with a catalogue or publisher record, and no Index for it exists, build its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
+Apply external criticism per key claim. A claim produced by this source's creator is primary. A claim reporting another creator's work is secondary: when the original is located and already in Raw, link it through `referenced`; when it is a book, write its Book Index per [books](references/books.md) and link that through `referenced`; when otherwise located but not yet acquired, compose `capture` for a manifest-only Inbox candidate with the inherited `purpose` (`reused`) and the citing passage in its capture notes, and link that candidate through `referenced`; when unlocated, record provenance unknown in `## Ingest Notes` and attribute the claim to this creator, never as primary.
 
 Search existing Raw, Entity, Concept, Guide and Map pages before creating anything. Match by stable identity or canonical locator first, then by meaning: a page about the same idea under another title is the same page.
 
@@ -63,7 +63,7 @@ Updating an existing page is the default when one matches:
 
 - add the new information under the relevant section, merging with what is there rather than appending a duplicate block;
 - add the Raw to `source` and new cross-references to `related`;
-- when the new information contradicts the page, keep both and add a `> [!warning] Contradiction` callout; it needs two located claims that cannot both be true, so a detail of a retelling that the checked material is merely silent about goes to Open Questions or Ingest Notes as unverified, and before asserting that a secondary account conflicts with its original, check the original or its creator's own account;
+- when the new information contradicts the page, keep both and add a `> [!warning] Contradiction` callout only when two located claims cannot both be true; record a detail the checked material is silent about as unverified;
 - preserve human-written passages and unknown frontmatter keys.
 
 New pages: Concepts use Overview/Details/Related/Sources/Open Questions with a `confidence` per [frontmatter](references/frontmatter.md); Entities cover both the secondary author and each original author; Guides hold step-by-step practice. Every new page starts `explored: false`. A `confidence: high` or synthesis-heavy page carries a Bias Check callout with a counter-argument and a data gap.
@@ -102,7 +102,7 @@ Mandatory for every paper. Follow [papers](references/papers.md): purpose and sc
 
 ## Book mode
 
-Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. A book that a source only cites gets the Index alone, per that reference. Never compile unread chapter content.
+Follow [Book B-1–B-5 and Promotion](references/books.md): fetch the table of contents, write the Book Index and chapter stubs, compile a small set of book-level Wiki pages, and promote a chapter when the owner reads it. Never compile unread chapter content.
 
 ## Tools
 

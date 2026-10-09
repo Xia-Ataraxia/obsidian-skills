@@ -3,7 +3,7 @@ name: principle-skill-creating
 description: Apply when creating, editing, reviewing or trimming an Agent Skill package - deciding what belongs in SKILL.md versus templates, scripts, agents or references, whether a helper script or test should exist, and what to delete. Use for 스킬 만들기, 스킬 고쳐줘, 스크립트로 강제하지 마, 템플릿으로 빼자, skill authoring and skill review.
 license: MIT
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Skill creating
@@ -49,6 +49,7 @@ Before writing, search the sibling packages for the same trigger, step or rule.
 - Delete before adding. No speculative helper, compatibility alias, fallback path or retired stub; a retired thing is removed and stays in history. Build the missing piece when it is actually needed.
 - When a task can only proceed through a script's pipeline, the script is a gate. Delete it and state the steps in the body.
 - When a body step is counting, matching or tracking many items, give it a thin script.
+- Write each rule as one imperative line that names the tool or the action. Do not record the incident that prompted it, its reasons, or flag-level detail the tool's own help gives; that belongs in the commit message.
 - Keep a prohibition only when breaking it loses something that cannot be restored. Defensive prose that restates the obvious is weight.
 
 Example: a mail archive skill had a script that listed, fetched, deduplicated, rendered and wrote every note. Selection and rendering were judgment, so the script went away and the body now gives the steps; the note shape moved to a template; a twenty-line script that answers "which message ids are already archived" stayed.

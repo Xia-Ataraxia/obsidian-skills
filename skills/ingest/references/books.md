@@ -17,7 +17,7 @@ This URL acquisition remains the contract for web books. A commercial or offline
 
 ### Book cited by a source
 
-A located book that a source merely cites gets one Book Index and nothing else until it is read. Build it from the bibliography and TOC as actually obtained (see Bibliographic acquisition), every field labelled by origin, the inherited `purpose` recorded `reused`, and the citing Raw named in its Ingest Notes. Link it from the citing Raw through `referenced`. This overrides B-2 and the template in four places: the TOC is `- [ ] {obtained title}` with no stub link, there is no Progress Tracking section, `purpose_origin` is `reused`, and `source_input` and `source_extraction` state how the bibliography was actually obtained. Original Content holds the preface when one was obtained, otherwise the bibliographic record and TOC as obtained, with the missing preface named in Ingest Notes. Create no chapter stubs. When the owner starts reading, run B-2's TOC and Progress shape and B-3 once to add the stubs, then Promotion works as written; a commercial or offline book still needs the lawful text and locator the paragraph above requires before any chapter is promotable. An unticked TOC is the unread state; nothing is moved when a book is read.
+Write one Book Index from [book-index-cited](../templates/book-index-cited.md) and link it from the citing Raw through `referenced`. Create no chapter stubs. When the owner starts reading, run B-2 and B-3.
 
 ### B-2 — Create Book Index (one Raw)
 

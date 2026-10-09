@@ -42,7 +42,7 @@ Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `a
 | Purpose basis | purpose_origin (stated/reused/inferred/unknown) | Raw, books | — |
 | Retained binary | source_attachment | converted Raw, PDF hub | source-attachment |
 | Read-only mothership connection | mothership (verified deeplink list) | Raw, Entity, Concept | mainVaultRelated; reject mainVaultCmds/source-vault |
-| Knowledge confidence | confidence: exactly `high`, `medium` or `low`, nothing else in the value; the level follows `verify`'s calibration table and the reason is the last item under `## Sources` | Concept | not fidelity |
+| Knowledge confidence | confidence: `high`, `medium` or `low` only; the reason is the last item under `## Sources` | Concept | not fidelity |
 | Exploration flag | explored | Entity, Concept, Guide | — |
 | Persona target | personaOf (scalar Entity link) | Persona | — |
 | Persona maturity | personaMaturity (preserve existing) | Persona | — |
