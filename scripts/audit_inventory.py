@@ -32,6 +32,7 @@ KNOWLEDGE_PACKAGES = (
     "reindex", "refresh-context", "onboard",
     "principle-respect-des-fonds", "principle-original-order",
     "principle-hierarchical-management", "principle-collective-description",
+    "secondbrain-mode", "principle-skill-creating",
 )
 KNOWLEDGE_FEATURES = {
     f"K{i:02}": name for i, name in enumerate(KNOWLEDGE_PACKAGES, start=1)

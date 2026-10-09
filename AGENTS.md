@@ -1,10 +1,11 @@
 # Repository contract
 
-This repository owns twenty-four independent Agent Skills, the `secondbrain-skills` collection: nine native Obsidian skills and fifteen knowledge skills, including four independently usable archival principles.
+This repository owns twenty-six independent Agent Skills, the `secondbrain-skills` collection: nine native Obsidian skills and seventeen knowledge skills, including four independently usable archival principles, `principle-skill-creating`, and the optional `secondbrain-mode` stance.
 
 - Native: Markdown, Bases, Canvas, Mermaid, visualization, official CLI operations, Web Clipper, plugin/Templater diagnosis, and Headless Sync. Each `skills/obsidian-*/SKILL.md` owns exactly its named feature.
 - Knowledge: `capture`, `inbox`, `ingest`, `query`, `verify`, `audit`, `lint`, `status`, `reindex`, `refresh-context`, and `onboard`. Each `skills/<name>/SKILL.md` owns exactly its named task and carries no `obsidian-` prefix.
 - Principles: `principle-respect-des-fonds`, `principle-original-order`, `principle-hierarchical-management`, and `principle-collective-description` belong to the knowledge group. They provide contextual guidance, carry no shared contract copy, and grant no write authorization.
+- Authoring: `principle-skill-creating` decides what a package keeps in Markdown and what it hands to templates, thin scripts and agents; read it before changing a package. `secondbrain-mode` is an optional stance for multi-package work; it dispatches nothing and every package still runs directly.
 
 There is no callable root skill, mandatory shared runtime, compatibility alias, or hidden dispatcher. `docs/naming.md` fixes package and file names. `source-inventory.json` maps every capability unit to exactly one owning package, and `scripts/audit_inventory.py` enforces it.
 
