@@ -44,7 +44,7 @@ Before writing, search the sibling packages for the same trigger, step or rule.
 
 ## Keep it light
 
-- History is the Git log. A package carries no `CHANGELOG.md`; `metadata.version` is set on every package at once by `scripts/release.sh`.
+- History is the Git log. A package carries no `CHANGELOG.md`. Do not edit `metadata.version` per change; the release sets it.
 - Checks enforce package format only: valid frontmatter, a name that matches the directory, links that resolve. Do not write tests for a package's scripts or for its wording; routing evals for a description are format checks and stay.
 - Delete before adding. No speculative helper, compatibility alias, fallback path or retired stub; a retired thing is removed and stays in history. Build the missing piece when it is actually needed.
 - When a task can only proceed through a script's pipeline, the script is a gate. Delete it and state the steps in the body.

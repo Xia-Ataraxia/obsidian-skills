@@ -90,7 +90,7 @@ Six more packages hold the stance that the eleven above work from.
 
 Supported runtimes are `claude`, `codex`, `gjc`, `grok`, `hermes`, `cursor` and `agent-skills`. Native plugin and tap commands, skill directories and requirements for each are in [docs/install-matrix.md](docs/install-matrix.md).
 
-Release: `scripts/release.sh <version>` on a clean `main` sets that version on every package and `plugin.json`, then tags, pushes and publishes a GitHub prerelease. Every package shares the release version.
+Release: `scripts/release.sh <version>` on `main` sets that version everywhere, tags, pushes and publishes the prerelease.
 
 ## What is verified
 
