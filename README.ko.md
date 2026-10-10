@@ -85,7 +85,7 @@ claude plugin install secondbrain-skills@secondbrain-skills
 | Codex | `codex plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 `codex plugin add secondbrain-skills@secondbrain-skills` | `codex plugin marketplace upgrade secondbrain-skills` 후 `codex plugin add secondbrain-skills@secondbrain-skills` |
 | GJC | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 `gjc plugin install secondbrain-skills@secondbrain-skills` | `gjc plugin marketplace update secondbrain-skills` 후 `gjc plugin upgrade secondbrain-skills@secondbrain-skills` |
 | Grok Build | `grok plugin marketplace add Xia-Ataraxia/secondbrain-skills` 후 Marketplace 탭에서 설치 | Marketplace 탭 |
-| Hermes | `hermes skills tap add Xia-Ataraxia/secondbrain-skills` 후 패키지마다 `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` | 탭 |
+| Hermes | `hermes plugins install Xia-Ataraxia/secondbrain-skills --enable` (portable 플러그인, 스킬은 `<namespace>:<name>`) | `plugins.auto_apply: true`면 자동 |
 
 플러그인 레지스트리가 없는 런타임(Cursor, 일반 Agent Skills)은 스킬 디렉터리의 `skills/<name>/` 폴더를 읽습니다. 그 런타임이 문서화한 가져오기 방법을 쓰십시오.
 

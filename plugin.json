@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "secondbrain-skills",
+  "version": "0.5.3",
+  "description": "Twenty-six self-contained Agent Skills: nine native Obsidian packages and seventeen knowledge packages, including four archival principles. The principles are local candidate additions; historical Claude Code evidence in an isolated project scope does not verify this candidate. New runtime loads are unverified. This is a public prerelease.",
+  "author": {
+    "name": "beomsukoh",
+    "url": "https://beomsukoh.com"
+  },
+  "homepage": "https://github.com/Xia-Ataraxia/secondbrain-skills",
+  "repository": "https://github.com/Xia-Ataraxia/secondbrain-skills",
+  "license": "MIT",
+  "keywords": [
+    "obsidian",
+    "markdown",
+    "bases",
+    "canvas",
+    "mermaid",
+    "agent-skills",
+    "knowledge-management",
+    "secondbrain-skills"
+  ]
+}

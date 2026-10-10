@@ -85,7 +85,7 @@ Install through each runtime's own plugin or skill registry, and update the same
 | Codex | `codex plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then `codex plugin add secondbrain-skills@secondbrain-skills` | `codex plugin marketplace upgrade secondbrain-skills`, then `codex plugin add secondbrain-skills@secondbrain-skills` |
 | GJC | `gjc plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then `gjc plugin install secondbrain-skills@secondbrain-skills` | `gjc plugin marketplace update secondbrain-skills`, then `gjc plugin upgrade secondbrain-skills@secondbrain-skills` |
 | Grok Build | `grok plugin marketplace add Xia-Ataraxia/secondbrain-skills`, then install from the Marketplace tab | the Marketplace tab |
-| Hermes | `hermes skills tap add Xia-Ataraxia/secondbrain-skills`, then `hermes skills install Xia-Ataraxia/secondbrain-skills/<name>` per package | the tap |
+| Hermes | `hermes plugins install Xia-Ataraxia/secondbrain-skills --enable` (portable plugin; skills resolve as `<namespace>:<name>`) | automatic with `plugins.auto_apply: true` |
 
 Runtimes without a plugin registry (Cursor, generic Agent Skills) read `skills/<name>/` folders from their skill directory; use their own documented import.
 
