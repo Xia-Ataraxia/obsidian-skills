@@ -1,6 +1,6 @@
 {
   "name": "secondbrain-skills",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Twenty-six independent secondbrain-skills packages: nine native Obsidian and seventeen knowledge packages, including four archival principles. This is a public prerelease; the principles are local candidate additions, not verified runtime loads.",
   "owner": {
     "name": "beomsukoh",

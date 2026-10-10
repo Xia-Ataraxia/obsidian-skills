@@ -3,7 +3,7 @@ name: lint
 description: Checks an explicitly bounded vault scope for note structure, citations, missing frontmatter properties, broken or orphan links, Map coverage, Persona boundaries, and cross-vault targets. Use for vault lint, note health, link checks, or a Map coverage repair. Not for claim verification, sampled quality audit, template authoring, or unrestricted whole-vault correction; epistemic sampling belongs to `audit`, per-claim checks to `verify`.
 license: MIT
 metadata:
-  version: "0.5.1"
+  version: "0.5.2"
 ---
 
 # Lint
