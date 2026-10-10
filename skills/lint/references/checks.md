@@ -24,7 +24,7 @@ rg -l '^purpose_origin: (inferred|unknown)' <raw-scope>
 rg -L '^explored:' <wiki-scope>
 rg -L '^## Sources' <wiki-scope>
 # Raw-only keys on a Wiki page
-rg -l '^(source_identity|purpose|purpose_origin|fidelity\w*|user_intent_interview):' <wiki-scope>
+rg -l '^(source_identity|source_locator|source_extraction|purpose|purpose_origin|fidelity\w*|user_intent_interview):' <wiki-scope>
 
 # High confidence without a Bias Check
 rg -l '^confidence: "?high"?$' <wiki-scope> | xargs rg -L 'Bias Check'
