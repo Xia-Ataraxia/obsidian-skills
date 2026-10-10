@@ -3,7 +3,7 @@ name: refresh-context
 description: Re-reads the owner's named Me, policy, and user-instruction sources, diffs them against the derived agent-context snapshot, proposes the changes, and applies them after the owner says yes. Use when derived agent context must be refreshed after source changes, or when status or lint reports the snapshot as stale. Not for editing Me or policy, inventing personal context, automatic reloads, public context publication, or requiring a counterpart vault.
 license: MIT
 metadata:
-  version: "0.5.2"
+  version: "0.5.3"
 ---
 
 # Refresh Context

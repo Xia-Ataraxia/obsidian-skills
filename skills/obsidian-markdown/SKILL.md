@@ -3,7 +3,7 @@ name: obsidian-markdown
 description: Create and edit Obsidian Flavored Markdown (.md) with wikilinks, embeds, callouts, properties, tags, comments, highlights, math, and footnotes, preserving unrelated note content and reading the changed destination back from the source note. Use when working with .md files in an Obsidian vault, or when the user mentions wikilinks, callouts, frontmatter, tags, embeds, block references, or Obsidian notes, or asks in Korean to clean up, organize, or tidy notes such as 노트 정리 or 노트 청소. Not for .canvas graph structure, .base file internals, or vault CLI operations.
 license: MIT
 metadata:
-  version: "0.5.2"
+  version: "0.5.3"
 ---
 
 # Obsidian Flavored Markdown Skill

@@ -3,7 +3,7 @@ name: audit
 description: Samples an explicitly bounded knowledge scope for quality risks, states coverage and limits, compares a prior report when supplied, and saves a report only on owner approval. Use for vault health sampling, periodic knowledge review, or verify follow-up prioritization. Not for exhaustive claim verification, bulk Wiki repair, or quality scoring; mechanical link and frontmatter health belongs to `lint`, single-page claim checks to `verify`.
 license: MIT
 metadata:
-  version: "0.5.2"
+  version: "0.5.3"
 ---
 
 # Audit

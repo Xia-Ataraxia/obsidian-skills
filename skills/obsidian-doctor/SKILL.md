@@ -3,7 +3,7 @@ name: obsidian-doctor
 description: Diagnoses Obsidian community-plugin and Templater failures from captured read-only evidence — unbound identifiers and `ReferenceError`, async calls used without `await`, execution blocks whose value never reaches the note, cancelled prompts leaving a half-applied rename or move, plugin API symbols missing at the installed version, and plugin/app version incompatibility — classifying each as confirmed, ruled out, or unknown against a plugin registry. Use when a template renders a literal `<% ... %>` command or `[object Promise]`, a prompt answer disappears, a plugin command throws or does nothing, a cancelled run leaves a note renamed, or the user asks whether the installed plugin version has a known failure. Not for link rot, orphan notes, or frontmatter drift, not for core-app defects, and not for writing, reloading, reinstalling, or resetting plugin state — this package proposes changes and never applies them.
 license: MIT
 metadata:
-  version: "0.5.2"
+  version: "0.5.3"
 ---
 
 # Obsidian Doctor

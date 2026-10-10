@@ -3,7 +3,7 @@ name: capture
 description: Captures explicitly selected tabs, URLs, files, conversations or agent sessions as Inbox candidates, bundling several sessions that worked on one topic into a single note. Use for save this conversation, capture these tabs, keep this excerpt, harvest these sessions, or bundle today's sessions on a topic. Not for automatic session backup, compiling knowledge, Inbox management, or Web Clipper template authoring.
 license: MIT
 metadata:
-  version: "0.5.2"
+  version: "0.5.3"
 ---
 
 # Capture
