@@ -3,7 +3,7 @@ name: principle-original-order
 description: Apply when capturing ordered source material, preserving verbatim content, or enriching an existing Raw capture during knowledge-vault ingest. Preserve the creator’s meaningful sequence and distinguish annotation from evidence.
 license: MIT
 metadata:
-  version: "0.5.3"
+  version: "0.5.4"
 ---
 
 # Original order

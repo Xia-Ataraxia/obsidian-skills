@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "secondbrain-skills",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Twenty-six self-contained Agent Skills: nine native Obsidian packages and seventeen knowledge packages, including four archival principles. The principles are local candidate additions; historical Claude Code evidence in an isolated project scope does not verify this candidate. New runtime loads are unverified. This is a public prerelease.",
   "author": {
     "name": "beomsukoh",

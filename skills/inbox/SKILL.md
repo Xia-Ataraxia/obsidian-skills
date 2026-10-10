@@ -3,7 +3,7 @@ name: inbox
 description: Lists, previews, counts and reports recursive Inbox candidates, then hands an explicitly selected scope and one common purpose to ingest. Use for review my Inbox, preview these candidates, process this selection, or inspect duplicate sources. Not for capture, automatic RSS compilation, knowledge synthesis, or candidate deletion.
 license: MIT
 metadata:
-  version: "0.5.3"
+  version: "0.5.4"
 ---
 
 # Inbox
