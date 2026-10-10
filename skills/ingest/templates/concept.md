@@ -1,5 +1,5 @@
 ---
-type: note
+type: concept
 tags: [knowledge/concept]
 date_created: {{date}}
 date_modified: {{date}}
