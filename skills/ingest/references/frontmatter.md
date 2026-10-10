@@ -9,7 +9,7 @@ Based on Properties and 구요한 `/ingest` at commit `863ca43`. One meaning has
 | Raw | raw.md | article/video/paper/book/repo/mail/chat, matching material and live Type Map | reference/{type} | absent |
 | Book Index Raw | book-index.md | book | reference/book | absent |
 | Book chapter Raw | book-chapter.md | book | reference/book | stub → reading → completed |
-| Entity | entity.md | note | knowledge/entity, plus `person` for a person | absent |
+| Entity | entity.md | entity | knowledge/entity, plus `person` for a person | absent |
 | Concept | concept.md | concept | knowledge/concept | absent |
 | Persona | persona.md | note | knowledge/persona | absent |
 | Guide | guide.md | guide | knowledge/guide | required: todo/inprogress/done/reviewed/stop |
