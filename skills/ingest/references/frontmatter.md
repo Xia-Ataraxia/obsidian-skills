@@ -23,6 +23,7 @@ This table defines schema, not placement. Paper hubs follow live Apatheia Role P
 ## Meaning → field
 
 Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `authorship` (template default), `model`, `effort`, `aliases`, `description`. Dates are ISO plain dates. Agent-created notes require the runtime-reported model and effort (default when unreported); do not fabricate a model. Quoted YAML wikilinks are lists unless explicitly scalar below.
+
 | Meaning | Field | Applies to | Absorbed/rejected synonyms |
 | --- | --- | --- | --- |
 | Original author | author (wikilink list) | Raw, hub, books | author string |
