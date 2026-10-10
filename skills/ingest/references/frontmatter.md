@@ -1,10 +1,10 @@
 # Frontmatter — single source
 
-Based on Properties and 구요한 `/ingest` at commit `863ca43`. One meaning has one field. Read live policy before applying: the satellite Common Rules override must be approved; never modify the mothership Properties document.
+Based on Properties and 구요한 `/ingest` at commit `863ca43`. One meaning has one field. Read live policy before applying: its field set and `type` values win over the templates; the satellite Common Rules override must be approved; never modify the mothership Properties document.
 
 ## Type → role → template
 
-| Role | Template | type | tags | status |
+| Role | Template | type (template default) | tags | status |
 | --- | --- | --- | --- | --- |
 | Raw | raw.md | article/video/paper/book/repo/mail/chat, matching material and live Type Map | reference/{type} | absent |
 | Book Index Raw | book-index.md | book | reference/book | absent |
@@ -22,10 +22,7 @@ This table defines schema, not placement. Paper hubs follow live Apatheia Role P
 
 ## Meaning → field
 
-Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `authorship`, `model`, `effort`, `aliases`, `description`. Dates are ISO plain dates. Agent-created notes require the runtime-reported model and effort (default when unreported); do not fabricate a model. Quoted YAML wikilinks are lists unless explicitly scalar below.
-
-The destination's live Properties guideline overrides template field sets and `type` values: omit fields the destination does not define, and use the destination's `type` for the role.
-
+Common fields: `tags`, `type`, `date_created`, `date_modified`, `created_by`, `authorship` (template default), `model`, `effort`, `aliases`, `description`. Dates are ISO plain dates. Agent-created notes require the runtime-reported model and effort (default when unreported); do not fabricate a model. Quoted YAML wikilinks are lists unless explicitly scalar below.
 | Meaning | Field | Applies to | Absorbed/rejected synonyms |
 | --- | --- | --- | --- |
 | Original author | author (wikilink list) | Raw, hub, books | author string |
